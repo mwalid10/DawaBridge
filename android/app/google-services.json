@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "929963244181",
+    "project_id": "pharma-exchange-egypt",
+    "storage_bucket": "pharma-exchange-egypt.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:929963244181:android:540c6d28a890523820f99c",
+        "android_client_info": {
+          "package_name": "com.pharmaexchangeegypt.pharma_exchange_egypt"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDA8DaeijGknSGfEkutTmdQq3AtrOjf6XM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

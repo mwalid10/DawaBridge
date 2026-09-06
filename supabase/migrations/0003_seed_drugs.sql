@@ -1,0 +1,42 @@
+-- Seed reference drug data. Idempotent: skips any trade_name already present.
+insert into drugs (trade_name, active_ingredient, is_controlled)
+select v.trade_name, v.active_ingredient, v.is_controlled
+from (values
+  ('Panadol Extra', 'Paracetamol + Caffeine', false),
+  ('Panadol Cold & Flu', 'Paracetamol + Phenylephrine + Chlorpheniramine', false),
+  ('Augmentin 1g', 'Amoxicillin / Clavulanic acid', false),
+  ('Amoxil 500mg', 'Amoxicillin', false),
+  ('Concor 5mg', 'Bisoprolol', false),
+  ('Cataflam 50mg', 'Diclofenac Potassium', false),
+  ('Brufen 400mg', 'Ibuprofen', false),
+  ('Nexium 40mg', 'Esomeprazole', false),
+  ('Gaviscon', 'Alginic Acid / Sodium Bicarbonate', false),
+  ('Zantac 150mg', 'Ranitidine', false),
+  ('Ventolin Inhaler', 'Salbutamol', false),
+  ('Claritine 10mg', 'Loratadine', false),
+  ('Telfast 180mg', 'Fexofenadine', false),
+  ('Glucophage 500mg', 'Metformin', false),
+  ('Lantus SoloStar', 'Insulin Glargine', false),
+  ('Lipitor 20mg', 'Atorvastatin', false),
+  ('Norvasc 5mg', 'Amlodipine', false),
+  ('Aspocid 100mg', 'Aspirin', false),
+  ('Flagyl 500mg', 'Metronidazole', false),
+  ('Ciprobay 500mg', 'Ciprofloxacin', false),
+  ('Zithromax 500mg', 'Azithromycin', false),
+  ('Voltaren Emulgel', 'Diclofenac Diethylamine', false),
+  ('Motilium 10mg', 'Domperidone', false),
+  ('Buscopan 10mg', 'Hyoscine Butylbromide', false),
+  ('Neurobion Forte', 'Vitamin B1 / B6 / B12', false),
+  ('Fervex', 'Paracetamol / Pheniramine / Vitamin C', false),
+  ('Otrivin Nasal Spray', 'Xylometazoline', false),
+  ('Rhinathiol Syrup', 'Carbocisteine', false),
+  ('Antinal', 'Nifuroxazide', false),
+  ('Eno Fruit Salt', 'Sodium Bicarbonate / Citric Acid', false),
+  ('Tramal 50mg', 'Tramadol HCl', true),
+  ('Tramadex 100mg', 'Tramadol HCl', true),
+  ('Valium 5mg', 'Diazepam', true),
+  ('Xanax 0.25mg', 'Alprazolam', true),
+  ('Rivotril 2mg', 'Clonazepam', true),
+  ('Lyrica 75mg', 'Pregabalin', true)
+) as v(trade_name, active_ingredient, is_controlled)
+where not exists (select 1 from drugs d where d.trade_name = v.trade_name);

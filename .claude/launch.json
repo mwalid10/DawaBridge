@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "flutter-web",
+      "runtimeExecutable": "flutter",
+      "runtimeArgs": ["run", "-d", "web-server", "--web-port=8765"],
+      "port": 8765
+    },
+    {
+      "name": "admin-web",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "cd /d D:\\flutter_projects\\pharma_exchange_admin && flutter run -d web-server --web-port=8811"],
+      "port": 8811
+    }
+  ]
+}
