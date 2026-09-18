@@ -1,19 +1,33 @@
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:go_router/go_router.dart';
 
+import 'l10n_extensions.dart';
 import 'theme.dart';
 import 'widgets/app_gradient_button.dart';
 
 /// Args for [SuccessScreen], passed via `GoRouterState.extra`
 /// (`context.push('/success', extra: SuccessArgs(...))`).
 class SuccessArgs {
-  final String title;
-  final String message;
-  final String ctaLabel;
-  final VoidCallback onCta;
+  final String? title;
+  final String? message;
+  final String? ctaLabel;
 
-  const SuccessArgs({required this.title, required this.message, required this.ctaLabel, required this.onCta});
+  /// Null means "just go home" — see [SuccessArgs.generic].
+  final VoidCallback? onCta;
+
+  const SuccessArgs({this.title, this.message, this.ctaLabel, this.onCta});
+
+  /// Fallback for when `/success` is reached without live `extra`: a deep
+  /// link, or Android rebuilding the route after the process was killed.
+  /// The router used to hard-cast `state.extra as SuccessArgs`, which threw
+  /// a TypeError on exactly those paths instead of showing a screen.
+  const SuccessArgs.generic()
+      : title = null,
+        message = null,
+        ctaLabel = null,
+        onCta = null;
 }
 
 class SuccessScreen extends StatefulWidget {
@@ -58,11 +72,22 @@ class _SuccessScreenState extends State<SuccessScreen> {
                     child: const Icon(Icons.check_circle_rounded, size: 48, color: AppColors.primary),
                   ).animate().fadeIn(duration: 300.ms).scale(begin: const Offset(0.85, 0.85)),
                   const SizedBox(height: AppSpacing.xl),
-                  Text(widget.args.title, style: Theme.of(context).textTheme.headlineLarge, textAlign: TextAlign.center),
+                  Text(
+                    widget.args.title ?? context.l10n.successGenericTitle,
+                    style: Theme.of(context).textTheme.headlineLarge,
+                    textAlign: TextAlign.center,
+                  ),
                   const SizedBox(height: AppSpacing.sm),
-                  Text(widget.args.message, style: Theme.of(context).textTheme.bodyMedium, textAlign: TextAlign.center),
+                  Text(
+                    widget.args.message ?? context.l10n.successGenericBody,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.center,
+                  ),
                   const SizedBox(height: AppSpacing.xxxl),
-                  AppGradientButton(onPressed: widget.args.onCta, child: Text(widget.args.ctaLabel)),
+                  AppGradientButton(
+                    onPressed: widget.args.onCta ?? () => context.go('/home'),
+                    child: Text(widget.args.ctaLabel ?? context.l10n.successGenericCta),
+                  ),
                 ],
               ),
             ),

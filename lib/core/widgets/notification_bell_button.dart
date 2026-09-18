@@ -12,13 +12,16 @@ class NotificationBellButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final unread = ref.watch(unreadNotificationsCountProvider);
+    // The count is a server-side `count(*)` now rather than the length of a
+    // client-side list, so it's async — and correct without having to
+    // download every notification row first.
+    final unread = ref.watch(unreadNotificationsCountProvider).value ?? 0;
 
     return IconButton(
       onPressed: () => context.push('/notifications'),
       icon: Badge(
         isLabelVisible: unread > 0,
-        label: Text('$unread'),
+        label: Text(unread > 99 ? '99+' : '$unread'),
         backgroundColor: AppColors.danger,
         child: const Icon(Icons.notifications_outlined),
       ),

@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../../core/l10n_extensions.dart';
 import '../../core/theme.dart';
+import '../../l10n/app_localizations.dart';
 import '../../core/widgets/glass_card.dart';
 import '../../core/widgets/listing_type_pill.dart';
 import '../deals/deal.dart';
@@ -86,10 +87,22 @@ class _DealTile extends StatelessWidget {
         ListingType.barter => ListingTypePillKind.barter,
       };
 
+  // Deals have their own status enum now (migration 0035) instead of
+  // borrowing listing_state, and 'pending'/'declined' are new states the
+  // old flow had no way to express.
   (Color, Color)? get _stateBadge => switch (deal.state) {
-        ListingState.completed => (AppColors.good, AppColors.goodBg),
-        ListingState.cancelled => (AppColors.danger, AppColors.dangerBg),
-        ListingState.reserved || ListingState.available => null,
+        DealState.pending => (AppColors.warn, AppColors.warnBg),
+        DealState.completed => (AppColors.good, AppColors.goodBg),
+        DealState.declined || DealState.cancelled => (AppColors.danger, AppColors.dangerBg),
+        DealState.accepted => null,
+      };
+
+  String _stateLabel(AppLocalizations l10n) => switch (deal.state) {
+        DealState.pending => deal.isSeller ? l10n.chatBadgeNeedsYourAnswer : l10n.chatBadgeAwaitingSeller,
+        DealState.accepted => '',
+        DealState.declined => l10n.chatBadgeDeclined,
+        DealState.completed => l10n.chatBadgeCompleted,
+        DealState.cancelled => l10n.chatBadgeCancelled,
       };
 
   @override
@@ -154,7 +167,7 @@ class _DealTile extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: 2),
                           decoration: BoxDecoration(color: badge.$2, borderRadius: BorderRadius.circular(AppRadius.pill)),
                           child: Text(
-                            deal.state.label(l10n),
+                            _stateLabel(l10n),
                             style: textTheme.labelSmall?.copyWith(color: badge.$1, fontWeight: FontWeight.w600),
                           ),
                         ),

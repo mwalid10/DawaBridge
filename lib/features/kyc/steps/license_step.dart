@@ -16,7 +16,20 @@ import '../widgets/kyc_step_header.dart';
 class LicenseStep extends ConsumerStatefulWidget {
   final VoidCallback onNext;
   final VoidCallback onBack;
-  const LicenseStep({super.key, required this.onNext, required this.onBack});
+
+  /// In recovery mode (see [KycWizardScreen.recovery]) this is the last
+  /// step, so the button reads Submit and shows a spinner while the
+  /// registration RPC is in flight.
+  final bool isFinalStep;
+  final bool submitting;
+
+  const LicenseStep({
+    super.key,
+    required this.onNext,
+    required this.onBack,
+    this.isFinalStep = false,
+    this.submitting = false,
+  });
 
   @override
   ConsumerState<LicenseStep> createState() => _LicenseStepState();
@@ -155,9 +168,25 @@ class _LicenseStepState extends ConsumerState<LicenseStep> {
         const SizedBox(height: AppSpacing.xxl),
         Row(
           children: [
-            Expanded(child: OutlinedButton(onPressed: widget.onBack, child: Text(l10n.commonBack))),
+            Expanded(
+              child: OutlinedButton(
+                onPressed: widget.submitting ? null : widget.onBack,
+                child: Text(l10n.commonBack),
+              ),
+            ),
             const SizedBox(width: 12),
-            Expanded(child: ElevatedButton(onPressed: _submit, child: Text(l10n.commonContinue))),
+            Expanded(
+              child: ElevatedButton(
+                onPressed: widget.submitting ? null : _submit,
+                child: widget.submitting
+                    ? const SizedBox(
+                        height: 18,
+                        width: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                      )
+                    : Text(widget.isFinalStep ? l10n.commonSubmit : l10n.commonContinue),
+              ),
+            ),
           ],
         ),
       ],

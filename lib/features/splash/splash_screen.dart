@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../core/supabase_client.dart';
+import '../../core/session.dart';
 import '../../core/widgets/gradient_hero_background.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -16,17 +16,32 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // Just long enough for the icon's fade/scale-in (400ms) to read as
-    // deliberate rather than a flash — was 900ms, adding half a second of
-    // pure dead time to every cold start for no visual payoff.
-    Future.delayed(const Duration(milliseconds: 450), _route);
+    // This screen no longer decides anything. It used to read
+    // `supabase.auth.currentSession` and send any session straight to
+    // `/home` — without ever checking `pharmacies.status`, which is exactly
+    // how an unapproved (or rejected, or suspended) pharmacy walked past
+    // the KYC gate. Routing now belongs to the redirect in `core/router.dart`,
+    // driven by `SessionController`; this just holds the frame while the
+    // session resolves.
+    //
+    // The delay is only so the icon's 400ms fade/scale-in reads as
+    // deliberate when the session resolves instantly from cache.
+    Future.delayed(const Duration(milliseconds: 450), () {
+      if (!mounted) return;
+      // Nudge the router to re-evaluate in case the session resolved before
+      // this route was even built (no notifyListeners would have fired).
+      if (sessionController.state != SessionState.unknown) {
+        context.go(_destinationFor(sessionController.state));
+      }
+    });
   }
 
-  void _route() {
-    if (!mounted) return;
-    final session = supabase.auth.currentSession;
-    context.go(session == null ? '/onboarding' : '/home');
-  }
+  String _destinationFor(SessionState state) => switch (state) {
+        SessionState.approved => '/home',
+        SessionState.signedOut => '/onboarding',
+        SessionState.needsRegistration => '/register/complete',
+        _ => '/account-status',
+      };
 
   @override
   Widget build(BuildContext context) {

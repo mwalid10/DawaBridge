@@ -49,3 +49,8 @@ app.*.map.json
 
 # Claude Code local-only settings (personal permission overrides)
 .claude/settings.local.json
+
+# Release signing secrets — never commit
+android/key.properties
+android/*.jks
+android/app/*.jks

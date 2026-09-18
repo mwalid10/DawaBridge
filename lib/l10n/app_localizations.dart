@@ -2113,6 +2113,672 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'العربية'**
   String get languageArabic;
+
+  /// No description provided for @commonSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get commonSubmit;
+
+  /// No description provided for @commonSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save changes'**
+  String get commonSave;
+
+  /// No description provided for @fieldDescriptionOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes (optional)'**
+  String get fieldDescriptionOptional;
+
+  /// No description provided for @errorGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get errorGeneric;
+
+  /// No description provided for @errorNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection. Check your internet and try again.'**
+  String get errorNetwork;
+
+  /// No description provided for @errorAuthRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please sign in again.'**
+  String get errorAuthRequired;
+
+  /// No description provided for @errorInvalidCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong email or password.'**
+  String get errorInvalidCredentials;
+
+  /// No description provided for @errorEmailNotConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm your email address first — check your inbox for the code.'**
+  String get errorEmailNotConfirmed;
+
+  /// No description provided for @errorEmailAlreadyRegistered.
+  ///
+  /// In en, this message translates to:
+  /// **'An account already exists for this email. Try signing in.'**
+  String get errorEmailAlreadyRegistered;
+
+  /// No description provided for @errorOtpInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'That code is wrong or has expired. Request a new one.'**
+  String get errorOtpInvalid;
+
+  /// No description provided for @errorRateLimited.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts. Wait a minute and try again.'**
+  String get errorRateLimited;
+
+  /// No description provided for @errorWeakPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 8 characters with an uppercase letter, a number and a symbol.'**
+  String get errorWeakPassword;
+
+  /// No description provided for @errorFileTooLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'That file is too large.'**
+  String get errorFileTooLarge;
+
+  /// No description provided for @errorFileType.
+  ///
+  /// In en, this message translates to:
+  /// **'That file type isn’t supported.'**
+  String get errorFileType;
+
+  /// No description provided for @errorNotApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Your pharmacy is still awaiting approval, so you can’t trade yet.'**
+  String get errorNotApproved;
+
+  /// No description provided for @errorAccountIsAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'This is an admin account — use the admin dashboard instead.'**
+  String get errorAccountIsAdmin;
+
+  /// No description provided for @errorAccountHasActiveDeals.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish or cancel your open deals before deleting your account.'**
+  String get errorAccountHasActiveDeals;
+
+  /// No description provided for @errorAccountHasOpenDisputes.
+  ///
+  /// In en, this message translates to:
+  /// **'You have an unresolved dispute. It must be closed before your account can be deleted.'**
+  String get errorAccountHasOpenDisputes;
+
+  /// No description provided for @errorListingNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'This listing no longer exists.'**
+  String get errorListingNotFound;
+
+  /// No description provided for @errorListingOwn.
+  ///
+  /// In en, this message translates to:
+  /// **'This is your own listing.'**
+  String get errorListingOwn;
+
+  /// No description provided for @errorListingUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This listing is no longer available.'**
+  String get errorListingUnavailable;
+
+  /// No description provided for @errorListingExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'This listing’s medicine has passed its expiry date.'**
+  String get errorListingExpired;
+
+  /// No description provided for @errorListingExpiryInPast.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick an expiry date in the future.'**
+  String get errorListingExpiryInPast;
+
+  /// No description provided for @errorListingNotOwner.
+  ///
+  /// In en, this message translates to:
+  /// **'This isn’t your listing.'**
+  String get errorListingNotOwner;
+
+  /// No description provided for @errorListingNotEditable.
+  ///
+  /// In en, this message translates to:
+  /// **'This listing can no longer be edited.'**
+  String get errorListingNotEditable;
+
+  /// No description provided for @errorListingReservedNoEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'You can’t change the details while this listing is reserved for a buyer.'**
+  String get errorListingReservedNoEdit;
+
+  /// No description provided for @errorListingHasActiveDeal.
+  ///
+  /// In en, this message translates to:
+  /// **'There’s an open request on this listing. Cancel it first.'**
+  String get errorListingHasActiveDeal;
+
+  /// No description provided for @errorQuantityInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid quantity.'**
+  String get errorQuantityInvalid;
+
+  /// No description provided for @errorPriceInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid price.'**
+  String get errorPriceInvalid;
+
+  /// No description provided for @errorDiscountInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'The discount must be lower than the price.'**
+  String get errorDiscountInvalid;
+
+  /// No description provided for @errorControlledSubstance.
+  ///
+  /// In en, this message translates to:
+  /// **'This is a controlled substance and can’t be listed here.'**
+  String get errorControlledSubstance;
+
+  /// No description provided for @errorDealNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'This conversation no longer exists.'**
+  String get errorDealNotFound;
+
+  /// No description provided for @errorDealNotParticipant.
+  ///
+  /// In en, this message translates to:
+  /// **'You’re not part of this deal.'**
+  String get errorDealNotParticipant;
+
+  /// No description provided for @errorDealAlreadyOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'You already have an open request on this listing.'**
+  String get errorDealAlreadyOpen;
+
+  /// No description provided for @errorDealSellerOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the seller can do that.'**
+  String get errorDealSellerOnly;
+
+  /// No description provided for @errorDealNotPending.
+  ///
+  /// In en, this message translates to:
+  /// **'This request has already been answered.'**
+  String get errorDealNotPending;
+
+  /// No description provided for @errorDealNotActive.
+  ///
+  /// In en, this message translates to:
+  /// **'This deal is already closed.'**
+  String get errorDealNotActive;
+
+  /// No description provided for @errorDisputeAlreadyOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'You already have an open dispute on this deal.'**
+  String get errorDisputeAlreadyOpen;
+
+  /// No description provided for @errorDisputeReasonRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Give a reason for the dispute.'**
+  String get errorDisputeReasonRequired;
+
+  /// No description provided for @errorRatingInvalidStars.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a rating from 1 to 5 stars.'**
+  String get errorRatingInvalidStars;
+
+  /// No description provided for @errorRatingDealNotCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'You can only rate a completed deal.'**
+  String get errorRatingDealNotCompleted;
+
+  /// No description provided for @errorDrugNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the medicine name.'**
+  String get errorDrugNameRequired;
+
+  /// No description provided for @errorDrugNameTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'That medicine name is too long.'**
+  String get errorDrugNameTooLong;
+
+  /// No description provided for @errorPharmacyNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your pharmacy name.'**
+  String get errorPharmacyNameRequired;
+
+  /// No description provided for @errorGovernorateRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick your governorate.'**
+  String get errorGovernorateRequired;
+
+  /// No description provided for @errorLocationRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Drop a pin on your pharmacy’s location.'**
+  String get errorLocationRequired;
+
+  /// No description provided for @errorLocationOutOfBounds.
+  ///
+  /// In en, this message translates to:
+  /// **'That location isn’t inside Egypt.'**
+  String get errorLocationOutOfBounds;
+
+  /// No description provided for @errorLicenseRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload your pharmacy licence.'**
+  String get errorLicenseRequired;
+
+  /// No description provided for @successGenericTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'All done'**
+  String get successGenericTitle;
+
+  /// No description provided for @successGenericBody.
+  ///
+  /// In en, this message translates to:
+  /// **'That went through successfully.'**
+  String get successGenericBody;
+
+  /// No description provided for @successGenericCta.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to home'**
+  String get successGenericCta;
+
+  /// No description provided for @loginInvalidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid email address.'**
+  String get loginInvalidEmail;
+
+  /// No description provided for @loginPasswordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your password.'**
+  String get loginPasswordRequired;
+
+  /// No description provided for @resetPasswordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a new password'**
+  String get resetPasswordTitle;
+
+  /// No description provided for @resetPasswordSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a password you haven’t used before.'**
+  String get resetPasswordSubtitle;
+
+  /// No description provided for @resetPasswordNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get resetPasswordNew;
+
+  /// No description provided for @resetPasswordConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm password'**
+  String get resetPasswordConfirm;
+
+  /// No description provided for @resetPasswordMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords don’t match.'**
+  String get resetPasswordMismatch;
+
+  /// No description provided for @resetPasswordRule.
+  ///
+  /// In en, this message translates to:
+  /// **'At least 8 characters, with an uppercase letter, a number and a symbol.'**
+  String get resetPasswordRule;
+
+  /// No description provided for @resetPasswordSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save password'**
+  String get resetPasswordSave;
+
+  /// No description provided for @resetPasswordDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Password updated. You can sign in with it now.'**
+  String get resetPasswordDone;
+
+  /// No description provided for @resetPasswordLinkExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'This reset link has expired. Request a new one from the sign-in screen.'**
+  String get resetPasswordLinkExpired;
+
+  /// No description provided for @resetPasswordBackToSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to sign in'**
+  String get resetPasswordBackToSignIn;
+
+  /// No description provided for @kycSuspendedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Suspended'**
+  String get kycSuspendedLabel;
+
+  /// No description provided for @kycAccountSuspended.
+  ///
+  /// In en, this message translates to:
+  /// **'Account suspended'**
+  String get kycAccountSuspended;
+
+  /// No description provided for @kycSuspendedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your pharmacy’s access has been suspended. Contact support to find out why and how to restore it.'**
+  String get kycSuspendedBody;
+
+  /// No description provided for @kycAdminLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin account'**
+  String get kycAdminLabel;
+
+  /// No description provided for @kycAdminTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the admin dashboard'**
+  String get kycAdminTitle;
+
+  /// No description provided for @kycAdminBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This is an administrator account. The pharmacy app is for pharmacies — sign in to the admin dashboard instead.'**
+  String get kycAdminBody;
+
+  /// No description provided for @kycFinishSetupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish setting up'**
+  String get kycFinishSetupTitle;
+
+  /// No description provided for @kycFinishSetupBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account was created but your pharmacy details never finished saving. Fill them in here to complete your registration — you won’t need to sign up again.'**
+  String get kycFinishSetupBody;
+
+  /// No description provided for @kycOtpResend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send a new code'**
+  String get kycOtpResend;
+
+  /// No description provided for @kycOtpResendIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Send a new code in {seconds}s'**
+  String kycOtpResendIn(int seconds);
+
+  /// No description provided for @kycOtpResent.
+  ///
+  /// In en, this message translates to:
+  /// **'A new code is on its way.'**
+  String get kycOtpResent;
+
+  /// No description provided for @kycOtpAcceptedRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Your code was accepted. We just need to finish saving your pharmacy details.'**
+  String get kycOtpAcceptedRetry;
+
+  /// No description provided for @accountDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete my account'**
+  String get accountDelete;
+
+  /// No description provided for @accountDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete your account?'**
+  String get accountDeleteTitle;
+
+  /// No description provided for @accountDeleteWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'This removes your pharmacy profile, licence document and listings, and you won’t be able to sign in again. Completed deals stay on record for the pharmacies you traded with. This can’t be undone.'**
+  String get accountDeleteWarning;
+
+  /// No description provided for @accountDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete permanently'**
+  String get accountDeleteConfirm;
+
+  /// No description provided for @accountDeleteDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account has been deleted.'**
+  String get accountDeleteDone;
+
+  /// No description provided for @accountDeleteExplainer.
+  ///
+  /// In en, this message translates to:
+  /// **'Open deals and unresolved disputes must be closed first.'**
+  String get accountDeleteExplainer;
+
+  /// No description provided for @editListingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit listing'**
+  String get editListingTitle;
+
+  /// No description provided for @editListingSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Listing updated.'**
+  String get editListingSaved;
+
+  /// No description provided for @editListingDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this listing'**
+  String get editListingDelete;
+
+  /// No description provided for @editListingDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this listing?'**
+  String get editListingDeleteTitle;
+
+  /// No description provided for @editListingDeleteWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'It will be removed from the marketplace. If it already has deal history it will be closed rather than erased.'**
+  String get editListingDeleteWarning;
+
+  /// No description provided for @editListingDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get editListingDeleteConfirm;
+
+  /// No description provided for @editListingDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Listing removed.'**
+  String get editListingDeleted;
+
+  /// No description provided for @editListingReserved.
+  ///
+  /// In en, this message translates to:
+  /// **'This listing is reserved for a buyer right now, so its details are locked. Cancel the deal first if you need to change them.'**
+  String get editListingReserved;
+
+  /// No description provided for @editListingClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'This listing is closed and can no longer be edited.'**
+  String get editListingClosed;
+
+  /// No description provided for @editListingQuantityValidator.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a quantity between 1 and 1,000,000'**
+  String get editListingQuantityValidator;
+
+  /// No description provided for @editListingDiscountNeedsPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a price before adding a discount'**
+  String get editListingDiscountNeedsPrice;
+
+  /// No description provided for @chatAcceptRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept'**
+  String get chatAcceptRequest;
+
+  /// No description provided for @chatDeclineRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Decline'**
+  String get chatDeclineRequest;
+
+  /// No description provided for @chatWithdrawRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw request'**
+  String get chatWithdrawRequest;
+
+  /// No description provided for @chatAcceptConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept this request?'**
+  String get chatAcceptConfirmTitle;
+
+  /// No description provided for @chatAcceptConfirmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The listing will be reserved for this pharmacy, and any other pending requests on it will be declined.'**
+  String get chatAcceptConfirmBody;
+
+  /// No description provided for @chatDeclineConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Decline this request?'**
+  String get chatDeclineConfirmTitle;
+
+  /// No description provided for @chatDeclineConfirmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The listing stays available for other pharmacies.'**
+  String get chatDeclineConfirmBody;
+
+  /// No description provided for @chatDealPendingBar.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for the seller to accept'**
+  String get chatDealPendingBar;
+
+  /// No description provided for @chatDealDeclinedBar.
+  ///
+  /// In en, this message translates to:
+  /// **'Request declined'**
+  String get chatDealDeclinedBar;
+
+  /// No description provided for @chatExpiresInHours.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours}h'**
+  String chatExpiresInHours(int hours);
+
+  /// No description provided for @chatExpiresInDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{days}d'**
+  String chatExpiresInDays(int days);
+
+  /// No description provided for @chatAwaitingSellerIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Seller has {time} to respond'**
+  String chatAwaitingSellerIn(Object time);
+
+  /// No description provided for @chatReservedUntilIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Reserved for {time}'**
+  String chatReservedUntilIn(Object time);
+
+  /// No description provided for @notificationsMarkAllRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all as read'**
+  String get notificationsMarkAllRead;
+
+  /// No description provided for @chatBadgeNeedsYourAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs your answer'**
+  String get chatBadgeNeedsYourAnswer;
+
+  /// No description provided for @chatBadgeAwaitingSeller.
+  ///
+  /// In en, this message translates to:
+  /// **'Awaiting seller'**
+  String get chatBadgeAwaitingSeller;
+
+  /// No description provided for @chatBadgeDeclined.
+  ///
+  /// In en, this message translates to:
+  /// **'Declined'**
+  String get chatBadgeDeclined;
+
+  /// No description provided for @chatBadgeCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get chatBadgeCompleted;
+
+  /// No description provided for @chatBadgeCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get chatBadgeCancelled;
 }
 
 class _AppLocalizationsDelegate

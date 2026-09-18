@@ -1,6 +1,5 @@
 {
   "@@locale": "ar",
-
   "commonCancel": "إلغاء",
   "commonBack": "رجوع",
   "commonContinue": "متابعة",
@@ -9,13 +8,11 @@
   "commonConfirm": "تأكيد",
   "commonAll": "الكل",
   "commonView": "عرض",
-
   "navHome": "الرئيسية",
   "navSearch": "بحث",
   "navChat": "المحادثات",
   "navNews": "الأخبار",
   "navProfile": "الملف الشخصي",
-
   "listingTypeSell": "بيع",
   "listingTypeBuy": "شراء",
   "listingTypeExchange": "مقايضة",
@@ -40,7 +37,6 @@
   "disputeReasonQuantityMismatch": "عدم تطابق الكمية",
   "disputeReasonPaymentIssue": "مشكلة في الدفع",
   "disputeReasonOther": "أخرى",
-
   "onboardSkip": "تخطي",
   "onboardSlide1Title": "تصريف المخزون قريب الانتهاء",
   "onboardSlide1Body": "اعرض الأدوية الفائضة قبل انتهاء صلاحيتها بدلاً من إتلافها.",
@@ -50,7 +46,6 @@
   "onboardSlide3Body": "يتم التحقق من كل حساب قبل أن يتمكن من العرض أو التداول.",
   "onboardGetStarted": "ابدأ الآن",
   "onboardNext": "التالي",
-
   "loginWelcomeBack": "مرحبًا بعودتك",
   "loginSubtitle": "سجّل الدخول للتداول مع الصيدليات في جميع أنحاء مصر",
   "loginEmailLabel": "البريد الإلكتروني",
@@ -63,10 +58,13 @@
   "loginResetBody": "سنرسل لك رابطًا عبر البريد الإلكتروني لإعادة تعيين كلمة المرور.",
   "loginSendLink": "إرسال الرابط",
   "loginResetSent": "تم إرسال رابط إعادة التعيين إلى {email}",
-  "@loginResetSent": { "placeholders": { "email": {} } },
+  "@loginResetSent": {
+    "placeholders": {
+      "email": {}
+    }
+  },
   "loginResetError": "تعذر إرسال رابط إعادة التعيين — حاول مرة أخرى.",
   "loginError": "تعذر تسجيل الدخول — تحقق من البريد الإلكتروني وكلمة المرور.",
-
   "kycStepPharmacy": "الصيدلية",
   "kycStepAddress": "العنوان",
   "kycStepLicense": "الترخيص",
@@ -88,7 +86,12 @@
   "kycUseCurrentLocation": "استخدام الموقع الحالي",
   "kycTapToDropPin": "اسحب الخريطة لتحريك الدبوس إلى موقع صيدليتك.",
   "kycPinSet": "تم تحديد الموقع: {lat}, {lng}",
-  "@kycPinSet": { "placeholders": { "lat": {}, "lng": {} } },
+  "@kycPinSet": {
+    "placeholders": {
+      "lat": {},
+      "lng": {}
+    }
+  },
   "kycLocationDenied": "تم رفض إذن الموقع — حدد الدبوس يدويًا بدلاً من ذلك.",
   "kycLocationError": "تعذر تحديد موقعك — حدد الدبوس يدويًا بدلاً من ذلك.",
   "kycFillRequiredFields": "أدخل المحافظة والمنطقة والعنوان.",
@@ -108,7 +111,11 @@
   "kycSubmitForReview": "إرسال للمراجعة",
   "kycVerifyEmailTitle": "تحقق من بريدك الإلكتروني",
   "kycOtpBody": "أدخل الرمز المكون من 6 أرقام المرسل إلى {email}. ينتهي خلال دقيقتين.",
-  "@kycOtpBody": { "placeholders": { "email": {} } },
+  "@kycOtpBody": {
+    "placeholders": {
+      "email": {}
+    }
+  },
   "kycOtpLabel": "رمز التحقق",
   "kycVerifyAndSubmit": "تحقق وأرسل للمراجعة",
   "kycPendingReview": "قيد المراجعة",
@@ -117,7 +124,6 @@
   "kycApplicationRejected": "تم رفض الطلب",
   "kycRejectedBody": "تعذر التحقق من ترخيصك. تواصل مع الدعم لإعادة التقديم.",
   "kycPendingBody": "فريقنا يراجع ترخيصك الآن. عادةً ما يستغرق ذلك حتى 24 ساعة — تتحدث هذه الشاشة تلقائيًا عند اتخاذ القرار.",
-
   "homeWelcomeBack": "مرحبًا بعودتك،",
   "homeStatActiveListings": "الإعلانات النشطة",
   "homeStatExchanges": "التبادلات",
@@ -133,7 +139,6 @@
   "homeNoListingsNearby": "لا توجد إعلانات بالقرب منك بعد",
   "homeAddFirstMedicine": "اضغط على تبويب الإضافة أدناه لعرض أول دواء لك.",
   "homeCouldntLoadListings": "تعذر تحميل الإعلانات",
-
   "searchTitle": "بحث",
   "searchListView": "عرض القائمة",
   "searchMapViewTooltip": "عرض الخريطة",
@@ -148,7 +153,11 @@
   "searchNotifyMeBody": "سنُعلمك عند ظهور إعلان مطابق.",
   "searchNotifyMeCta": "أعلمني عند التوفر",
   "searchNotifyMeError": "تعذر إعداد التنبيه: {error}",
-  "@searchNotifyMeError": { "placeholders": { "error": {} } },
+  "@searchNotifyMeError": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "searchFilters": "الفلاتر",
   "fieldType": "النوع",
   "searchAllTypes": "كل الأنواع",
@@ -157,17 +166,29 @@
   "searchAnyConcentration": "أي تركيز",
   "searchConcentrationHint": "مثال: 500 مجم",
   "searchUseConcentration": "استخدام \"{value}\"",
-  "@searchUseConcentration": { "placeholders": { "value": {} } },
+  "@searchUseConcentration": {
+    "placeholders": {
+      "value": {}
+    }
+  },
   "searchExpiryBefore": "تاريخ الانتهاء قبل",
   "searchClear": "مسح",
   "searchApply": "تطبيق",
   "mapViewButtonView": "عرض",
   "mapPinnedCount": "{count, plural, one{صيدلية واحدة} two{صيدليتان} few{{count} صيدليات} many{{count} صيدلية} other{{count} صيدلية}}",
-  "@mapPinnedCount": { "placeholders": { "count": { "type": "num" } } },
-
+  "@mapPinnedCount": {
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
   "listingQtyLabel": "الكمية {quantity}",
-  "@listingQtyLabel": { "placeholders": { "quantity": {} } },
-
+  "@listingQtyLabel": {
+    "placeholders": {
+      "quantity": {}
+    }
+  },
   "listingEditPrice": "تعديل السعر",
   "fieldPriceEgp": "السعر (ج.م)",
   "listingPriceValidator": "أدخل سعرًا صحيحًا",
@@ -175,12 +196,20 @@
   "listingDiscountExceedsPrice": "لا يمكن أن يتجاوز السعر الأصلي",
   "listingSavePrice": "حفظ السعر",
   "listingCouldntUpdatePrice": "تعذر تحديث السعر: {error}",
-  "@listingCouldntUpdatePrice": { "placeholders": { "error": {} } },
+  "@listingCouldntUpdatePrice": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "listingMessageSeller": "مراسلة البائع",
   "listingMessageSellerBody": "اختياري — اذكر ما تحتاجه. سيتم إرسال تحية افتراضية إذا تركت هذا فارغًا.",
   "listingSendRequest": "إرسال الطلب",
   "listingCouldntSendRequest": "تعذر إرسال الطلب: {error}",
-  "@listingCouldntSendRequest": { "placeholders": { "error": {} } },
+  "@listingCouldntSendRequest": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "listingCouldntLoad": "تعذر تحميل هذا الإعلان",
   "listingControlledSubstance": "مادة مقيدة",
   "fieldTypeLabel": "النوع",
@@ -191,9 +220,17 @@
   "listingEditPriceLink": "تعديل السعر",
   "listingAcceptedAlternatives": "البدائل المقبولة",
   "listingDistanceAway": "على بعد {distance} كم",
-  "@listingDistanceAway": { "placeholders": { "distance": {} } },
+  "@listingDistanceAway": {
+    "placeholders": {
+      "distance": {}
+    }
+  },
   "listingExpires": "تنتهي في {date}",
-  "@listingExpires": { "placeholders": { "date": {} } },
+  "@listingExpires": {
+    "placeholders": {
+      "date": {}
+    }
+  },
   "listingYourOwn": "هذا إعلانك الخاص.",
   "listingNoLongerAvailable": "هذا الإعلان لم يعد متاحًا للطلب.",
   "listingContact": "تواصل",
@@ -202,23 +239,42 @@
   "listingGreetingInterested": "مرحبًا، أنا مهتم بهذا الإعلان.",
   "listingGreetingGoAhead": "مرحبًا، أرغب في المتابعة مع هذا الإعلان.",
   "listingPercentOff": "خصم {pct}٪",
-  "@listingPercentOff": { "placeholders": { "pct": {} } },
+  "@listingPercentOff": {
+    "placeholders": {
+      "pct": {}
+    }
+  },
   "listingFavoriteTooltip": "إضافة إلى المفضلة",
   "listingUnfavoriteTooltip": "إزالة من المفضلة",
   "listingCouldntToggleFavorite": "تعذّر تحديث المفضلة: {error}",
-  "@listingCouldntToggleFavorite": { "placeholders": { "error": {} } },
-
+  "@listingCouldntToggleFavorite": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "chatTitle": "المحادثات",
   "chatCouldntLoad": "تعذر تحميل المحادثات",
   "chatEmpty": "لا توجد محادثات بعد",
   "chatEmptyBody": "اطلب إعلانًا من البحث أو الرئيسية لبدء محادثة مع البائع.",
   "chatNoMessagesYet": "لا توجد رسائل بعد",
   "chatCouldntSend": "تعذر الإرسال: {error}",
-  "@chatCouldntSend": { "placeholders": { "error": {} } },
+  "@chatCouldntSend": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "chatCouldntSendAttachment": "تعذر إرسال المرفق: {error}",
-  "@chatCouldntSendAttachment": { "placeholders": { "error": {} } },
+  "@chatCouldntSendAttachment": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "chatCouldntUpdateDeal": "تعذر تحديث الصفقة: {error}",
-  "@chatCouldntUpdateDeal": { "placeholders": { "error": {} } },
+  "@chatCouldntUpdateDeal": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "chatDealCompletedTitle": "اكتملت الصفقة",
   "chatDealCompletedBody": "تم تأكيد التبادل. يمكنك تقييم هذه الصيدلية من المحادثة.",
   "chatRateThisPharmacy": "قيّم هذه الصيدلية",
@@ -229,7 +285,11 @@
   "chatSubmitRating": "إرسال التقييم",
   "chatRatingSubmitted": "تم إرسال التقييم — شكرًا لك.",
   "chatCouldntSubmitRating": "تعذر إرسال التقييم: {error}",
-  "@chatCouldntSubmitRating": { "placeholders": { "error": {} } },
+  "@chatCouldntSubmitRating": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "chatReportIssue": "الإبلاغ عن مشكلة",
   "chatReportBody": "سيتم إخطار الصيدلية الأخرى وسيبقى هذا ظاهرًا حتى يتم الحل.",
   "fieldReason": "السبب",
@@ -239,7 +299,11 @@
   "chatSubmitReport": "إرسال البلاغ",
   "chatReportSubmitted": "تم إرسال البلاغ.",
   "chatCouldntSubmitReport": "تعذر إرسال البلاغ: {error}",
-  "@chatCouldntSubmitReport": { "placeholders": { "error": {} } },
+  "@chatCouldntSubmitReport": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "chatHeaderFallback": "محادثة",
   "chatReportTooltip": "الإبلاغ عن مشكلة",
   "chatCouldntLoadMessages": "تعذر تحميل الرسائل",
@@ -260,14 +324,17 @@
   "chatLocationPermissionDenied": "تم رفض إذن الموقع",
   "chatCouldntShareLocation": "تعذرت مشاركة الموقع: {error}",
   "chatCouldntOpenAttachment": "تعذر فتح المرفق: {error}",
-  "@chatCouldntOpenAttachment": { "placeholders": { "error": {} } },
+  "@chatCouldntOpenAttachment": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "chatMarkCompleteConfirmTitle": "وضع الصفقة كمكتملة؟",
   "chatMarkCompleteConfirmBody": "هذا يؤكد حدوث التبادل ويغلق الإعلان.",
   "chatCancelConfirmTitle": "إلغاء هذه الصفقة؟",
   "chatCancelConfirmBody": "سيعود الإعلان إلى متاح للصيدليات الأخرى.",
   "chatDealCompletedBar": "اكتملت الصفقة",
   "chatDealCancelledBar": "أُلغيت الصفقة",
-
   "profileTitle": "الملف الشخصي",
   "profileAccountSettingsTooltip": "إعدادات الحساب",
   "profileCouldntLoad": "تعذر تحميل الملف الشخصي",
@@ -277,7 +344,13 @@
   "profileNoRatingsYet": "لا توجد تقييمات بعد — ستظهر هنا بعد أول صفقة مكتملة.",
   "profileRatingsReviews": "التقييمات والمراجعات",
   "profileRatingCount": "{count, plural, one{(تقييم واحد)} two{(تقييمان)} few{({count} تقييمات)} many{({count} تقييمًا)} other{({count} تقييم)}}",
-  "@profileRatingCount": { "placeholders": { "count": { "type": "num" } } },
+  "@profileRatingCount": {
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
   "profileCredibility": "المصداقية",
   "profileResponsiveness": "سرعة الاستجابة",
   "profilePackaging": "التغليف",
@@ -285,19 +358,27 @@
   "profileMyFavorites": "المفضلة",
   "profileDisputes": "النزاعات",
   "profileLanguage": "اللغة",
-
   "accountSettingsTitle": "إعدادات الحساب",
   "accountCouldntLoad": "تعذر تحميل بيانات الحساب",
   "accountEditProfile": "تعديل الملف الشخصي",
   "accountEditProfileSubtitle": "الاسم والهاتف والعنوان",
   "accountSignOut": "تسجيل الخروج",
   "accountPlanSuffix": "خطة {plan}",
-  "@accountPlanSuffix": { "placeholders": { "plan": {} } },
+  "@accountPlanSuffix": {
+    "placeholders": {
+      "plan": {}
+    }
+  },
   "accountNoTrialCountdown": "لا يوجد عد تنازلي للتجربة في هذه الخطة.",
   "accountTrialEnded": "انتهت فترتك التجريبية.",
   "accountTrialDaysLeft": "{days, plural, one{يوم واحد متبقٍ في تجربتك.} two{يومان متبقيان في تجربتك.} few{{days} أيام متبقية في تجربتك.} many{{days} يومًا متبقيًا في تجربتك.} other{{days} يوم متبقٍ في تجربتك.}}",
-  "@accountTrialDaysLeft": { "placeholders": { "days": { "type": "num" } } },
-
+  "@accountTrialDaysLeft": {
+    "placeholders": {
+      "days": {
+        "type": "num"
+      }
+    }
+  },
   "editProfileTitle": "تعديل الملف الشخصي",
   "editProfileFillRequired": "أدخل جميع الحقول المطلوبة.",
   "editProfileCouldntSave": "تعذر حفظ التغييرات — حاول مرة أخرى.",
@@ -307,34 +388,32 @@
   "editProfileAreaValidator": "أدخل منطقتك",
   "editProfileAddressValidator": "أدخل عنوانك",
   "editProfileSaveChanges": "حفظ التغييرات",
-
   "disputesTitle": "النزاعات",
   "disputesCouldntLoad": "تعذر تحميل النزاعات",
   "disputesEmpty": "لا توجد نزاعات",
   "disputesEmptyBody": "يمكنك الإبلاغ عن مشكلة في صفقة من محادثة تلك الصفقة.",
   "disputeRaisedByYou": "أبلغتَ عن",
   "disputeRaisedByOther": "أبلغت {name} عن",
-  "@disputeRaisedByOther": { "placeholders": { "name": {} } },
-
+  "@disputeRaisedByOther": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "notificationsTitle": "الإشعارات",
   "notificationsCouldntLoad": "تعذر تحميل الإشعارات",
   "notificationsEmpty": "لا توجد إشعارات بعد",
   "notificationsDeleteError": "تعذر الحذف — حاول مرة أخرى.",
-
   "newsTitle": "الأخبار",
   "newsAll": "الكل",
   "newsCouldntLoad": "تعذر تحميل الأخبار",
   "newsEmptyCategory": "لا توجد مقالات في هذا التصنيف بعد",
   "newsDetailCouldntLoad": "تعذر تحميل هذا المقال",
-
   "priceAlertsTitle": "ارتفاع الأسعار",
   "priceAlertsCouldntLoad": "تعذر تحميل تنبيهات الأسعار",
   "priceAlertsEmpty": "لا توجد تنبيهات أسعار حاليًا",
-
   "notFoundTitle": "الصفحة غير موجودة",
   "notFoundBody": "الصفحة التي تبحث عنها غير موجودة أو تم نقلها.",
   "notFoundGoHome": "العودة للرئيسية",
-
   "addMedicineTitle": "إضافة دواء",
   "addMedicineHeading": "عرض دواء",
   "addMedicineSubtitle": "بِع أو اطلب أو قايض المخزون الفائض مع الصيدليات القريبة.",
@@ -344,7 +423,11 @@
   "fieldForm": "الشكل الصيدلاني",
   "addMedicineControlledTitle": "مادة مقيدة — لا يمكن عرضها هنا",
   "addMedicineControlledBody": "{name} مادة مقيدة. لا يدعم تطبيق فارما إكستشينج إيجيبت العرض الذاتي للمواد المقيدة بعد — تواصل مع الدعم إذا كنت تعتقد أن هذا خطأ.",
-  "@addMedicineControlledBody": { "placeholders": { "name": {} } },
+  "@addMedicineControlledBody": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "addMedicineChooseDifferent": "اختر دواءً آخر",
   "fieldListingType": "نوع الإعلان",
   "fieldQuantity": "الكمية",
@@ -366,23 +449,139 @@
   "addMedicineSearchHint": "ابحث أو اكتب اسم دواء…",
   "addMedicineSearchPrompt": "ابدأ الكتابة للبحث بين نحو 23,600 دواء",
   "addMedicineUseCustom": "استخدام \"{name}\"",
-  "@addMedicineUseCustom": { "placeholders": { "name": {} } },
+  "@addMedicineUseCustom": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "addMedicineNotInCatalog": "غير موجود في الكتالوج — أضفه بهذا الاسم",
   "addMedicineNoMatches": "لا توجد نتائج مطابقة — يمكنك استخدام الخيار أعلاه.",
   "addMedicineCouldntSelect": "تعذر اختيار هذا الدواء — حاول مرة أخرى.",
-
   "myListingsTitle": "إعلاناتي",
   "myListingsCouldntLoad": "تعذر تحميل إعلاناتك",
   "myListingsEmpty": "لا توجد إعلانات بعد",
   "myListingsEmptyFiltered": "لا توجد إعلانات {state}",
-  "@myListingsEmptyFiltered": { "placeholders": { "state": {} } },
+  "@myListingsEmptyFiltered": {
+    "placeholders": {
+      "state": {}
+    }
+  },
   "myListingsEmptyBody": "الأدوية التي تعرضها ستظهر هنا.",
-
   "favoritesTitle": "المفضلة",
   "favoritesCouldntLoad": "تعذر تحميل المفضلة",
   "favoritesEmpty": "لا توجد عناصر مفضلة بعد",
   "favoritesEmptyBody": "اضغط على أيقونة القلب في أي إعلان لحفظه هنا.",
-
   "languageEnglish": "English",
-  "languageArabic": "العربية"
+  "languageArabic": "العربية",
+  "commonSubmit": "إرسال",
+  "commonSave": "حفظ التغييرات",
+  "fieldDescriptionOptional": "ملاحظات (اختياري)",
+  "errorGeneric": "حدث خطأ ما. من فضلك حاول مرة أخرى.",
+  "errorNetwork": "لا يوجد اتصال. تحقق من الإنترنت وحاول مرة أخرى.",
+  "errorAuthRequired": "من فضلك سجّل الدخول مرة أخرى.",
+  "errorInvalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
+  "errorEmailNotConfirmed": "أكّد بريدك الإلكتروني أولاً — تحقق من رسائلك للحصول على الرمز.",
+  "errorEmailAlreadyRegistered": "يوجد حساب بهذا البريد الإلكتروني بالفعل. جرّب تسجيل الدخول.",
+  "errorOtpInvalid": "هذا الرمز غير صحيح أو انتهت صلاحيته. اطلب رمزاً جديداً.",
+  "errorRateLimited": "محاولات كثيرة جداً. انتظر دقيقة وحاول مرة أخرى.",
+  "errorWeakPassword": "يجب أن تكون كلمة المرور 8 أحرف على الأقل وتحتوي على حرف كبير ورقم ورمز.",
+  "errorFileTooLarge": "هذا الملف كبير جداً.",
+  "errorFileType": "نوع الملف هذا غير مدعوم.",
+  "errorNotApproved": "صيدليتك ما زالت في انتظار الموافقة، لذا لا يمكنك التداول بعد.",
+  "errorAccountIsAdmin": "هذا حساب مسؤول — استخدم لوحة تحكم المسؤولين بدلاً من ذلك.",
+  "errorAccountHasActiveDeals": "أنهِ أو ألغِ صفقاتك المفتوحة قبل حذف حسابك.",
+  "errorAccountHasOpenDisputes": "لديك نزاع لم يُحسم بعد. يجب إغلاقه قبل حذف حسابك.",
+  "errorListingNotFound": "هذا الإعلان لم يعد موجوداً.",
+  "errorListingOwn": "هذا إعلانك أنت.",
+  "errorListingUnavailable": "هذا الإعلان لم يعد متاحاً.",
+  "errorListingExpired": "انتهت صلاحية الدواء في هذا الإعلان.",
+  "errorListingExpiryInPast": "اختر تاريخ صلاحية في المستقبل.",
+  "errorListingNotOwner": "هذا ليس إعلانك.",
+  "errorListingNotEditable": "لم يعد من الممكن تعديل هذا الإعلان.",
+  "errorListingReservedNoEdit": "لا يمكنك تغيير التفاصيل أثناء حجز هذا الإعلان لمشترٍ.",
+  "errorListingHasActiveDeal": "يوجد طلب مفتوح على هذا الإعلان. ألغِه أولاً.",
+  "errorQuantityInvalid": "أدخل كمية صحيحة.",
+  "errorPriceInvalid": "أدخل سعراً صحيحاً.",
+  "errorDiscountInvalid": "يجب أن يكون سعر الخصم أقل من السعر الأصلي.",
+  "errorControlledSubstance": "هذه مادة خاضعة للرقابة ولا يمكن عرضها هنا.",
+  "errorDealNotFound": "هذه المحادثة لم تعد موجودة.",
+  "errorDealNotParticipant": "أنت لست طرفاً في هذه الصفقة.",
+  "errorDealAlreadyOpen": "لديك طلب مفتوح بالفعل على هذا الإعلان.",
+  "errorDealSellerOnly": "البائع وحده من يمكنه فعل ذلك.",
+  "errorDealNotPending": "تم الرد على هذا الطلب بالفعل.",
+  "errorDealNotActive": "هذه الصفقة مغلقة بالفعل.",
+  "errorDisputeAlreadyOpen": "لديك نزاع مفتوح بالفعل على هذه الصفقة.",
+  "errorDisputeReasonRequired": "اذكر سبب النزاع.",
+  "errorRatingInvalidStars": "اختر تقييماً من 1 إلى 5 نجوم.",
+  "errorRatingDealNotCompleted": "يمكنك تقييم الصفقات المكتملة فقط.",
+  "errorDrugNameRequired": "أدخل اسم الدواء.",
+  "errorDrugNameTooLong": "اسم الدواء طويل جداً.",
+  "errorPharmacyNameRequired": "أدخل اسم صيدليتك.",
+  "errorGovernorateRequired": "اختر المحافظة.",
+  "errorLocationRequired": "حدّد موقع صيدليتك على الخريطة.",
+  "errorLocationOutOfBounds": "هذا الموقع ليس داخل مصر.",
+  "errorLicenseRequired": "ارفع ترخيص الصيدلية.",
+  "successGenericTitle": "تم بنجاح",
+  "successGenericBody": "تمت العملية بنجاح.",
+  "successGenericCta": "العودة للرئيسية",
+  "loginInvalidEmail": "أدخل بريداً إلكترونياً صحيحاً.",
+  "loginPasswordRequired": "أدخل كلمة المرور.",
+  "resetPasswordTitle": "تعيين كلمة مرور جديدة",
+  "resetPasswordSubtitle": "اختر كلمة مرور لم تستخدمها من قبل.",
+  "resetPasswordNew": "كلمة المرور الجديدة",
+  "resetPasswordConfirm": "تأكيد كلمة المرور",
+  "resetPasswordMismatch": "كلمتا المرور غير متطابقتين.",
+  "resetPasswordRule": "8 أحرف على الأقل، مع حرف كبير ورقم ورمز.",
+  "resetPasswordSave": "حفظ كلمة المرور",
+  "resetPasswordDone": "تم تحديث كلمة المرور. يمكنك تسجيل الدخول بها الآن.",
+  "resetPasswordLinkExpired": "انتهت صلاحية رابط إعادة التعيين. اطلب رابطاً جديداً من شاشة تسجيل الدخول.",
+  "resetPasswordBackToSignIn": "العودة لتسجيل الدخول",
+  "kycSuspendedLabel": "موقوف",
+  "kycAccountSuspended": "الحساب موقوف",
+  "kycSuspendedBody": "تم إيقاف وصول صيدليتك. تواصل مع الدعم لمعرفة السبب وكيفية استعادة الحساب.",
+  "kycAdminLabel": "حساب مسؤول",
+  "kycAdminTitle": "استخدم لوحة تحكم المسؤولين",
+  "kycAdminBody": "هذا حساب مسؤول. تطبيق الصيدليات مخصص للصيدليات — سجّل الدخول إلى لوحة تحكم المسؤولين بدلاً من ذلك.",
+  "kycFinishSetupTitle": "أكمل الإعداد",
+  "kycFinishSetupBody": "تم إنشاء حسابك لكن بيانات صيدليتك لم يكتمل حفظها. أدخلها هنا لإتمام التسجيل — لن تحتاج إلى التسجيل من جديد.",
+  "kycOtpResend": "إرسال رمز جديد",
+  "kycOtpResendIn": "إرسال رمز جديد خلال {seconds} ثانية",
+  "kycOtpResent": "تم إرسال رمز جديد.",
+  "kycOtpAcceptedRetry": "تم قبول الرمز. نحتاج فقط لإكمال حفظ بيانات صيدليتك.",
+  "accountDelete": "حذف حسابي",
+  "accountDeleteTitle": "حذف حسابك؟",
+  "accountDeleteWarning": "سيؤدي هذا إلى حذف ملف صيدليتك ووثيقة الترخيص وإعلاناتك، ولن تتمكن من تسجيل الدخول مرة أخرى. تبقى الصفقات المكتملة مسجلة لدى الصيدليات التي تعاملت معها. لا يمكن التراجع عن هذا.",
+  "accountDeleteConfirm": "حذف نهائي",
+  "accountDeleteDone": "تم حذف حسابك.",
+  "accountDeleteExplainer": "يجب إغلاق الصفقات المفتوحة والنزاعات غير المحسومة أولاً.",
+  "editListingTitle": "تعديل الإعلان",
+  "editListingSaved": "تم تحديث الإعلان.",
+  "editListingDelete": "حذف هذا الإعلان",
+  "editListingDeleteTitle": "حذف هذا الإعلان؟",
+  "editListingDeleteWarning": "ستتم إزالته من السوق. إذا كان له سجل صفقات فسيتم إغلاقه بدلاً من حذفه.",
+  "editListingDeleteConfirm": "حذف",
+  "editListingDeleted": "تمت إزالة الإعلان.",
+  "editListingReserved": "هذا الإعلان محجوز لمشترٍ الآن، لذا فتفاصيله مقفلة. ألغِ الصفقة أولاً إذا أردت تغييرها.",
+  "editListingClosed": "هذا الإعلان مغلق ولم يعد من الممكن تعديله.",
+  "editListingQuantityValidator": "أدخل كمية بين 1 و 1,000,000",
+  "editListingDiscountNeedsPrice": "حدّد السعر قبل إضافة خصم",
+  "chatAcceptRequest": "قبول",
+  "chatDeclineRequest": "رفض",
+  "chatWithdrawRequest": "سحب الطلب",
+  "chatAcceptConfirmTitle": "قبول هذا الطلب؟",
+  "chatAcceptConfirmBody": "سيتم حجز الإعلان لهذه الصيدلية، وسيتم رفض أي طلبات أخرى معلّقة عليه.",
+  "chatDeclineConfirmTitle": "رفض هذا الطلب؟",
+  "chatDeclineConfirmBody": "سيظل الإعلان متاحاً للصيدليات الأخرى.",
+  "chatDealPendingBar": "في انتظار موافقة البائع",
+  "chatDealDeclinedBar": "تم رفض الطلب",
+  "chatExpiresInHours": "{hours} ساعة",
+  "chatExpiresInDays": "{days} يوم",
+  "chatAwaitingSellerIn": "أمام البائع {time} للرد",
+  "chatReservedUntilIn": "محجوز لمدة {time}",
+  "notificationsMarkAllRead": "تعليم الكل كمقروء",
+  "chatBadgeNeedsYourAnswer": "بانتظار ردك",
+  "chatBadgeAwaitingSeller": "بانتظار البائع",
+  "chatBadgeDeclined": "مرفوض",
+  "chatBadgeCompleted": "مكتمل",
+  "chatBadgeCancelled": "ملغى"
 }

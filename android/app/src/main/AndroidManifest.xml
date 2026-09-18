@@ -28,6 +28,21 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <!-- Password-reset deep link.
+
+                 `resetPasswordForEmail` is now called with
+                 redirectTo: io.pharmaexchange.egypt://reset-password. Without
+                 this filter the link in the email has nowhere to land, which
+                 is why password reset never worked on mobile: the call was
+                 made with no redirectTo at all, so the email pointed at the
+                 project's Supabase Site URL (a web address) instead of the
+                 app, and there was no handler or screen on this side either. -->
+            <intent-filter android:autoVerify="false">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="io.pharmaexchange.egypt" android:host="reset-password"/>
+            </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->

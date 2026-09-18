@@ -24,7 +24,7 @@ class DisputesController extends AsyncNotifier<List<Dispute>> {
 final disputesControllerProvider = AsyncNotifierProvider<DisputesController, List<Dispute>>(DisputesController.new);
 
 /// The most recent dispute on a deal, kept live via Realtime (same
-/// `onPostgresChanges` pattern as pending_approval_screen.dart /
+/// `onPostgresChanges` pattern as account_status_screen.dart /
 /// messages_controller.dart) so a status change an admin makes in
 /// Supabase Studio shows up without a manual refresh. The disputes select
 /// policy (0009_disputes_rpc.sql) allows either participant to read, so

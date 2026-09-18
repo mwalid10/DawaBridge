@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../core/egypt_governorates.dart';
+import '../../core/app_error.dart';
 import '../../core/l10n_extensions.dart';
 import '../../core/theme.dart';
 import '../../core/widgets/app_gradient_button.dart';
@@ -227,7 +228,7 @@ class _NotifyMeEmptyStateState extends State<_NotifyMeEmptyState> {
       if (mounted) setState(() => _subscribed = true);
     } catch (error) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.l10n.searchNotifyMeError(error))));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppError.message(context.l10n, error))));
       }
     } finally {
       if (mounted) setState(() => _subscribing = false);

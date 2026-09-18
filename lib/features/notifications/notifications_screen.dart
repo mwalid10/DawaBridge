@@ -13,9 +13,9 @@ class NotificationsScreen extends ConsumerWidget {
   const NotificationsScreen({super.key});
 
   IconData _iconFor(String kind) => switch (kind) {
-        'new_message' => Icons.chat_bubble_outline_rounded,
-        _ => Icons.notifications_outlined,
-      };
+    'new_message' => Icons.chat_bubble_outline_rounded,
+    _ => Icons.notifications_outlined,
+  };
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -23,7 +23,19 @@ class NotificationsScreen extends ConsumerWidget {
     final l10n = context.l10n;
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.notificationsTitle)),
+      appBar: AppBar(
+        title: Text(l10n.notificationsTitle),
+        actions: [
+          // Clearing a backlog previously meant swiping every row
+          // individually — and the old per-message notification trigger
+          // meant a busy thread could produce dozens.
+          if ((notifications.value ?? const []).any((n) => !n.read))
+            TextButton(
+              onPressed: () => ref.read(notificationsControllerProvider.notifier).markAllRead(),
+              child: Text(l10n.notificationsMarkAllRead),
+            ),
+        ],
+      ),
       body: notifications.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(
@@ -57,48 +69,62 @@ class NotificationsScreen extends ConsumerWidget {
               ),
             );
           }
+          final controller = ref.read(notificationsControllerProvider.notifier);
           return RefreshIndicator(
-            onRefresh: () => ref.read(notificationsControllerProvider.notifier).refresh(),
-            child: ListView.separated(
-              padding: const EdgeInsets.all(AppSpacing.lg),
-              itemCount: items.length,
-              separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.md),
-              itemBuilder: (context, i) {
-                final notification = items[i];
-                return Dismissible(
-                  key: ValueKey(notification.id),
-                  direction: DismissDirection.endToStart,
-                  background: Container(
-                    alignment: Alignment.centerRight,
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-                    decoration: BoxDecoration(color: AppColors.dangerBg, borderRadius: BorderRadius.circular(AppRadius.xl)),
-                    child: const Icon(Icons.delete_outline_rounded, color: AppColors.danger),
-                  ),
-                  onDismissed: (_) async {
-                    try {
-                      await ref.read(notificationsControllerProvider.notifier).delete(notification.id);
-                    } catch (_) {
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(context.l10n.notificationsDeleteError)),
-                        );
-                      }
-                    }
-                  },
-                  child: _NotificationTile(
-                    notification: notification,
-                    icon: _iconFor(notification.kind),
-                    onTap: () {
-                      ref.read(notificationsControllerProvider.notifier).markRead(notification.id);
-                      if (notification.dealId != null) {
-                        context.push('/chat/${notification.dealId}');
-                      } else if (notification.listingId != null) {
-                        context.push('/listing/${notification.listingId}');
+            onRefresh: () => controller.refresh(),
+            child: NotificationListener<ScrollNotification>(
+              // The list is paged now (30 at a time) instead of fetching
+              // every row the pharmacy has ever received on each app open.
+              onNotification: (scroll) {
+                if (scroll.metrics.pixels >= scroll.metrics.maxScrollExtent - 320) {
+                  controller.loadMore();
+                }
+                return false;
+              },
+              child: ListView.separated(
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                itemCount: items.length,
+                separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.md),
+                itemBuilder: (context, i) {
+                  final notification = items[i];
+                  return Dismissible(
+                    key: ValueKey(notification.id),
+                    direction: DismissDirection.endToStart,
+                    background: Container(
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                      decoration: BoxDecoration(
+                        color: AppColors.dangerBg,
+                        borderRadius: BorderRadius.circular(AppRadius.xl),
+                      ),
+                      child: const Icon(Icons.delete_outline_rounded, color: AppColors.danger),
+                    ),
+                    onDismissed: (_) async {
+                      try {
+                        await ref.read(notificationsControllerProvider.notifier).delete(notification.id);
+                      } catch (_) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(SnackBar(content: Text(context.l10n.notificationsDeleteError)));
+                        }
                       }
                     },
-                  ),
-                );
-              },
+                    child: _NotificationTile(
+                      notification: notification,
+                      icon: _iconFor(notification.kind),
+                      onTap: () {
+                        ref.read(notificationsControllerProvider.notifier).markRead(notification.id);
+                        if (notification.dealId != null) {
+                          context.push('/chat/${notification.dealId}');
+                        } else if (notification.listingId != null) {
+                          context.push('/listing/${notification.listingId}');
+                        }
+                      },
+                    ),
+                  );
+                },
+              ),
             ),
           );
         },
@@ -140,7 +166,9 @@ class _NotificationTile extends StatelessWidget {
                 children: [
                   Text(
                     notification.title,
-                    style: textTheme.titleMedium?.copyWith(fontWeight: notification.read ? FontWeight.w500 : FontWeight.w700),
+                    style: textTheme.titleMedium?.copyWith(
+                      fontWeight: notification.read ? FontWeight.w500 : FontWeight.w700,
+                    ),
                   ),
                   if (notification.body != null) ...[
                     const SizedBox(height: 2),

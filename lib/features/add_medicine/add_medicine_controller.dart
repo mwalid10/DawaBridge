@@ -1,11 +1,21 @@
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../core/file_utils.dart';
+import '../../core/rpc.dart';
 import '../../core/supabase_client.dart';
 import '../drugs/drug.dart';
 import '../listings/listing_summary.dart';
 import 'add_listing_data.dart';
+
+/// Recognised by AppError via its message code.
+class PhotoTooLargeException implements Exception {
+  const PhotoTooLargeException();
+  @override
+  String toString() => 'FILE_TOO_LARGE';
+}
 
 class AddMedicineController extends Notifier<AddListingData> {
   String? _lastLoggedControlledDrugId;
@@ -46,13 +56,16 @@ class AddMedicineController extends Notifier<AddListingData> {
     String? company,
     String? pharmaceuticalForm,
   }) async {
-    final rows = await supabase.rpc('find_or_create_drug', params: {
-      'p_trade_name': tradeName,
-      'p_concentration': concentration,
-      'p_company': company,
-      'p_pharmaceutical_form': pharmaceuticalForm,
-    });
-    final row = (rows as List<dynamic>).first as Map<String, dynamic>;
+    final row = await rpcSingle(
+      'find_or_create_drug',
+      params: {
+        'p_trade_name': tradeName,
+        'p_concentration': concentration,
+        'p_company': company,
+        'p_pharmaceutical_form': pharmaceuticalForm,
+      },
+      notFoundLabel: 'drug',
+    );
     selectDrug(Drug.fromJson(row));
   }
 
@@ -133,28 +146,60 @@ class AddMedicineController extends Notifier<AddListingData> {
 
   Future<void> submit({required int quantity}) async {
     final data = state;
-    final uid = supabase.auth.currentUser!.id;
+    final uid = supabase.auth.currentUser?.id;
+    if (uid == null) throw StateError('AUTH_REQUIRED');
 
-    String? photoUrl;
-    if (data.photoPath != null) {
-      final ext = data.photoPath!.split('.').last;
-      final path = '$uid/${DateTime.now().microsecondsSinceEpoch}.$ext';
-      await supabase.storage.from('medicine-photos').upload(path, File(data.photoPath!));
-      photoUrl = supabase.storage.from('medicine-photos').getPublicUrl(path);
+    // These were all bare `!` derefs. Submit is gated on
+    // `hasRequiredSelections` in the UI, but a null here crashed with an
+    // unhelpful TypeError instead of a message.
+    final drug = data.drug;
+    final type = data.type;
+    final expiry = data.expiryDate;
+    if (drug == null || type == null || expiry == null) {
+      throw StateError('LISTING_INCOMPLETE');
     }
 
-    await supabase.from('listings').insert({
-      'pharmacy_id': uid,
-      'drug_id': data.drug!.id,
-      'type': data.type!.name,
-      'quantity': quantity,
-      'expiry_date': data.expiryDate!.toIso8601String().split('T').first,
-      'accepted_alternatives': data.type == ListingType.barter ? data.acceptedAlternatives : <String>[],
-      'photo_url': photoUrl,
-      'price': data.price,
-      'discount_price': data.discountPrice,
-      'description': data.description,
-    });
+    String? photoUrl;
+    String? photoPath;
+    final localPhoto = data.photoPath;
+    if (localPhoto != null) {
+      final size = await fileSizeBytes(localPhoto);
+      if (size != null && size > maxMedicinePhotoBytes) {
+        throw const PhotoTooLargeException();
+      }
+      // `split('.').last` returned the whole path for an extensionless
+      // file, producing an unusable storage key — see `fileExtension`.
+      photoPath = '$uid/${DateTime.now().microsecondsSinceEpoch}.${fileExtension(localPhoto)}';
+      await supabase.storage.from('medicine-photos').upload(photoPath, File(localPhoto));
+      photoUrl = supabase.storage.from('medicine-photos').getPublicUrl(photoPath);
+    }
+
+    try {
+      await supabase.from('listings').insert({
+        'pharmacy_id': uid,
+        'drug_id': drug.id,
+        'type': type.name,
+        'quantity': quantity,
+        'expiry_date': expiry.toIso8601String().split('T').first,
+        'accepted_alternatives': type == ListingType.barter ? data.acceptedAlternatives : <String>[],
+        'photo_url': photoUrl,
+        'price': data.price,
+        'discount_price': data.discountPrice,
+        'description': data.description,
+      });
+    } catch (_) {
+      // The photo is uploaded before the insert, so any insert failure —
+      // a rejected expiry date, the controlled-substance block from
+      // migration 0037, a dropped connection — used to strand the file in
+      // the bucket with nothing pointing at it. Nothing could ever remove
+      // it either: `medicine-photos` had no DELETE policy until 0040.
+      if (photoPath != null) {
+        await supabase.storage
+            .from('medicine-photos')
+            .remove([photoPath]).catchError((_) => <FileObject>[]);
+      }
+      rethrow;
+    }
   }
 }
 

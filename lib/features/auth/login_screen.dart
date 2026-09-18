@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../core/app_error.dart';
 import '../../core/l10n_extensions.dart';
 import '../../core/supabase_client.dart';
 import '../../core/theme.dart';
@@ -11,6 +12,8 @@ import '../../core/widgets/glass_card.dart';
 import '../../core/widgets/gradient_hero_background.dart';
 
 const _rememberedEmailKey = 'remembered_email';
+
+final _emailPattern = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -52,22 +55,41 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _signIn() async {
+    final l10n = context.l10n;
+
+    // Both fields went unchecked, so tapping Sign in with an empty form
+    // made a pointless round trip and came back with the same opaque
+    // "couldn't sign in" as a wrong password.
+    final email = _email.text.trim();
+    if (email.isEmpty || !_emailPattern.hasMatch(email)) {
+      setState(() => _error = l10n.loginInvalidEmail);
+      return;
+    }
+    if (_password.text.isEmpty) {
+      setState(() => _error = l10n.loginPasswordRequired);
+      return;
+    }
+
     setState(() {
       _loading = true;
       _error = null;
     });
-    final l10n = context.l10n;
     try {
-      await supabase.auth.signInWithPassword(email: _email.text.trim(), password: _password.text);
+      await supabase.auth.signInWithPassword(email: email, password: _password.text);
       final prefs = await SharedPreferences.getInstance();
       if (_rememberMe) {
-        await prefs.setString(_rememberedEmailKey, _email.text.trim());
+        await prefs.setString(_rememberedEmailKey, email);
       } else {
         await prefs.remove(_rememberedEmailKey);
       }
-      if (mounted) context.go('/home');
-    } catch (e) {
-      setState(() => _error = l10n.loginError);
+      // Where to go next is the router's call now — it resolves the
+      // session's role and KYC status first. Sending everyone straight to
+      // /home here is what let unapproved pharmacies into the marketplace.
+    } catch (error) {
+      // Every failure used to collapse into one generic string, so "email
+      // not confirmed", "rate limited" and "no internet" were
+      // indistinguishable to the user and to support.
+      if (mounted) setState(() => _error = AppError.message(l10n, error));
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -76,45 +98,69 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _forgotPassword() async {
     final l10n = context.l10n;
     final emailController = TextEditingController(text: _email.text.trim());
-    final sent = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.loginResetTitle),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(l10n.loginResetBody),
-            const SizedBox(height: AppSpacing.lg),
-            TextField(
-              controller: emailController,
-              keyboardType: TextInputType.emailAddress,
-              autofocus: true,
-              decoration: InputDecoration(labelText: l10n.fieldEmailAddress),
+    try {
+      final sent = await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: Text(l10n.loginResetTitle),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(l10n.loginResetBody),
+              const SizedBox(height: AppSpacing.lg),
+              TextField(
+                controller: emailController,
+                keyboardType: TextInputType.emailAddress,
+                autofocus: true,
+                decoration: InputDecoration(labelText: l10n.fieldEmailAddress),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(dialogContext, false), child: Text(l10n.commonCancel)),
+            // The enabled state used to be computed once, at build time,
+            // from `emailController.text`. Nothing rebuilt the dialog when
+            // the user typed — so opening this without an email already
+            // filled in on the login screen left Send permanently greyed
+            // out no matter what was entered. ValueListenableBuilder makes
+            // it track the field.
+            ValueListenableBuilder<TextEditingValue>(
+              valueListenable: emailController,
+              builder: (context, value, _) => FilledButton(
+                onPressed: _emailPattern.hasMatch(value.text.trim())
+                    ? () => Navigator.pop(dialogContext, true)
+                    : null,
+                child: Text(l10n.loginSendLink),
+              ),
             ),
           ],
         ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(l10n.commonCancel)),
-          FilledButton(
-            onPressed: emailController.text.trim().isEmpty ? null : () => Navigator.pop(context, true),
-            child: Text(l10n.loginSendLink),
-          ),
-        ],
-      ),
-    );
-    if (sent != true || !mounted) return;
-    try {
-      await supabase.auth.resetPasswordForEmail(emailController.text.trim());
+      );
+      if (sent != true || !mounted) return;
+
+      final target = emailController.text.trim();
+      await supabase.auth.resetPasswordForEmail(
+        target,
+        // Without this the link in the email goes to the project's Site URL
+        // — a web address, localhost by default — so the reset simply never
+        // reached the app. The scheme is registered in AndroidManifest.xml
+        // and Info.plist.
+        redirectTo: 'io.pharmaexchange.egypt://reset-password',
+      );
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.loginResetSent(emailController.text.trim()))),
+        SnackBar(content: Text(l10n.loginResetSent(target))),
       );
-    } catch (e) {
+    } catch (error) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.loginResetError)),
+        SnackBar(content: Text(AppError.message(l10n, error))),
       );
+    } finally {
+      // Was never disposed — one leaked controller per tap of "Forgot
+      // password".
+      emailController.dispose();
     }
   }
 

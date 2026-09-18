@@ -172,6 +172,24 @@ class _MyListingTile extends StatelessWidget {
             ),
           ),
         ),
+        // Edit/remove. There was no entry point for either: price was the
+        // only mutable field (via a sheet on the detail screen) and there
+        // was no delete path at all, so a listing with a typo'd quantity or
+        // expiry stayed wrong and public forever.
+        if (listing.state == ListingState.available)
+          Positioned(
+            top: AppSpacing.xs,
+            right: AppSpacing.xs,
+            child: Material(
+              color: Colors.transparent,
+              child: IconButton(
+                tooltip: context.l10n.editListingTitle,
+                visualDensity: VisualDensity.compact,
+                icon: const Icon(Icons.edit_outlined, size: 18, color: AppColors.inkSoft),
+                onPressed: () => context.push('/listing/${listing.id}/edit'),
+              ),
+            ),
+          ),
       ],
     );
   }

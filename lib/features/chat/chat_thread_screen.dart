@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../core/app_error.dart';
 import '../../core/l10n_extensions.dart';
 import '../../core/success_screen.dart';
 import '../../core/supabase_client.dart';
@@ -20,7 +21,6 @@ import '../deals/deal.dart';
 import '../deals/deals_controller.dart';
 import '../disputes/dispute.dart';
 import '../disputes/disputes_controller.dart';
-import '../listings/listing_summary.dart';
 import '../profile/profile_controller.dart';
 import '../ratings/ratings_controller.dart';
 import 'message.dart';
@@ -76,7 +76,7 @@ class _ChatThreadScreenState extends ConsumerState<ChatThreadScreen> {
       _inputController.clear();
     } catch (error) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.chatCouldntSend(error))));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppError.message(l10n, error))));
       }
     } finally {
       if (mounted) setState(() => _sending = false);
@@ -92,7 +92,7 @@ class _ChatThreadScreenState extends ConsumerState<ChatThreadScreen> {
       await ref.read(messagesControllerProvider(widget.dealId).notifier).sendAttachment(localPath);
     } catch (error) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.chatCouldntSendAttachment(error))));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppError.message(l10n, error))));
       }
     }
   }
@@ -143,7 +143,7 @@ class _ChatThreadScreenState extends ConsumerState<ChatThreadScreen> {
       await ref.read(messagesControllerProvider(widget.dealId).notifier).sendAttachment(path);
     } catch (error) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.chatCouldntSendAttachment(error))));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppError.message(l10n, error))));
       }
     } finally {
       if (mounted) setState(() => _attaching = false);
@@ -174,7 +174,7 @@ class _ChatThreadScreenState extends ConsumerState<ChatThreadScreen> {
       await ref.read(messagesControllerProvider(widget.dealId).notifier).sendLocation(lat: position.latitude, lng: position.longitude);
     } catch (error) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.chatCouldntShareLocation(error))));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppError.message(l10n, error))));
       }
     } finally {
       if (mounted) setState(() => _attaching = false);
@@ -260,7 +260,7 @@ class _ChatThreadScreenState extends ConsumerState<ChatThreadScreen> {
       }
     } catch (error) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.chatCouldntUpdateDeal(error))));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppError.message(l10n, error))));
       }
     } finally {
       if (mounted) setState(() => _actingOnDeal = false);
@@ -336,7 +336,7 @@ class _ChatThreadScreenState extends ConsumerState<ChatThreadScreen> {
       }
     } catch (error) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.chatCouldntSubmitRating(error))));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppError.message(l10n, error))));
       }
     } finally {
       if (mounted) setState(() => _rating = false);
@@ -426,7 +426,7 @@ class _ChatThreadScreenState extends ConsumerState<ChatThreadScreen> {
       }
     } catch (error) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.chatCouldntSubmitReport(error))));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppError.message(l10n, error))));
       }
     } finally {
       if (mounted) setState(() => _reporting = false);
@@ -529,6 +529,19 @@ class _ChatThreadScreenState extends ConsumerState<ChatThreadScreen> {
               attaching: _attaching,
               onSend: _send,
               onAttach: _openAttachSheet,
+              // Accept/decline are new: a request used to reserve the
+              // listing outright with no seller involvement (see
+              // migration 0035).
+              onAccept: () => _act(
+                'accept',
+                confirmTitle: l10n.chatAcceptConfirmTitle,
+                confirmBody: l10n.chatAcceptConfirmBody,
+              ),
+              onDecline: () => _act(
+                'decline',
+                confirmTitle: l10n.chatDeclineConfirmTitle,
+                confirmBody: l10n.chatDeclineConfirmBody,
+              ),
               onComplete: () => _act(
                 'complete',
                 confirmTitle: l10n.chatMarkCompleteConfirmTitle,
@@ -556,12 +569,15 @@ class _DealStatusBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (deal.state == ListingState.reserved) return const SizedBox.shrink();
     final l10n = context.l10n;
     final (fg, bg, label) = switch (deal.state) {
-      ListingState.completed => (AppColors.good, AppColors.goodBg, l10n.chatDealCompletedBar),
-      ListingState.cancelled => (AppColors.danger, AppColors.dangerBg, l10n.chatDealCancelledBar),
-      _ => (AppColors.inkFaint, AppColors.background, ''),
+      // 'pending' is new — the request is with the seller and the listing
+      // is still on the market for others to ask about too.
+      DealState.pending => (AppColors.warn, AppColors.warnBg, l10n.chatDealPendingBar),
+      DealState.accepted => (AppColors.inkFaint, AppColors.background, ''),
+      DealState.declined => (AppColors.danger, AppColors.dangerBg, l10n.chatDealDeclinedBar),
+      DealState.completed => (AppColors.good, AppColors.goodBg, l10n.chatDealCompletedBar),
+      DealState.cancelled => (AppColors.danger, AppColors.dangerBg, l10n.chatDealCancelledBar),
     };
     if (label.isEmpty) return const SizedBox.shrink();
     return Container(
@@ -606,6 +622,48 @@ class _DisputeBanner extends StatelessWidget {
   }
 }
 
+/// Countdown on a live deal.
+///
+/// The 48h window existed in the database from the start (`reserved_until`)
+/// but was never shown to anyone — and never acted on either, so it was
+/// purely decorative. Now that the sweep job in migration 0038 actually
+/// enforces it, both sides need to see the clock.
+class _ExpiryHint extends StatelessWidget {
+  const _ExpiryHint({required this.expiresAt, required this.pending});
+
+  final DateTime expiresAt;
+  final bool pending;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final remaining = expiresAt.difference(DateTime.now());
+    if (remaining.isNegative) return const SizedBox.shrink();
+
+    final hours = remaining.inHours;
+    final label = hours >= 24
+        ? l10n.chatExpiresInDays((remaining.inMinutes / (60 * 24)).ceil())
+        : l10n.chatExpiresInHours(hours < 1 ? 1 : hours);
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.schedule_rounded, size: 14, color: pending ? AppColors.warn : AppColors.inkFaint),
+        const SizedBox(width: AppSpacing.xs),
+        Flexible(
+          child: Text(
+            pending ? l10n.chatAwaitingSellerIn(label) : l10n.chatReservedUntilIn(label),
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall
+                ?.copyWith(color: pending ? AppColors.warn : AppColors.inkFaint),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class _MessageBubble extends StatelessWidget {
   const _MessageBubble({required this.message, required this.isMine});
 
@@ -615,6 +673,32 @@ class _MessageBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+
+    // Lifecycle lines ("Request accepted", "Deal cancelled") used to be
+    // written with the acting user's sender_id, so they rendered as a
+    // normal bubble and the other party read them as something the person
+    // had typed at them. They're neutral, centred, and unattributed now.
+    if (message.isSystem) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+        child: Center(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.sm),
+            decoration: BoxDecoration(
+              color: AppColors.creamSoft,
+              borderRadius: BorderRadius.circular(AppRadius.pill),
+              border: Border.all(color: AppColors.divider),
+            ),
+            child: Text(
+              message.body,
+              textAlign: TextAlign.center,
+              style: textTheme.bodySmall?.copyWith(color: AppColors.inkSoft),
+            ),
+          ),
+        ),
+      );
+    }
+
     return Align(
       alignment: isMine ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
@@ -685,7 +769,7 @@ class _AttachmentThumbnail extends StatelessWidget {
       );
     } catch (error) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.chatCouldntOpenAttachment(error))));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppError.message(l10n, error))));
       }
     }
   }
@@ -742,7 +826,7 @@ class _LocationPreview extends StatelessWidget {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     } catch (error) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.chatCouldntOpenAttachment(error))));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppError.message(l10n, error))));
       }
     }
   }
@@ -831,6 +915,8 @@ class _ActionBar extends StatelessWidget {
     required this.attaching,
     required this.onSend,
     required this.onAttach,
+    required this.onAccept,
+    required this.onDecline,
     required this.onComplete,
     required this.onCancel,
     required this.onRate,
@@ -845,6 +931,8 @@ class _ActionBar extends StatelessWidget {
   final bool attaching;
   final VoidCallback onSend;
   final VoidCallback onAttach;
+  final VoidCallback onAccept;
+  final VoidCallback onDecline;
   final VoidCallback onComplete;
   final VoidCallback onCancel;
   final VoidCallback onRate;
@@ -852,8 +940,15 @@ class _ActionBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final closed = deal.state != ListingState.reserved;
-    final canRate = deal.state == ListingState.completed && !hasRated;
+    final closed = !deal.state.isLive;
+    final canRate = deal.state == DealState.completed && !hasRated;
+
+    // Three distinct action sets now, where there used to be one. The old
+    // bar only ever knew "reserved or not", because a request reserved the
+    // listing the instant it was made and the seller was never asked.
+    final sellerMustAnswer = deal.isSeller && deal.state == DealState.pending;
+    final awaitingSeller = !deal.isSeller && deal.state == DealState.pending;
+
     return SafeArea(
       top: false,
       child: Padding(
@@ -861,7 +956,52 @@ class _ActionBar extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (!closed)
+            if (deal.expiresAt != null && deal.state.isLive)
+              Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                child: _ExpiryHint(expiresAt: deal.expiresAt!, pending: deal.state == DealState.pending),
+              ),
+            if (sellerMustAnswer)
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: actingOnDeal ? null : onDecline,
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppColors.danger,
+                        side: const BorderSide(color: AppColors.danger),
+                      ),
+                      icon: const Icon(Icons.close_rounded, size: 18),
+                      label: Text(l10n.chatDeclineRequest),
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: FilledButton.icon(
+                      onPressed: actingOnDeal ? null : onAccept,
+                      icon: const Icon(Icons.check_rounded, size: 18),
+                      label: Text(l10n.chatAcceptRequest),
+                    ),
+                  ),
+                ],
+              )
+            else if (awaitingSeller)
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: actingOnDeal ? null : onCancel,
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppColors.danger,
+                        side: const BorderSide(color: AppColors.danger),
+                      ),
+                      icon: const Icon(Icons.close_rounded, size: 18),
+                      label: Text(l10n.chatWithdrawRequest),
+                    ),
+                  ),
+                ],
+              )
+            else if (!closed)
               Row(
                 children: [
                   if (deal.isSeller)
@@ -897,7 +1037,7 @@ class _ActionBar extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                 child: Text(
-                  deal.state == ListingState.completed ? l10n.chatDealClosedRated : l10n.chatDealClosed,
+                  deal.state == DealState.completed ? l10n.chatDealClosedRated : l10n.chatDealClosed,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               )

@@ -1132,4 +1132,382 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get languageArabic => 'العربية';
+
+  @override
+  String get commonSubmit => 'Submit';
+
+  @override
+  String get commonSave => 'Save changes';
+
+  @override
+  String get fieldDescriptionOptional => 'Notes (optional)';
+
+  @override
+  String get errorGeneric => 'Something went wrong. Please try again.';
+
+  @override
+  String get errorNetwork =>
+      'No connection. Check your internet and try again.';
+
+  @override
+  String get errorAuthRequired => 'Please sign in again.';
+
+  @override
+  String get errorInvalidCredentials => 'Wrong email or password.';
+
+  @override
+  String get errorEmailNotConfirmed =>
+      'Confirm your email address first — check your inbox for the code.';
+
+  @override
+  String get errorEmailAlreadyRegistered =>
+      'An account already exists for this email. Try signing in.';
+
+  @override
+  String get errorOtpInvalid =>
+      'That code is wrong or has expired. Request a new one.';
+
+  @override
+  String get errorRateLimited =>
+      'Too many attempts. Wait a minute and try again.';
+
+  @override
+  String get errorWeakPassword =>
+      'Password must be at least 8 characters with an uppercase letter, a number and a symbol.';
+
+  @override
+  String get errorFileTooLarge => 'That file is too large.';
+
+  @override
+  String get errorFileType => 'That file type isn’t supported.';
+
+  @override
+  String get errorNotApproved =>
+      'Your pharmacy is still awaiting approval, so you can’t trade yet.';
+
+  @override
+  String get errorAccountIsAdmin =>
+      'This is an admin account — use the admin dashboard instead.';
+
+  @override
+  String get errorAccountHasActiveDeals =>
+      'Finish or cancel your open deals before deleting your account.';
+
+  @override
+  String get errorAccountHasOpenDisputes =>
+      'You have an unresolved dispute. It must be closed before your account can be deleted.';
+
+  @override
+  String get errorListingNotFound => 'This listing no longer exists.';
+
+  @override
+  String get errorListingOwn => 'This is your own listing.';
+
+  @override
+  String get errorListingUnavailable => 'This listing is no longer available.';
+
+  @override
+  String get errorListingExpired =>
+      'This listing’s medicine has passed its expiry date.';
+
+  @override
+  String get errorListingExpiryInPast => 'Pick an expiry date in the future.';
+
+  @override
+  String get errorListingNotOwner => 'This isn’t your listing.';
+
+  @override
+  String get errorListingNotEditable => 'This listing can no longer be edited.';
+
+  @override
+  String get errorListingReservedNoEdit =>
+      'You can’t change the details while this listing is reserved for a buyer.';
+
+  @override
+  String get errorListingHasActiveDeal =>
+      'There’s an open request on this listing. Cancel it first.';
+
+  @override
+  String get errorQuantityInvalid => 'Enter a valid quantity.';
+
+  @override
+  String get errorPriceInvalid => 'Enter a valid price.';
+
+  @override
+  String get errorDiscountInvalid =>
+      'The discount must be lower than the price.';
+
+  @override
+  String get errorControlledSubstance =>
+      'This is a controlled substance and can’t be listed here.';
+
+  @override
+  String get errorDealNotFound => 'This conversation no longer exists.';
+
+  @override
+  String get errorDealNotParticipant => 'You’re not part of this deal.';
+
+  @override
+  String get errorDealAlreadyOpen =>
+      'You already have an open request on this listing.';
+
+  @override
+  String get errorDealSellerOnly => 'Only the seller can do that.';
+
+  @override
+  String get errorDealNotPending => 'This request has already been answered.';
+
+  @override
+  String get errorDealNotActive => 'This deal is already closed.';
+
+  @override
+  String get errorDisputeAlreadyOpen =>
+      'You already have an open dispute on this deal.';
+
+  @override
+  String get errorDisputeReasonRequired => 'Give a reason for the dispute.';
+
+  @override
+  String get errorRatingInvalidStars => 'Pick a rating from 1 to 5 stars.';
+
+  @override
+  String get errorRatingDealNotCompleted =>
+      'You can only rate a completed deal.';
+
+  @override
+  String get errorDrugNameRequired => 'Enter the medicine name.';
+
+  @override
+  String get errorDrugNameTooLong => 'That medicine name is too long.';
+
+  @override
+  String get errorPharmacyNameRequired => 'Enter your pharmacy name.';
+
+  @override
+  String get errorGovernorateRequired => 'Pick your governorate.';
+
+  @override
+  String get errorLocationRequired => 'Drop a pin on your pharmacy’s location.';
+
+  @override
+  String get errorLocationOutOfBounds => 'That location isn’t inside Egypt.';
+
+  @override
+  String get errorLicenseRequired => 'Upload your pharmacy licence.';
+
+  @override
+  String get successGenericTitle => 'All done';
+
+  @override
+  String get successGenericBody => 'That went through successfully.';
+
+  @override
+  String get successGenericCta => 'Go to home';
+
+  @override
+  String get loginInvalidEmail => 'Enter a valid email address.';
+
+  @override
+  String get loginPasswordRequired => 'Enter your password.';
+
+  @override
+  String get resetPasswordTitle => 'Set a new password';
+
+  @override
+  String get resetPasswordSubtitle =>
+      'Choose a password you haven’t used before.';
+
+  @override
+  String get resetPasswordNew => 'New password';
+
+  @override
+  String get resetPasswordConfirm => 'Confirm password';
+
+  @override
+  String get resetPasswordMismatch => 'Passwords don’t match.';
+
+  @override
+  String get resetPasswordRule =>
+      'At least 8 characters, with an uppercase letter, a number and a symbol.';
+
+  @override
+  String get resetPasswordSave => 'Save password';
+
+  @override
+  String get resetPasswordDone =>
+      'Password updated. You can sign in with it now.';
+
+  @override
+  String get resetPasswordLinkExpired =>
+      'This reset link has expired. Request a new one from the sign-in screen.';
+
+  @override
+  String get resetPasswordBackToSignIn => 'Back to sign in';
+
+  @override
+  String get kycSuspendedLabel => 'Suspended';
+
+  @override
+  String get kycAccountSuspended => 'Account suspended';
+
+  @override
+  String get kycSuspendedBody =>
+      'Your pharmacy’s access has been suspended. Contact support to find out why and how to restore it.';
+
+  @override
+  String get kycAdminLabel => 'Admin account';
+
+  @override
+  String get kycAdminTitle => 'Use the admin dashboard';
+
+  @override
+  String get kycAdminBody =>
+      'This is an administrator account. The pharmacy app is for pharmacies — sign in to the admin dashboard instead.';
+
+  @override
+  String get kycFinishSetupTitle => 'Finish setting up';
+
+  @override
+  String get kycFinishSetupBody =>
+      'Your account was created but your pharmacy details never finished saving. Fill them in here to complete your registration — you won’t need to sign up again.';
+
+  @override
+  String get kycOtpResend => 'Send a new code';
+
+  @override
+  String kycOtpResendIn(int seconds) {
+    return 'Send a new code in ${seconds}s';
+  }
+
+  @override
+  String get kycOtpResent => 'A new code is on its way.';
+
+  @override
+  String get kycOtpAcceptedRetry =>
+      'Your code was accepted. We just need to finish saving your pharmacy details.';
+
+  @override
+  String get accountDelete => 'Delete my account';
+
+  @override
+  String get accountDeleteTitle => 'Delete your account?';
+
+  @override
+  String get accountDeleteWarning =>
+      'This removes your pharmacy profile, licence document and listings, and you won’t be able to sign in again. Completed deals stay on record for the pharmacies you traded with. This can’t be undone.';
+
+  @override
+  String get accountDeleteConfirm => 'Delete permanently';
+
+  @override
+  String get accountDeleteDone => 'Your account has been deleted.';
+
+  @override
+  String get accountDeleteExplainer =>
+      'Open deals and unresolved disputes must be closed first.';
+
+  @override
+  String get editListingTitle => 'Edit listing';
+
+  @override
+  String get editListingSaved => 'Listing updated.';
+
+  @override
+  String get editListingDelete => 'Delete this listing';
+
+  @override
+  String get editListingDeleteTitle => 'Delete this listing?';
+
+  @override
+  String get editListingDeleteWarning =>
+      'It will be removed from the marketplace. If it already has deal history it will be closed rather than erased.';
+
+  @override
+  String get editListingDeleteConfirm => 'Delete';
+
+  @override
+  String get editListingDeleted => 'Listing removed.';
+
+  @override
+  String get editListingReserved =>
+      'This listing is reserved for a buyer right now, so its details are locked. Cancel the deal first if you need to change them.';
+
+  @override
+  String get editListingClosed =>
+      'This listing is closed and can no longer be edited.';
+
+  @override
+  String get editListingQuantityValidator =>
+      'Enter a quantity between 1 and 1,000,000';
+
+  @override
+  String get editListingDiscountNeedsPrice =>
+      'Set a price before adding a discount';
+
+  @override
+  String get chatAcceptRequest => 'Accept';
+
+  @override
+  String get chatDeclineRequest => 'Decline';
+
+  @override
+  String get chatWithdrawRequest => 'Withdraw request';
+
+  @override
+  String get chatAcceptConfirmTitle => 'Accept this request?';
+
+  @override
+  String get chatAcceptConfirmBody =>
+      'The listing will be reserved for this pharmacy, and any other pending requests on it will be declined.';
+
+  @override
+  String get chatDeclineConfirmTitle => 'Decline this request?';
+
+  @override
+  String get chatDeclineConfirmBody =>
+      'The listing stays available for other pharmacies.';
+
+  @override
+  String get chatDealPendingBar => 'Waiting for the seller to accept';
+
+  @override
+  String get chatDealDeclinedBar => 'Request declined';
+
+  @override
+  String chatExpiresInHours(int hours) {
+    return '${hours}h';
+  }
+
+  @override
+  String chatExpiresInDays(int days) {
+    return '${days}d';
+  }
+
+  @override
+  String chatAwaitingSellerIn(Object time) {
+    return 'Seller has $time to respond';
+  }
+
+  @override
+  String chatReservedUntilIn(Object time) {
+    return 'Reserved for $time';
+  }
+
+  @override
+  String get notificationsMarkAllRead => 'Mark all as read';
+
+  @override
+  String get chatBadgeNeedsYourAnswer => 'Needs your answer';
+
+  @override
+  String get chatBadgeAwaitingSeller => 'Awaiting seller';
+
+  @override
+  String get chatBadgeDeclined => 'Declined';
+
+  @override
+  String get chatBadgeCompleted => 'Completed';
+
+  @override
+  String get chatBadgeCancelled => 'Cancelled';
 }

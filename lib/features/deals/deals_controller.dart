@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/rpc.dart';
 import '../../core/supabase_client.dart';
 import 'deal.dart';
 
@@ -8,8 +9,8 @@ import 'deal.dart';
 class DealsController extends AsyncNotifier<List<Deal>> {
   @override
   Future<List<Deal>> build() async {
-    final rows = await supabase.rpc('get_my_deals');
-    return (rows as List<dynamic>).map((row) => Deal.fromJson(row as Map<String, dynamic>)).toList();
+    final rows = await rpcList('get_my_deals');
+    return rows.map(Deal.fromJson).toList();
   }
 
   Future<void> refresh() async {
@@ -19,6 +20,14 @@ class DealsController extends AsyncNotifier<List<Deal>> {
 }
 
 final dealsControllerProvider = AsyncNotifierProvider<DealsController, List<Deal>>(DealsController.new);
+
+/// Requests the seller still owes an answer on. Drives the Chat tab badge
+/// so a seller can't miss a request and let the 48h window lapse — the old
+/// flow had no concept of a request to answer at all.
+final pendingSellerRequestsProvider = Provider<int>((ref) {
+  final deals = ref.watch(dealsControllerProvider).value;
+  return deals?.where((d) => d.isSeller && d.state.awaitsSeller).length ?? 0;
+});
 
 /// Single-deal fetch for the chat thread header — same manual-family
 /// pattern as ListingDetailController (no injected `arg` getter, so the
@@ -30,8 +39,13 @@ class DealDetailController extends AsyncNotifier<DealDetail> {
 
   @override
   Future<DealDetail> build() async {
-    final rows = await supabase.rpc('get_deal_detail', params: {'p_deal_id': dealId});
-    final row = (rows as List<dynamic>).first as Map<String, dynamic>;
+    // Was `(rows as List).first` — a bare StateError when the deal isn't
+    // visible to the caller (deleted, or opened from a stale notification).
+    final row = await rpcSingle(
+      'get_deal_detail',
+      params: {'p_deal_id': dealId},
+      notFoundLabel: 'deal',
+    );
     return DealDetail.fromJson(row);
   }
 
@@ -46,10 +60,13 @@ final dealDetailControllerProvider =
   (id) => DealDetailController(id),
 );
 
-/// Creates a deal for [listingId] (reserving it) and posts the opening
-/// chat message; returns the new deal id. Thrown Postgres exceptions from
-/// request_listing (already reserved, own listing, etc.) surface as-is —
-/// callers show `error.toString()` to the user.
+/// Opens a *request* on [listingId] and posts the opening chat message;
+/// returns the new deal id.
+///
+/// Note this no longer reserves the listing — the seller has to accept
+/// first (migration 0035). Errors come back as stable codes that
+/// `AppError.message` turns into a localized sentence; they are no longer
+/// shown to the user as raw Postgres exception text.
 Future<String> requestListing(String listingId, {String? message}) async {
   final result = await supabase.rpc('request_listing', params: {
     'p_listing_id': listingId,
@@ -58,9 +75,16 @@ Future<String> requestListing(String listingId, {String? message}) async {
   return result as String;
 }
 
-/// Marks a deal complete (seller only) or cancels it (either party) via
-/// the respond_to_deal RPC — see 0007_deals_chat_notifications.sql for the
-/// server-side rules this enforces.
+/// Drives a deal through its lifecycle.
+///
+/// [action] is one of:
+///   * `accept`   — seller only, while pending. Reserves the listing and
+///                  auto-declines every other pending request on it.
+///   * `decline`  — seller only, while pending.
+///   * `complete` — seller only, once accepted.
+///   * `cancel`   — either party, while pending or accepted.
+///
+/// See `respond_to_deal` in 0035_deal_lifecycle_v2.sql.
 Future<void> respondToDeal(String dealId, String action) async {
   await supabase.rpc('respond_to_deal', params: {'p_deal_id': dealId, 'p_action': action});
 }

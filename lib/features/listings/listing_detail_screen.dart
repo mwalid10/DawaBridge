@@ -4,7 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../core/app_error.dart';
 import '../../core/l10n_extensions.dart';
+import '../../core/rpc.dart';
 import '../../core/supabase_client.dart';
 import '../../core/theme.dart';
 import '../../core/widgets/app_gradient_button.dart';
@@ -95,21 +97,34 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
       ),
     );
 
-    if (save != true || !mounted) return;
+    if (save != true || !mounted) {
+      priceController.dispose();
+      discountController.dispose();
+      return;
+    }
 
     setState(() => _savingPrice = true);
     try {
       final discountText = discountController.text.trim();
-      await supabase.from('listings').update({
-        'price': double.parse(priceController.text.trim()),
-        'discount_price': discountText.isEmpty ? null : double.parse(discountText),
-      }).eq('id', widget.listingId);
+      // Was a direct `from('listings').update(...)`. It goes through the
+      // validated RPC now so the price/discount relationship and the
+      // "can't change terms while a buyer has it reserved" rule are
+      // enforced server-side rather than relying on this form.
+      await supabase.rpc('update_my_listing', params: {
+        'p_listing_id': widget.listingId,
+        'p_price': double.parse(priceController.text.trim()),
+        'p_discount_price': discountText.isEmpty ? null : double.parse(discountText),
+        'p_clear_discount': discountText.isEmpty,
+      });
       ref.invalidate(listingDetailControllerProvider(widget.listingId));
     } catch (error) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.listingCouldntUpdatePrice(error))));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppError.message(l10n, error))));
       }
     } finally {
+      // Both were leaked on every invocation.
+      priceController.dispose();
+      discountController.dispose();
       if (mounted) setState(() => _savingPrice = false);
     }
   }
@@ -162,19 +177,26 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
       ),
     );
 
-    if (send != true || !mounted) return;
+    if (send != true || !mounted) {
+      messageController.dispose();
+      return;
+    }
 
     setState(() => _requesting = true);
     try {
       final message = messageController.text.trim().isEmpty ? greeting : messageController.text;
       final dealId = await requestListing(widget.listingId, message: message);
       ref.invalidate(dealsControllerProvider);
+      // The listing stays 'available' until the seller accepts now, so
+      // refresh it rather than assuming it just went reserved.
+      ref.invalidate(listingDetailControllerProvider(widget.listingId));
       if (!mounted) return;
       context.push('/chat/$dealId');
     } catch (error) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.listingCouldntSendRequest(error))));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppError.message(l10n, error))));
     } finally {
+      messageController.dispose();
       if (mounted) setState(() => _requesting = false);
     }
   }
@@ -204,9 +226,26 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.cloud_off_rounded, size: 40, color: AppColors.inkFaint),
+                      // A listing that's been completed or taken down is a
+                      // routine outcome here — favourites keep listings of
+                      // every state, and notifications deep-link to them —
+                      // not a connection failure, so it gets its own icon
+                      // and message instead of "couldn't load".
+                      Icon(
+                        error is NotFoundException
+                            ? Icons.inventory_2_outlined
+                            : Icons.cloud_off_rounded,
+                        size: 40,
+                        color: AppColors.inkFaint,
+                      ),
                       const SizedBox(height: AppSpacing.md),
-                      Text(l10n.listingCouldntLoad, style: Theme.of(context).textTheme.titleMedium),
+                      Text(
+                        error is NotFoundException
+                            ? l10n.errorListingUnavailable
+                            : l10n.listingCouldntLoad,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
                       const SizedBox(height: AppSpacing.md),
                       ElevatedButton(
                         onPressed: () => ref.invalidate(listingDetailControllerProvider(widget.listingId)),
@@ -509,7 +548,7 @@ class _FavoriteButton extends ConsumerWidget {
       await ref.read(favoriteControllerProvider(listingId).notifier).toggle();
     } catch (error) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.listingCouldntToggleFavorite(error))));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppError.message(l10n, error))));
       }
     }
   }

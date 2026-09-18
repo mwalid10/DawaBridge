@@ -1,6 +1,5 @@
 {
   "@@locale": "en",
-
   "commonCancel": "Cancel",
   "commonBack": "Back",
   "commonContinue": "Continue",
@@ -9,13 +8,11 @@
   "commonConfirm": "Confirm",
   "commonAll": "All",
   "commonView": "View",
-
   "navHome": "Home",
   "navSearch": "Search",
   "navChat": "Chat",
   "navNews": "News",
   "navProfile": "Profile",
-
   "listingTypeSell": "Sell",
   "listingTypeBuy": "Buy",
   "listingTypeExchange": "Exchange",
@@ -40,7 +37,6 @@
   "disputeReasonQuantityMismatch": "Quantity mismatch",
   "disputeReasonPaymentIssue": "Payment issue",
   "disputeReasonOther": "Other",
-
   "onboardSkip": "Skip",
   "onboardSlide1Title": "Move near-expiry stock",
   "onboardSlide1Body": "List surplus medication before it expires instead of writing it off.",
@@ -50,7 +46,6 @@
   "onboardSlide3Body": "Every account is KYC-verified before it can list or trade.",
   "onboardGetStarted": "Get started",
   "onboardNext": "Next",
-
   "loginWelcomeBack": "Welcome back",
   "loginSubtitle": "Sign in to trade with pharmacies across Egypt",
   "loginEmailLabel": "Email address",
@@ -63,10 +58,13 @@
   "loginResetBody": "We'll email you a link to reset your password.",
   "loginSendLink": "Send link",
   "loginResetSent": "Password reset link sent to {email}",
-  "@loginResetSent": { "placeholders": { "email": {} } },
+  "@loginResetSent": {
+    "placeholders": {
+      "email": {}
+    }
+  },
   "loginResetError": "Couldn't send the reset link — try again.",
   "loginError": "Could not sign in — check your email and password.",
-
   "kycStepPharmacy": "Pharmacy",
   "kycStepAddress": "Address",
   "kycStepLicense": "License",
@@ -88,7 +86,12 @@
   "kycUseCurrentLocation": "Use current location",
   "kycTapToDropPin": "Drag the map to move the pin to your pharmacy.",
   "kycPinSet": "Pin set: {lat}, {lng}",
-  "@kycPinSet": { "placeholders": { "lat": {}, "lng": {} } },
+  "@kycPinSet": {
+    "placeholders": {
+      "lat": {},
+      "lng": {}
+    }
+  },
   "kycLocationDenied": "Location permission denied — drop the pin manually instead.",
   "kycLocationError": "Could not get your location — drop the pin manually instead.",
   "kycFillRequiredFields": "Fill in governorate, area, and address.",
@@ -108,7 +111,11 @@
   "kycSubmitForReview": "Submit for review",
   "kycVerifyEmailTitle": "Verify your email",
   "kycOtpBody": "Enter the 6-digit code sent to {email}. It expires in 2 minutes.",
-  "@kycOtpBody": { "placeholders": { "email": {} } },
+  "@kycOtpBody": {
+    "placeholders": {
+      "email": {}
+    }
+  },
   "kycOtpLabel": "OTP code",
   "kycVerifyAndSubmit": "Verify & submit for review",
   "kycPendingReview": "Pending review",
@@ -117,7 +124,6 @@
   "kycApplicationRejected": "Application rejected",
   "kycRejectedBody": "Your license could not be verified. Contact support to resubmit.",
   "kycPendingBody": "Our team is reviewing your license. This usually takes up to 24 hours — this screen updates automatically once a decision is made.",
-
   "homeWelcomeBack": "Welcome back,",
   "homeStatActiveListings": "Active Listings",
   "homeStatExchanges": "Exchanges",
@@ -133,7 +139,6 @@
   "homeNoListingsNearby": "No listings near you yet",
   "homeAddFirstMedicine": "Tap the Add tab below to list your first medicine.",
   "homeCouldntLoadListings": "Couldn't load listings",
-
   "searchTitle": "Search",
   "searchListView": "List view",
   "searchMapViewTooltip": "Map view",
@@ -148,7 +153,11 @@
   "searchNotifyMeBody": "We'll let you know when a matching listing appears.",
   "searchNotifyMeCta": "Notify me when available",
   "searchNotifyMeError": "Couldn't set up the alert: {error}",
-  "@searchNotifyMeError": { "placeholders": { "error": {} } },
+  "@searchNotifyMeError": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "searchFilters": "Filters",
   "fieldType": "Type",
   "searchAllTypes": "All types",
@@ -157,17 +166,27 @@
   "searchAnyConcentration": "Any concentration",
   "searchConcentrationHint": "e.g. 500mg",
   "searchUseConcentration": "Use \"{value}\"",
-  "@searchUseConcentration": { "placeholders": { "value": {} } },
+  "@searchUseConcentration": {
+    "placeholders": {
+      "value": {}
+    }
+  },
   "searchExpiryBefore": "Expiry before",
   "searchClear": "Clear",
   "searchApply": "Apply",
   "mapViewButtonView": "View",
   "mapPinnedCount": "{count, plural, one{1 pharmacy} other{{count} pharmacies}}",
-  "@mapPinnedCount": { "placeholders": { "count": {} } },
-
+  "@mapPinnedCount": {
+    "placeholders": {
+      "count": {}
+    }
+  },
   "listingQtyLabel": "Qty {quantity}",
-  "@listingQtyLabel": { "placeholders": { "quantity": {} } },
-
+  "@listingQtyLabel": {
+    "placeholders": {
+      "quantity": {}
+    }
+  },
   "listingEditPrice": "Edit price",
   "fieldPriceEgp": "Price (EGP)",
   "listingPriceValidator": "Enter a valid price",
@@ -175,12 +194,20 @@
   "listingDiscountExceedsPrice": "Can't exceed the price",
   "listingSavePrice": "Save price",
   "listingCouldntUpdatePrice": "Couldn't update price: {error}",
-  "@listingCouldntUpdatePrice": { "placeholders": { "error": {} } },
+  "@listingCouldntUpdatePrice": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "listingMessageSeller": "Message the seller",
   "listingMessageSellerBody": "Optional — say what you need. A default greeting is sent if you leave this blank.",
   "listingSendRequest": "Send request",
   "listingCouldntSendRequest": "Could not send request: {error}",
-  "@listingCouldntSendRequest": { "placeholders": { "error": {} } },
+  "@listingCouldntSendRequest": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "listingCouldntLoad": "Couldn't load this listing",
   "listingControlledSubstance": "Controlled substance",
   "fieldTypeLabel": "Type",
@@ -191,9 +218,17 @@
   "listingEditPriceLink": "Edit price",
   "listingAcceptedAlternatives": "Accepted alternatives",
   "listingDistanceAway": "{distance} km away",
-  "@listingDistanceAway": { "placeholders": { "distance": {} } },
+  "@listingDistanceAway": {
+    "placeholders": {
+      "distance": {}
+    }
+  },
   "listingExpires": "Expires {date}",
-  "@listingExpires": { "placeholders": { "date": {} } },
+  "@listingExpires": {
+    "placeholders": {
+      "date": {}
+    }
+  },
   "listingYourOwn": "This is your own listing.",
   "listingNoLongerAvailable": "This listing is no longer available to request.",
   "listingContact": "Contact",
@@ -202,23 +237,42 @@
   "listingGreetingInterested": "Hi, I'm interested in this listing.",
   "listingGreetingGoAhead": "Hi, I'd like to go ahead with this listing.",
   "listingPercentOff": "-{pct}% OFF",
-  "@listingPercentOff": { "placeholders": { "pct": {} } },
+  "@listingPercentOff": {
+    "placeholders": {
+      "pct": {}
+    }
+  },
   "listingFavoriteTooltip": "Add to favorites",
   "listingUnfavoriteTooltip": "Remove from favorites",
   "listingCouldntToggleFavorite": "Couldn't update favorites: {error}",
-  "@listingCouldntToggleFavorite": { "placeholders": { "error": {} } },
-
+  "@listingCouldntToggleFavorite": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "chatTitle": "Chat",
   "chatCouldntLoad": "Couldn't load conversations",
   "chatEmpty": "No conversations yet",
   "chatEmptyBody": "Request a listing from Search or Home to start a chat with its seller.",
   "chatNoMessagesYet": "No messages yet",
   "chatCouldntSend": "Couldn't send: {error}",
-  "@chatCouldntSend": { "placeholders": { "error": {} } },
+  "@chatCouldntSend": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "chatCouldntSendAttachment": "Couldn't send attachment: {error}",
-  "@chatCouldntSendAttachment": { "placeholders": { "error": {} } },
+  "@chatCouldntSendAttachment": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "chatCouldntUpdateDeal": "Couldn't update deal: {error}",
-  "@chatCouldntUpdateDeal": { "placeholders": { "error": {} } },
+  "@chatCouldntUpdateDeal": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "chatDealCompletedTitle": "Deal completed",
   "chatDealCompletedBody": "The exchange is confirmed. You can rate this pharmacy from the chat.",
   "chatRateThisPharmacy": "Rate this pharmacy",
@@ -229,7 +283,11 @@
   "chatSubmitRating": "Submit rating",
   "chatRatingSubmitted": "Rating submitted — thank you.",
   "chatCouldntSubmitRating": "Couldn't submit rating: {error}",
-  "@chatCouldntSubmitRating": { "placeholders": { "error": {} } },
+  "@chatCouldntSubmitRating": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "chatReportIssue": "Report an issue",
   "chatReportBody": "This notifies the other pharmacy and stays visible until it's resolved.",
   "fieldReason": "Reason",
@@ -239,7 +297,11 @@
   "chatSubmitReport": "Submit report",
   "chatReportSubmitted": "Report submitted.",
   "chatCouldntSubmitReport": "Couldn't submit report: {error}",
-  "@chatCouldntSubmitReport": { "placeholders": { "error": {} } },
+  "@chatCouldntSubmitReport": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "chatHeaderFallback": "Chat",
   "chatReportTooltip": "Report an issue",
   "chatCouldntLoadMessages": "Couldn't load messages",
@@ -259,16 +321,23 @@
   "chatOpenInMaps": "Open in Maps",
   "chatLocationPermissionDenied": "Location permission denied",
   "chatCouldntShareLocation": "Couldn't share location: {error}",
-  "@chatCouldntShareLocation": { "placeholders": { "error": {} } },
+  "@chatCouldntShareLocation": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "chatCouldntOpenAttachment": "Couldn't open attachment: {error}",
-  "@chatCouldntOpenAttachment": { "placeholders": { "error": {} } },
+  "@chatCouldntOpenAttachment": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "chatMarkCompleteConfirmTitle": "Mark deal complete?",
   "chatMarkCompleteConfirmBody": "This confirms the exchange happened and closes the listing.",
   "chatCancelConfirmTitle": "Cancel this deal?",
   "chatCancelConfirmBody": "The listing goes back to available for other pharmacies.",
   "chatDealCompletedBar": "Deal completed",
   "chatDealCancelledBar": "Deal cancelled",
-
   "profileTitle": "Profile",
   "profileAccountSettingsTooltip": "Account settings",
   "profileCouldntLoad": "Couldn't load profile",
@@ -278,7 +347,13 @@
   "profileNoRatingsYet": "No ratings yet — they show up here after your first completed deal.",
   "profileRatingsReviews": "Ratings & reviews",
   "profileRatingCount": "{count, plural, one{(1 rating)} other{({count} ratings)}}",
-  "@profileRatingCount": { "placeholders": { "count": { "type": "num" } } },
+  "@profileRatingCount": {
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
   "profileCredibility": "Credibility",
   "profileResponsiveness": "Responsiveness",
   "profilePackaging": "Packaging",
@@ -286,19 +361,27 @@
   "profileMyFavorites": "My Favorites",
   "profileDisputes": "Disputes",
   "profileLanguage": "Language",
-
   "accountSettingsTitle": "Account settings",
   "accountCouldntLoad": "Couldn't load account details",
   "accountEditProfile": "Edit profile",
   "accountEditProfileSubtitle": "Name, phone, and address",
   "accountSignOut": "Sign out",
   "accountPlanSuffix": "{plan} plan",
-  "@accountPlanSuffix": { "placeholders": { "plan": {} } },
+  "@accountPlanSuffix": {
+    "placeholders": {
+      "plan": {}
+    }
+  },
   "accountNoTrialCountdown": "No trial countdown for this plan.",
   "accountTrialEnded": "Your trial has ended.",
   "accountTrialDaysLeft": "{days, plural, one{1 day left in your trial.} other{{days} days left in your trial.}}",
-  "@accountTrialDaysLeft": { "placeholders": { "days": { "type": "num" } } },
-
+  "@accountTrialDaysLeft": {
+    "placeholders": {
+      "days": {
+        "type": "num"
+      }
+    }
+  },
   "editProfileTitle": "Edit profile",
   "editProfileFillRequired": "Fill in all required fields.",
   "editProfileCouldntSave": "Couldn't save your changes — try again.",
@@ -308,34 +391,32 @@
   "editProfileAreaValidator": "Enter your area",
   "editProfileAddressValidator": "Enter your address",
   "editProfileSaveChanges": "Save changes",
-
   "disputesTitle": "Disputes",
   "disputesCouldntLoad": "Couldn't load disputes",
   "disputesEmpty": "No disputes",
   "disputesEmptyBody": "You can report an issue with a deal from that deal's chat thread.",
   "disputeRaisedByYou": "You reported",
   "disputeRaisedByOther": "{name} reported",
-  "@disputeRaisedByOther": { "placeholders": { "name": {} } },
-
+  "@disputeRaisedByOther": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "notificationsTitle": "Notifications",
   "notificationsCouldntLoad": "Couldn't load notifications",
   "notificationsEmpty": "No notifications yet",
   "notificationsDeleteError": "Couldn't delete — try again.",
-
   "newsTitle": "News",
   "newsAll": "All",
   "newsCouldntLoad": "Couldn't load news",
   "newsEmptyCategory": "No articles in this category yet",
   "newsDetailCouldntLoad": "Couldn't load this article",
-
   "priceAlertsTitle": "Price Increased",
   "priceAlertsCouldntLoad": "Couldn't load price alerts",
   "priceAlertsEmpty": "No market price alerts right now",
-
   "notFoundTitle": "Page not found",
   "notFoundBody": "The page you're looking for doesn't exist or has moved.",
   "notFoundGoHome": "Go home",
-
   "addMedicineTitle": "Add medicine",
   "addMedicineHeading": "List a medicine",
   "addMedicineSubtitle": "Sell, request, or barter surplus stock with nearby pharmacies.",
@@ -345,7 +426,11 @@
   "fieldForm": "Form",
   "addMedicineControlledTitle": "Controlled substance — can't be listed here",
   "addMedicineControlledBody": "{name} is a controlled substance. Pharma Exchange Egypt doesn't support self-service listing of controlled substances yet — contact support if you believe this is an error.",
-  "@addMedicineControlledBody": { "placeholders": { "name": {} } },
+  "@addMedicineControlledBody": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "addMedicineChooseDifferent": "Choose a different medicine",
   "fieldListingType": "Listing type",
   "fieldQuantity": "Quantity",
@@ -367,23 +452,170 @@
   "addMedicineSearchHint": "Search or type a medicine name…",
   "addMedicineSearchPrompt": "Start typing to search ~23,600 medicines",
   "addMedicineUseCustom": "Use \"{name}\"",
-  "@addMedicineUseCustom": { "placeholders": { "name": {} } },
+  "@addMedicineUseCustom": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "addMedicineNotInCatalog": "Not in the catalog — list it under this name",
   "addMedicineNoMatches": "No catalog matches — you can still use the option above.",
   "addMedicineCouldntSelect": "Couldn't select that medicine — try again.",
-
   "myListingsTitle": "My Listings",
   "myListingsCouldntLoad": "Couldn't load your listings",
   "myListingsEmpty": "No listings yet",
   "myListingsEmptyFiltered": "No {state} listings",
-  "@myListingsEmptyFiltered": { "placeholders": { "state": {} } },
+  "@myListingsEmptyFiltered": {
+    "placeholders": {
+      "state": {}
+    }
+  },
   "myListingsEmptyBody": "Medicines you list will show up here.",
-
   "favoritesTitle": "My Favorites",
   "favoritesCouldntLoad": "Couldn't load your favorites",
   "favoritesEmpty": "No favorites yet",
   "favoritesEmptyBody": "Tap the heart on a listing to save it here.",
-
   "languageEnglish": "English",
-  "languageArabic": "العربية"
+  "languageArabic": "العربية",
+  "commonSubmit": "Submit",
+  "commonSave": "Save changes",
+  "fieldDescriptionOptional": "Notes (optional)",
+  "errorGeneric": "Something went wrong. Please try again.",
+  "errorNetwork": "No connection. Check your internet and try again.",
+  "errorAuthRequired": "Please sign in again.",
+  "errorInvalidCredentials": "Wrong email or password.",
+  "errorEmailNotConfirmed": "Confirm your email address first — check your inbox for the code.",
+  "errorEmailAlreadyRegistered": "An account already exists for this email. Try signing in.",
+  "errorOtpInvalid": "That code is wrong or has expired. Request a new one.",
+  "errorRateLimited": "Too many attempts. Wait a minute and try again.",
+  "errorWeakPassword": "Password must be at least 8 characters with an uppercase letter, a number and a symbol.",
+  "errorFileTooLarge": "That file is too large.",
+  "errorFileType": "That file type isn’t supported.",
+  "errorNotApproved": "Your pharmacy is still awaiting approval, so you can’t trade yet.",
+  "errorAccountIsAdmin": "This is an admin account — use the admin dashboard instead.",
+  "errorAccountHasActiveDeals": "Finish or cancel your open deals before deleting your account.",
+  "errorAccountHasOpenDisputes": "You have an unresolved dispute. It must be closed before your account can be deleted.",
+  "errorListingNotFound": "This listing no longer exists.",
+  "errorListingOwn": "This is your own listing.",
+  "errorListingUnavailable": "This listing is no longer available.",
+  "errorListingExpired": "This listing’s medicine has passed its expiry date.",
+  "errorListingExpiryInPast": "Pick an expiry date in the future.",
+  "errorListingNotOwner": "This isn’t your listing.",
+  "errorListingNotEditable": "This listing can no longer be edited.",
+  "errorListingReservedNoEdit": "You can’t change the details while this listing is reserved for a buyer.",
+  "errorListingHasActiveDeal": "There’s an open request on this listing. Cancel it first.",
+  "errorQuantityInvalid": "Enter a valid quantity.",
+  "errorPriceInvalid": "Enter a valid price.",
+  "errorDiscountInvalid": "The discount must be lower than the price.",
+  "errorControlledSubstance": "This is a controlled substance and can’t be listed here.",
+  "errorDealNotFound": "This conversation no longer exists.",
+  "errorDealNotParticipant": "You’re not part of this deal.",
+  "errorDealAlreadyOpen": "You already have an open request on this listing.",
+  "errorDealSellerOnly": "Only the seller can do that.",
+  "errorDealNotPending": "This request has already been answered.",
+  "errorDealNotActive": "This deal is already closed.",
+  "errorDisputeAlreadyOpen": "You already have an open dispute on this deal.",
+  "errorDisputeReasonRequired": "Give a reason for the dispute.",
+  "errorRatingInvalidStars": "Pick a rating from 1 to 5 stars.",
+  "errorRatingDealNotCompleted": "You can only rate a completed deal.",
+  "errorDrugNameRequired": "Enter the medicine name.",
+  "errorDrugNameTooLong": "That medicine name is too long.",
+  "errorPharmacyNameRequired": "Enter your pharmacy name.",
+  "errorGovernorateRequired": "Pick your governorate.",
+  "errorLocationRequired": "Drop a pin on your pharmacy’s location.",
+  "errorLocationOutOfBounds": "That location isn’t inside Egypt.",
+  "errorLicenseRequired": "Upload your pharmacy licence.",
+  "successGenericTitle": "All done",
+  "successGenericBody": "That went through successfully.",
+  "successGenericCta": "Go to home",
+  "loginInvalidEmail": "Enter a valid email address.",
+  "loginPasswordRequired": "Enter your password.",
+  "resetPasswordTitle": "Set a new password",
+  "resetPasswordSubtitle": "Choose a password you haven’t used before.",
+  "resetPasswordNew": "New password",
+  "resetPasswordConfirm": "Confirm password",
+  "resetPasswordMismatch": "Passwords don’t match.",
+  "resetPasswordRule": "At least 8 characters, with an uppercase letter, a number and a symbol.",
+  "resetPasswordSave": "Save password",
+  "resetPasswordDone": "Password updated. You can sign in with it now.",
+  "resetPasswordLinkExpired": "This reset link has expired. Request a new one from the sign-in screen.",
+  "resetPasswordBackToSignIn": "Back to sign in",
+  "kycSuspendedLabel": "Suspended",
+  "kycAccountSuspended": "Account suspended",
+  "kycSuspendedBody": "Your pharmacy’s access has been suspended. Contact support to find out why and how to restore it.",
+  "kycAdminLabel": "Admin account",
+  "kycAdminTitle": "Use the admin dashboard",
+  "kycAdminBody": "This is an administrator account. The pharmacy app is for pharmacies — sign in to the admin dashboard instead.",
+  "kycFinishSetupTitle": "Finish setting up",
+  "kycFinishSetupBody": "Your account was created but your pharmacy details never finished saving. Fill them in here to complete your registration — you won’t need to sign up again.",
+  "kycOtpResend": "Send a new code",
+  "kycOtpResendIn": "Send a new code in {seconds}s",
+  "@kycOtpResendIn": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "kycOtpResent": "A new code is on its way.",
+  "kycOtpAcceptedRetry": "Your code was accepted. We just need to finish saving your pharmacy details.",
+  "accountDelete": "Delete my account",
+  "accountDeleteTitle": "Delete your account?",
+  "accountDeleteWarning": "This removes your pharmacy profile, licence document and listings, and you won’t be able to sign in again. Completed deals stay on record for the pharmacies you traded with. This can’t be undone.",
+  "accountDeleteConfirm": "Delete permanently",
+  "accountDeleteDone": "Your account has been deleted.",
+  "accountDeleteExplainer": "Open deals and unresolved disputes must be closed first.",
+  "editListingTitle": "Edit listing",
+  "editListingSaved": "Listing updated.",
+  "editListingDelete": "Delete this listing",
+  "editListingDeleteTitle": "Delete this listing?",
+  "editListingDeleteWarning": "It will be removed from the marketplace. If it already has deal history it will be closed rather than erased.",
+  "editListingDeleteConfirm": "Delete",
+  "editListingDeleted": "Listing removed.",
+  "editListingReserved": "This listing is reserved for a buyer right now, so its details are locked. Cancel the deal first if you need to change them.",
+  "editListingClosed": "This listing is closed and can no longer be edited.",
+  "editListingQuantityValidator": "Enter a quantity between 1 and 1,000,000",
+  "editListingDiscountNeedsPrice": "Set a price before adding a discount",
+  "chatAcceptRequest": "Accept",
+  "chatDeclineRequest": "Decline",
+  "chatWithdrawRequest": "Withdraw request",
+  "chatAcceptConfirmTitle": "Accept this request?",
+  "chatAcceptConfirmBody": "The listing will be reserved for this pharmacy, and any other pending requests on it will be declined.",
+  "chatDeclineConfirmTitle": "Decline this request?",
+  "chatDeclineConfirmBody": "The listing stays available for other pharmacies.",
+  "chatDealPendingBar": "Waiting for the seller to accept",
+  "chatDealDeclinedBar": "Request declined",
+  "chatExpiresInHours": "{hours}h",
+  "@chatExpiresInHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "chatExpiresInDays": "{days}d",
+  "@chatExpiresInDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "chatAwaitingSellerIn": "Seller has {time} to respond",
+  "@chatAwaitingSellerIn": {
+    "placeholders": {
+      "time": {}
+    }
+  },
+  "chatReservedUntilIn": "Reserved for {time}",
+  "@chatReservedUntilIn": {
+    "placeholders": {
+      "time": {}
+    }
+  },
+  "notificationsMarkAllRead": "Mark all as read",
+  "chatBadgeNeedsYourAnswer": "Needs your answer",
+  "chatBadgeAwaitingSeller": "Awaiting seller",
+  "chatBadgeDeclined": "Declined",
+  "chatBadgeCompleted": "Completed",
+  "chatBadgeCancelled": "Cancelled"
 }

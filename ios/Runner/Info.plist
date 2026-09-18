@@ -55,6 +55,23 @@
 	</dict>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<!-- Password-reset deep link. Matches the redirectTo passed to
+	     resetPasswordForEmail in login_screen.dart and the intent-filter in
+	     AndroidManifest.xml. Without it the reset email's link has nowhere
+	     to land on iOS. -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>io.pharmaexchange.egypt</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>io.pharmaexchange.egypt</string>
+			</array>
+		</dict>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

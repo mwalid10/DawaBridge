@@ -2,13 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/l10n_extensions.dart';
+import '../../../core/supabase_client.dart';
 import '../../../core/theme.dart';
 import '../kyc_controller.dart';
 import '../widgets/kyc_step_header.dart';
 
 class PharmacyDetailsStep extends ConsumerStatefulWidget {
   final VoidCallback onNext;
-  const PharmacyDetailsStep({super.key, required this.onNext});
+
+  /// Recovery mode: the email belongs to an auth account that already
+  /// exists, so it is shown for confirmation but can't be edited.
+  final bool emailLocked;
+
+  const PharmacyDetailsStep({super.key, required this.onNext, this.emailLocked = false});
 
   @override
   ConsumerState<PharmacyDetailsStep> createState() => _PharmacyDetailsStepState();
@@ -24,7 +30,11 @@ class _PharmacyDetailsStepState extends ConsumerState<PharmacyDetailsStep> {
     super.initState();
     final data = ref.read(kycControllerProvider);
     _nameController = TextEditingController(text: data.pharmacyName);
-    _emailController = TextEditingController(text: data.email);
+    // In recovery mode the authoritative email is the signed-in auth
+    // user's, not whatever is left in the wizard's transient state.
+    _emailController = TextEditingController(
+      text: widget.emailLocked ? (supabase.auth.currentUser?.email ?? data.email) : data.email,
+    );
   }
 
   @override
@@ -66,7 +76,12 @@ class _PharmacyDetailsStepState extends ConsumerState<PharmacyDetailsStep> {
           TextFormField(
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(labelText: l10n.fieldEmailAddress, hintText: l10n.kycEmailHint),
+            readOnly: widget.emailLocked,
+            enabled: !widget.emailLocked,
+            decoration: InputDecoration(
+              labelText: l10n.fieldEmailAddress,
+              hintText: widget.emailLocked ? null : l10n.kycEmailHint,
+            ),
             validator: (v) {
               if (v == null || !v.contains('@') || !v.contains('.')) {
                 return l10n.kycEmailValidator;

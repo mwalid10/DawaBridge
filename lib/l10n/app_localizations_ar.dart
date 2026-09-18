@@ -1132,4 +1132,373 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get languageArabic => 'العربية';
+
+  @override
+  String get commonSubmit => 'إرسال';
+
+  @override
+  String get commonSave => 'حفظ التغييرات';
+
+  @override
+  String get fieldDescriptionOptional => 'ملاحظات (اختياري)';
+
+  @override
+  String get errorGeneric => 'حدث خطأ ما. من فضلك حاول مرة أخرى.';
+
+  @override
+  String get errorNetwork => 'لا يوجد اتصال. تحقق من الإنترنت وحاول مرة أخرى.';
+
+  @override
+  String get errorAuthRequired => 'من فضلك سجّل الدخول مرة أخرى.';
+
+  @override
+  String get errorInvalidCredentials =>
+      'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+
+  @override
+  String get errorEmailNotConfirmed =>
+      'أكّد بريدك الإلكتروني أولاً — تحقق من رسائلك للحصول على الرمز.';
+
+  @override
+  String get errorEmailAlreadyRegistered =>
+      'يوجد حساب بهذا البريد الإلكتروني بالفعل. جرّب تسجيل الدخول.';
+
+  @override
+  String get errorOtpInvalid =>
+      'هذا الرمز غير صحيح أو انتهت صلاحيته. اطلب رمزاً جديداً.';
+
+  @override
+  String get errorRateLimited =>
+      'محاولات كثيرة جداً. انتظر دقيقة وحاول مرة أخرى.';
+
+  @override
+  String get errorWeakPassword =>
+      'يجب أن تكون كلمة المرور 8 أحرف على الأقل وتحتوي على حرف كبير ورقم ورمز.';
+
+  @override
+  String get errorFileTooLarge => 'هذا الملف كبير جداً.';
+
+  @override
+  String get errorFileType => 'نوع الملف هذا غير مدعوم.';
+
+  @override
+  String get errorNotApproved =>
+      'صيدليتك ما زالت في انتظار الموافقة، لذا لا يمكنك التداول بعد.';
+
+  @override
+  String get errorAccountIsAdmin =>
+      'هذا حساب مسؤول — استخدم لوحة تحكم المسؤولين بدلاً من ذلك.';
+
+  @override
+  String get errorAccountHasActiveDeals =>
+      'أنهِ أو ألغِ صفقاتك المفتوحة قبل حذف حسابك.';
+
+  @override
+  String get errorAccountHasOpenDisputes =>
+      'لديك نزاع لم يُحسم بعد. يجب إغلاقه قبل حذف حسابك.';
+
+  @override
+  String get errorListingNotFound => 'هذا الإعلان لم يعد موجوداً.';
+
+  @override
+  String get errorListingOwn => 'هذا إعلانك أنت.';
+
+  @override
+  String get errorListingUnavailable => 'هذا الإعلان لم يعد متاحاً.';
+
+  @override
+  String get errorListingExpired => 'انتهت صلاحية الدواء في هذا الإعلان.';
+
+  @override
+  String get errorListingExpiryInPast => 'اختر تاريخ صلاحية في المستقبل.';
+
+  @override
+  String get errorListingNotOwner => 'هذا ليس إعلانك.';
+
+  @override
+  String get errorListingNotEditable => 'لم يعد من الممكن تعديل هذا الإعلان.';
+
+  @override
+  String get errorListingReservedNoEdit =>
+      'لا يمكنك تغيير التفاصيل أثناء حجز هذا الإعلان لمشترٍ.';
+
+  @override
+  String get errorListingHasActiveDeal =>
+      'يوجد طلب مفتوح على هذا الإعلان. ألغِه أولاً.';
+
+  @override
+  String get errorQuantityInvalid => 'أدخل كمية صحيحة.';
+
+  @override
+  String get errorPriceInvalid => 'أدخل سعراً صحيحاً.';
+
+  @override
+  String get errorDiscountInvalid =>
+      'يجب أن يكون سعر الخصم أقل من السعر الأصلي.';
+
+  @override
+  String get errorControlledSubstance =>
+      'هذه مادة خاضعة للرقابة ولا يمكن عرضها هنا.';
+
+  @override
+  String get errorDealNotFound => 'هذه المحادثة لم تعد موجودة.';
+
+  @override
+  String get errorDealNotParticipant => 'أنت لست طرفاً في هذه الصفقة.';
+
+  @override
+  String get errorDealAlreadyOpen => 'لديك طلب مفتوح بالفعل على هذا الإعلان.';
+
+  @override
+  String get errorDealSellerOnly => 'البائع وحده من يمكنه فعل ذلك.';
+
+  @override
+  String get errorDealNotPending => 'تم الرد على هذا الطلب بالفعل.';
+
+  @override
+  String get errorDealNotActive => 'هذه الصفقة مغلقة بالفعل.';
+
+  @override
+  String get errorDisputeAlreadyOpen =>
+      'لديك نزاع مفتوح بالفعل على هذه الصفقة.';
+
+  @override
+  String get errorDisputeReasonRequired => 'اذكر سبب النزاع.';
+
+  @override
+  String get errorRatingInvalidStars => 'اختر تقييماً من 1 إلى 5 نجوم.';
+
+  @override
+  String get errorRatingDealNotCompleted => 'يمكنك تقييم الصفقات المكتملة فقط.';
+
+  @override
+  String get errorDrugNameRequired => 'أدخل اسم الدواء.';
+
+  @override
+  String get errorDrugNameTooLong => 'اسم الدواء طويل جداً.';
+
+  @override
+  String get errorPharmacyNameRequired => 'أدخل اسم صيدليتك.';
+
+  @override
+  String get errorGovernorateRequired => 'اختر المحافظة.';
+
+  @override
+  String get errorLocationRequired => 'حدّد موقع صيدليتك على الخريطة.';
+
+  @override
+  String get errorLocationOutOfBounds => 'هذا الموقع ليس داخل مصر.';
+
+  @override
+  String get errorLicenseRequired => 'ارفع ترخيص الصيدلية.';
+
+  @override
+  String get successGenericTitle => 'تم بنجاح';
+
+  @override
+  String get successGenericBody => 'تمت العملية بنجاح.';
+
+  @override
+  String get successGenericCta => 'العودة للرئيسية';
+
+  @override
+  String get loginInvalidEmail => 'أدخل بريداً إلكترونياً صحيحاً.';
+
+  @override
+  String get loginPasswordRequired => 'أدخل كلمة المرور.';
+
+  @override
+  String get resetPasswordTitle => 'تعيين كلمة مرور جديدة';
+
+  @override
+  String get resetPasswordSubtitle => 'اختر كلمة مرور لم تستخدمها من قبل.';
+
+  @override
+  String get resetPasswordNew => 'كلمة المرور الجديدة';
+
+  @override
+  String get resetPasswordConfirm => 'تأكيد كلمة المرور';
+
+  @override
+  String get resetPasswordMismatch => 'كلمتا المرور غير متطابقتين.';
+
+  @override
+  String get resetPasswordRule => '8 أحرف على الأقل، مع حرف كبير ورقم ورمز.';
+
+  @override
+  String get resetPasswordSave => 'حفظ كلمة المرور';
+
+  @override
+  String get resetPasswordDone =>
+      'تم تحديث كلمة المرور. يمكنك تسجيل الدخول بها الآن.';
+
+  @override
+  String get resetPasswordLinkExpired =>
+      'انتهت صلاحية رابط إعادة التعيين. اطلب رابطاً جديداً من شاشة تسجيل الدخول.';
+
+  @override
+  String get resetPasswordBackToSignIn => 'العودة لتسجيل الدخول';
+
+  @override
+  String get kycSuspendedLabel => 'موقوف';
+
+  @override
+  String get kycAccountSuspended => 'الحساب موقوف';
+
+  @override
+  String get kycSuspendedBody =>
+      'تم إيقاف وصول صيدليتك. تواصل مع الدعم لمعرفة السبب وكيفية استعادة الحساب.';
+
+  @override
+  String get kycAdminLabel => 'حساب مسؤول';
+
+  @override
+  String get kycAdminTitle => 'استخدم لوحة تحكم المسؤولين';
+
+  @override
+  String get kycAdminBody =>
+      'هذا حساب مسؤول. تطبيق الصيدليات مخصص للصيدليات — سجّل الدخول إلى لوحة تحكم المسؤولين بدلاً من ذلك.';
+
+  @override
+  String get kycFinishSetupTitle => 'أكمل الإعداد';
+
+  @override
+  String get kycFinishSetupBody =>
+      'تم إنشاء حسابك لكن بيانات صيدليتك لم يكتمل حفظها. أدخلها هنا لإتمام التسجيل — لن تحتاج إلى التسجيل من جديد.';
+
+  @override
+  String get kycOtpResend => 'إرسال رمز جديد';
+
+  @override
+  String kycOtpResendIn(int seconds) {
+    return 'إرسال رمز جديد خلال $seconds ثانية';
+  }
+
+  @override
+  String get kycOtpResent => 'تم إرسال رمز جديد.';
+
+  @override
+  String get kycOtpAcceptedRetry =>
+      'تم قبول الرمز. نحتاج فقط لإكمال حفظ بيانات صيدليتك.';
+
+  @override
+  String get accountDelete => 'حذف حسابي';
+
+  @override
+  String get accountDeleteTitle => 'حذف حسابك؟';
+
+  @override
+  String get accountDeleteWarning =>
+      'سيؤدي هذا إلى حذف ملف صيدليتك ووثيقة الترخيص وإعلاناتك، ولن تتمكن من تسجيل الدخول مرة أخرى. تبقى الصفقات المكتملة مسجلة لدى الصيدليات التي تعاملت معها. لا يمكن التراجع عن هذا.';
+
+  @override
+  String get accountDeleteConfirm => 'حذف نهائي';
+
+  @override
+  String get accountDeleteDone => 'تم حذف حسابك.';
+
+  @override
+  String get accountDeleteExplainer =>
+      'يجب إغلاق الصفقات المفتوحة والنزاعات غير المحسومة أولاً.';
+
+  @override
+  String get editListingTitle => 'تعديل الإعلان';
+
+  @override
+  String get editListingSaved => 'تم تحديث الإعلان.';
+
+  @override
+  String get editListingDelete => 'حذف هذا الإعلان';
+
+  @override
+  String get editListingDeleteTitle => 'حذف هذا الإعلان؟';
+
+  @override
+  String get editListingDeleteWarning =>
+      'ستتم إزالته من السوق. إذا كان له سجل صفقات فسيتم إغلاقه بدلاً من حذفه.';
+
+  @override
+  String get editListingDeleteConfirm => 'حذف';
+
+  @override
+  String get editListingDeleted => 'تمت إزالة الإعلان.';
+
+  @override
+  String get editListingReserved =>
+      'هذا الإعلان محجوز لمشترٍ الآن، لذا فتفاصيله مقفلة. ألغِ الصفقة أولاً إذا أردت تغييرها.';
+
+  @override
+  String get editListingClosed => 'هذا الإعلان مغلق ولم يعد من الممكن تعديله.';
+
+  @override
+  String get editListingQuantityValidator => 'أدخل كمية بين 1 و 1,000,000';
+
+  @override
+  String get editListingDiscountNeedsPrice => 'حدّد السعر قبل إضافة خصم';
+
+  @override
+  String get chatAcceptRequest => 'قبول';
+
+  @override
+  String get chatDeclineRequest => 'رفض';
+
+  @override
+  String get chatWithdrawRequest => 'سحب الطلب';
+
+  @override
+  String get chatAcceptConfirmTitle => 'قبول هذا الطلب؟';
+
+  @override
+  String get chatAcceptConfirmBody =>
+      'سيتم حجز الإعلان لهذه الصيدلية، وسيتم رفض أي طلبات أخرى معلّقة عليه.';
+
+  @override
+  String get chatDeclineConfirmTitle => 'رفض هذا الطلب؟';
+
+  @override
+  String get chatDeclineConfirmBody => 'سيظل الإعلان متاحاً للصيدليات الأخرى.';
+
+  @override
+  String get chatDealPendingBar => 'في انتظار موافقة البائع';
+
+  @override
+  String get chatDealDeclinedBar => 'تم رفض الطلب';
+
+  @override
+  String chatExpiresInHours(int hours) {
+    return '$hours ساعة';
+  }
+
+  @override
+  String chatExpiresInDays(int days) {
+    return '$days يوم';
+  }
+
+  @override
+  String chatAwaitingSellerIn(Object time) {
+    return 'أمام البائع $time للرد';
+  }
+
+  @override
+  String chatReservedUntilIn(Object time) {
+    return 'محجوز لمدة $time';
+  }
+
+  @override
+  String get notificationsMarkAllRead => 'تعليم الكل كمقروء';
+
+  @override
+  String get chatBadgeNeedsYourAnswer => 'بانتظار ردك';
+
+  @override
+  String get chatBadgeAwaitingSeller => 'بانتظار البائع';
+
+  @override
+  String get chatBadgeDeclined => 'مرفوض';
+
+  @override
+  String get chatBadgeCompleted => 'مكتمل';
+
+  @override
+  String get chatBadgeCancelled => 'ملغى';
 }

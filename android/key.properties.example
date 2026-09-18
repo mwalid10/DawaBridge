@@ -1,0 +1,14 @@
+# Copy to android/key.properties (gitignored) and fill in with your own
+# release keystore. Without this file the release build falls back to the
+# debug keystore and cannot be uploaded to Google Play.
+#
+# Generate a keystore first:
+#   keytool -genkey -v -keystore /path/to/pharma-exchange-release.jks \
+#     -keyalg RSA -keysize 2048 -validity 10000 -alias pharma-exchange
+#
+# storeFile is resolved relative to the android/ directory, so either use an
+# absolute path or place the .jks inside android/ (also gitignored below).
+storeFile=/absolute/path/to/pharma-exchange-release.jks
+storePassword=
+keyAlias=pharma-exchange
+keyPassword=

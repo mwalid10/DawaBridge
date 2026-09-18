@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/supabase_client.dart';
@@ -50,6 +52,7 @@ class SearchController extends AsyncNotifier<List<ListingSummary>> {
   bool nearest = false;
   int _offset = 0;
   bool _hasMore = true;
+  bool _loadingMore = false;
   double? _lat;
   double? _lng;
   bool _locationLoaded = false;
@@ -104,11 +107,34 @@ class SearchController extends AsyncNotifier<List<ListingSummary>> {
     });
   }
 
+  /// Appends the next page.
+  ///
+  /// Had no in-flight guard, so a fast scroll fired it several times at
+  /// once; each call read the same `_offset` and appended the same rows,
+  /// putting visible duplicates in the list. It also wasn't wrapped in
+  /// `AsyncValue.guard`, so a dropped connection threw an unhandled async
+  /// error and left the list stuck with no way to retry.
   Future<void> loadMore() async {
-    if (!_hasMore) return;
-    final current = state.value ?? [];
-    final more = await _fetchPage(_offset);
-    state = AsyncValue.data([...current, ...more]);
+    if (!_hasMore || _loadingMore) return;
+    _loadingMore = true;
+    try {
+      final current = state.value ?? [];
+      final more = await _fetchPage(_offset);
+
+      // Offset paging over a feed ordered by created_at can also re-serve a
+      // row when a new listing shifts the window between pages, so de-dupe
+      // by id rather than trusting the offset arithmetic.
+      final seen = current.map((l) => l.id).toSet();
+      state = AsyncValue.data([...current, ...more.where((l) => !seen.contains(l.id))]);
+    } catch (error, stack) {
+      // Keep the rows already on screen rather than blanking the list — a
+      // failed "load more" shouldn't lose the page the user is reading.
+      // The error is logged and `hasMore` stays true so the next scroll
+      // retries.
+      debugPrint('Search loadMore failed: $error\n$stack');
+    } finally {
+      _loadingMore = false;
+    }
   }
 }
 
