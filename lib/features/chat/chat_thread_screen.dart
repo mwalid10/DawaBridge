@@ -17,6 +17,7 @@ import '../../core/theme.dart';
 import '../../core/widgets/app_gradient_button.dart';
 import '../../core/widgets/map_pin.dart';
 import '../../core/widgets/star_picker.dart';
+import '../../core/widgets/error_retry.dart';
 import '../deals/deal.dart';
 import '../deals/deals_controller.dart';
 import '../disputes/dispute.dart';
@@ -495,8 +496,9 @@ class _ChatThreadScreenState extends ConsumerState<ChatThreadScreen> {
           Expanded(
             child: messagesAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, _) => Center(
-                child: Text(l10n.chatCouldntLoadMessages, style: Theme.of(context).textTheme.titleMedium),
+              error: (error, _) => ErrorRetry(
+                error: error,
+                onRetry: () => ref.invalidate(messagesControllerProvider(widget.dealId)),
               ),
               data: (messages) {
                 if (messages.isEmpty) {

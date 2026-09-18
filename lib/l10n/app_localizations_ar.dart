@@ -1487,4 +1487,22 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get chatBadgeCancelled => 'ملغى';
+
+  @override
+  String get offlineTitle => 'لا يوجد اتصال';
+
+  @override
+  String get offlineBody =>
+      'لا يمكننا الوصول إلى فارما إكستشينج الآن. تحقق من الإنترنت — سنعيد المحاولة تلقائياً بمجرد عودة الاتصال.';
+
+  @override
+  String get offlineBanner =>
+      'أنت غير متصل. بعض الميزات لن تعمل حتى تعود للاتصال.';
+
+  @override
+  String get offlineReconnecting => 'جارٍ إعادة الاتصال…';
+
+  @override
+  String get offlineActionUnavailable =>
+      'تحتاج إلى اتصال بالإنترنت للقيام بذلك.';
 }

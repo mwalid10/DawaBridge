@@ -574,5 +574,10 @@
   "chatBadgeAwaitingSeller": "بانتظار البائع",
   "chatBadgeDeclined": "مرفوض",
   "chatBadgeCompleted": "مكتمل",
-  "chatBadgeCancelled": "ملغى"
+  "chatBadgeCancelled": "ملغى",
+  "offlineTitle": "لا يوجد اتصال",
+  "offlineBody": "لا يمكننا الوصول إلى فارما إكستشينج الآن. تحقق من الإنترنت — سنعيد المحاولة تلقائياً بمجرد عودة الاتصال.",
+  "offlineBanner": "أنت غير متصل. بعض الميزات لن تعمل حتى تعود للاتصال.",
+  "offlineReconnecting": "جارٍ إعادة الاتصال…",
+  "offlineActionUnavailable": "تحتاج إلى اتصال بالإنترنت للقيام بذلك."
 }

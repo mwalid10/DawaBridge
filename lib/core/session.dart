@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'connectivity.dart';
 import 'supabase_client.dart';
 
 /// Where the current session is allowed to be.
@@ -23,6 +25,16 @@ enum SessionState {
   rejected,
   suspended,
   approved,
+
+  /// Signed in, but we couldn't reach the server to find out what this
+  /// account is allowed to do, and there's no cached answer from a previous
+  /// run to fall back on.
+  ///
+  /// Without this state a cold start with no network hung on the splash
+  /// screen forever: `refresh()` failed, the state stayed [unknown], and the
+  /// router's rule for [unknown] is "hold on `/`". The user couldn't even
+  /// reach the sign-in screen to be told what was wrong.
+  offline,
 
   /// An admin's auth account signed into the pharmacy app. Admins have no
   /// pharmacies row, so without this they'd look identical to an orphaned
@@ -51,6 +63,7 @@ enum SessionState {
 class SessionController extends ChangeNotifier {
   SessionState _state = SessionState.unknown;
   StreamSubscription<AuthState>? _sub;
+  StreamSubscription<void>? _reconnectSub;
   int _resolveToken = 0;
 
   SessionState get state => _state;
@@ -62,6 +75,14 @@ class SessionController extends ChangeNotifier {
 
   /// Called once from `main()` after Supabase is initialized.
   void start() {
+    // Retry the moment the network comes back, so a user who opened the app
+    // in a dead spot isn't stranded until they think to pull-to-refresh.
+    _reconnectSub ??= connectivityController.onReconnected.listen((_) {
+      if (_state == SessionState.offline || _state == SessionState.unknown) {
+        unawaited(refresh());
+      }
+    });
+
     _sub ??= supabase.auth.onAuthStateChange.listen((event) {
       switch (event.event) {
         case AuthChangeEvent.signedOut:
@@ -100,8 +121,11 @@ class SessionController extends ChangeNotifier {
     }
 
     try {
-      final rows = await supabase.rpc('get_my_status');
+      // A dead connection can otherwise leave this hanging for the platform
+      // default (minutes), which is what kept the splash up.
+      final rows = await supabase.rpc('get_my_status').timeout(const Duration(seconds: 12));
       if (token != _resolveToken) return;
+      connectivityController.reportSuccess();
 
       final list = rows as List<dynamic>;
       if (list.isEmpty) {
@@ -125,25 +149,75 @@ class SessionController extends ChangeNotifier {
       });
     } catch (error, stack) {
       if (token != _resolveToken) return;
-      // A network failure must not silently downgrade a signed-in user to
-      // "needs registration" and dump them into the KYC flow. Hold the
-      // previous decision if we had one; otherwise stay on the splash.
       debugPrint('SessionController.refresh failed: $error\n$stack');
-      if (_state == SessionState.unknown) {
-        _set(SessionState.unknown);
+
+      if (ConnectivityController.looksOffline(error)) {
+        connectivityController.reportFailure();
       }
+
+      // A network failure must never silently downgrade a signed-in user to
+      // "needs registration" and dump them into the KYC flow.
+      if (_state != SessionState.unknown) {
+        // Already resolved this run — keep that decision, the banner tells
+        // them we're offline.
+        return;
+      }
+
+      // Cold start with no network. Fall back to what we resolved last time
+      // this account ran, so a returning user gets their app rather than a
+      // wall. This is safe: the client-side gate is a convenience, and every
+      // rule it mirrors is enforced again in RLS — an unapproved pharmacy
+      // restored optimistically here still can't write anything.
+      final cached = await _readCachedState();
+      _set(cached ?? SessionState.offline);
+    }
+  }
+
+  static const _cachedStateKey = 'session_state';
+
+  /// Persisted so a cold start without network has something better to do
+  /// than hang. Cleared on sign-out.
+  Future<void> _cacheState(SessionState state) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (state == SessionState.signedOut) {
+        await prefs.remove(_cachedStateKey);
+      } else {
+        await prefs.setString(_cachedStateKey, state.name);
+      }
+    } catch (_) {
+      // Best effort — a prefs failure must not break sign-in.
+    }
+  }
+
+  Future<SessionState?> _readCachedState() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final saved = prefs.getString(_cachedStateKey);
+      if (saved == null) return null;
+      final match = SessionState.values.where((s) => s.name == saved);
+      if (match.isEmpty) return null;
+      // Never restore a transient state as if it were a resolved answer.
+      return switch (match.first) {
+        SessionState.unknown || SessionState.offline || SessionState.signedOut => null,
+        final s => s,
+      };
+    } catch (_) {
+      return null;
     }
   }
 
   void _set(SessionState next) {
     if (_state == next) return;
     _state = next;
+    unawaited(_cacheState(next));
     notifyListeners();
   }
 
   @override
   void dispose() {
     _sub?.cancel();
+    _reconnectSub?.cancel();
     super.dispose();
   }
 }

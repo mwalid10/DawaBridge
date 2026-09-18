@@ -608,5 +608,10 @@
   "chatBadgeAwaitingSeller": "Awaiting seller",
   "chatBadgeDeclined": "Declined",
   "chatBadgeCompleted": "Completed",
-  "chatBadgeCancelled": "Cancelled"
+  "chatBadgeCancelled": "Cancelled",
+  "offlineTitle": "No connection",
+  "offlineBody": "We can't reach Pharma Exchange right now. Check your internet — we'll retry automatically as soon as you're back.",
+  "offlineBanner": "You're offline. Some things won't work until you reconnect.",
+  "offlineReconnecting": "Reconnecting…",
+  "offlineActionUnavailable": "You need a connection to do that."
 }

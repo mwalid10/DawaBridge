@@ -6,6 +6,7 @@ import '../../core/l10n_extensions.dart';
 import '../../core/supabase_client.dart';
 import '../../core/theme.dart';
 import '../../core/widgets/app_gradient_button.dart';
+import '../../core/widgets/error_retry.dart';
 import 'pharmacy_profile.dart';
 import 'profile_controller.dart';
 
@@ -102,8 +103,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       appBar: AppBar(title: Text(l10n.editProfileTitle)),
       body: profile.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, _) => Center(
-          child: Text(l10n.editProfileCouldntLoad, style: Theme.of(context).textTheme.bodyMedium),
+        error: (error, _) => ErrorRetry(
+          error: error,
+          onRetry: () => ref.invalidate(pharmacyProfileControllerProvider),
         ),
         data: (_) => Form(
           key: _formKey,

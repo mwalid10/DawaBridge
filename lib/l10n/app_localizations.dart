@@ -2755,6 +2755,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cancelled'**
   String get chatBadgeCancelled;
+
+  /// No description provided for @offlineTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection'**
+  String get offlineTitle;
+
+  /// No description provided for @offlineBody.
+  ///
+  /// In en, this message translates to:
+  /// **'We can\'t reach Pharma Exchange right now. Check your internet — we\'ll retry automatically as soon as you\'re back.'**
+  String get offlineBody;
+
+  /// No description provided for @offlineBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re offline. Some things won\'t work until you reconnect.'**
+  String get offlineBanner;
+
+  /// No description provided for @offlineReconnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnecting…'**
+  String get offlineReconnecting;
+
+  /// No description provided for @offlineActionUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'You need a connection to do that.'**
+  String get offlineActionUnavailable;
 }
 
 class _AppLocalizationsDelegate

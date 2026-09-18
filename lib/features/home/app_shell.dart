@@ -1,15 +1,21 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/connectivity.dart';
 import '../../core/l10n_extensions.dart';
 import '../../core/theme.dart';
 import '../../core/widgets/gradient_fab.dart';
 import '../add_medicine/add_medicine_screen.dart';
 import '../chat/chat_list_screen.dart';
+import '../deals/deals_controller.dart';
 import '../news/news_screen.dart';
+import '../notifications/notifications_controller.dart';
 import '../profile/profile_screen.dart';
 import '../push/push_token_controller.dart';
 import '../search/search_screen.dart';
+import 'home_feed_controller.dart';
 import 'home_screen.dart';
 
 /// Bottom-nav shell: Home / Search / (floating Add) / Chat / News / Profile.
@@ -40,6 +46,31 @@ class _AppShellState extends ConsumerState<AppShell> {
         const NewsScreen(),
         const ProfileScreen(),
       ];
+
+  StreamSubscription<void>? _reconnectSub;
+
+  @override
+  void initState() {
+    super.initState();
+    // Refetch whatever the app missed while it was offline. Realtime inserts
+    // that happened while the socket was down are simply gone — the channel
+    // reconnects but doesn't replay — so a refetch is the only way to catch
+    // up, and without it a user who lost signal mid-session would keep
+    // seeing a stale feed and an out-of-date chat list indefinitely.
+    _reconnectSub = connectivityController.onReconnected.listen((_) {
+      if (!mounted) return;
+      ref.invalidate(homeFeedControllerProvider);
+      ref.invalidate(dealsControllerProvider);
+      ref.invalidate(notificationsControllerProvider);
+      ref.invalidate(unreadNotificationsCountProvider);
+    });
+  }
+
+  @override
+  void dispose() {
+    _reconnectSub?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

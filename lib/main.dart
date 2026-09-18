@@ -7,11 +7,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'core/connectivity.dart';
 import 'core/locale_controller.dart';
 import 'core/router.dart';
 import 'core/session.dart';
 import 'core/supabase_client.dart';
 import 'core/theme.dart';
+import 'core/widgets/offline_banner.dart';
 import 'l10n/app_localizations.dart';
 
 /// Runs in a separate isolate when a push arrives while the app is
@@ -95,6 +97,7 @@ Future<void> main() async {
   // Nothing listened to auth state before this, so an expired or revoked
   // session produced errors on every screen instead of returning the user
   // to sign-in, and `pharmacies.status` was never consulted at all.
+  connectivityController.start();
   sessionController.start();
 
   // Password recovery deep link. The email's link carries a recovery token;
@@ -132,6 +135,8 @@ class PharmaExchangeApp extends ConsumerWidget {
       locale: locale,
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
+      // Wraps every screen: "why did that fail?" can be asked from anywhere.
+      builder: (context, child) => OfflineBanner(child: child ?? const SizedBox.shrink()),
     );
   }
 }

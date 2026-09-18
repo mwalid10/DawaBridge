@@ -8,6 +8,7 @@ import '../../core/theme.dart';
 import '../../core/widgets/glass_card.dart';
 import '../../core/widgets/gradient_hero_background.dart';
 import '../../core/widgets/star_picker.dart';
+import '../../core/widgets/error_retry.dart';
 import '../home/home_stats_controller.dart';
 import 'profile_controller.dart';
 import 'rating_summary.dart';
@@ -75,7 +76,11 @@ class ProfileScreen extends ConsumerWidget {
                   const SizedBox(height: AppSpacing.md),
                   profile.when(
                     loading: () => const Padding(padding: EdgeInsets.all(AppSpacing.lg), child: CircularProgressIndicator()),
-                    error: (error, _) => Text(l10n.profileCouldntLoad, style: Theme.of(context).textTheme.bodyMedium),
+                    error: (error, _) => ErrorRetry(
+                      error: error,
+                      compact: true,
+                      onRetry: () => ref.invalidate(pharmacyProfileControllerProvider),
+                    ),
                     data: (pharmacy) => Column(
                       children: [
                         Text(pharmacy.name, style: Theme.of(context).textTheme.titleLarge, textAlign: TextAlign.center),

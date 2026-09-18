@@ -9,6 +9,7 @@ import '../../core/supabase_client.dart';
 import '../../core/theme.dart';
 import '../../core/widgets/app_gradient_button.dart';
 import '../../core/widgets/glass_card.dart';
+import '../../core/widgets/error_retry.dart';
 import 'listing_detail_controller.dart';
 import 'listing_summary.dart';
 import 'my_listings_controller.dart';
@@ -161,11 +162,9 @@ class _EditListingScreenState extends ConsumerState<EditListingScreen> {
       appBar: AppBar(title: Text(l10n.editListingTitle)),
       body: listingAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, _) => Center(
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.xxl),
-            child: Text(AppError.message(l10n, error), textAlign: TextAlign.center),
-          ),
+        error: (error, _) => ErrorRetry(
+          error: error,
+          onRetry: () => ref.invalidate(listingDetailControllerProvider(widget.listingId)),
         ),
         data: (listing) {
           _seed(listing);

@@ -1,3 +1,4 @@
+import 'connectivity.dart';
 import 'supabase_client.dart';
 
 /// Thrown when a single-row RPC legitimately comes back with no row.
@@ -22,13 +23,41 @@ class NotFoundException implements Exception {
   String toString() => 'NotFoundException: $what';
 }
 
+/// Every network read goes through here.
+///
+/// Two jobs, both of which the app was missing:
+///
+///   * **A timeout.** Supabase's client has no default deadline, so on a
+///     dead connection a request sits until the platform socket gives up —
+///     minutes, during which the screen shows a spinner and the user has no
+///     idea anything is wrong.
+///   * **Feeding the connectivity signal.** `ConnectivityController` treats
+///     real request outcomes as ground truth for whether we're online,
+///     because the OS-level "is there an interface" reading says yes on a
+///     captive-portal wifi or a mobile connection with no data left.
+Future<T> guardNetwork<T>(
+  Future<T> Function() request, {
+  Duration timeout = const Duration(seconds: 20),
+}) async {
+  try {
+    final result = await request().timeout(timeout);
+    connectivityController.reportSuccess();
+    return result;
+  } catch (error) {
+    if (ConnectivityController.looksOffline(error)) {
+      connectivityController.reportFailure();
+    }
+    rethrow;
+  }
+}
+
 /// Calls an RPC expected to return exactly one row.
 Future<Map<String, dynamic>> rpcSingle(
   String function, {
   Map<String, dynamic>? params,
   required String notFoundLabel,
 }) async {
-  final rows = await supabase.rpc(function, params: params);
+  final rows = await guardNetwork(() => supabase.rpc(function, params: params));
   final list = (rows as List<dynamic>?) ?? const [];
   if (list.isEmpty) throw NotFoundException(notFoundLabel);
   return list.first as Map<String, dynamic>;
@@ -39,7 +68,7 @@ Future<List<Map<String, dynamic>>> rpcList(
   String function, {
   Map<String, dynamic>? params,
 }) async {
-  final rows = await supabase.rpc(function, params: params);
+  final rows = await guardNetwork(() => supabase.rpc(function, params: params));
   return ((rows as List<dynamic>?) ?? const [])
       .cast<Map<String, dynamic>>()
       .toList();

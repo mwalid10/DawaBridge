@@ -1,3 +1,4 @@
+import '../../core/rpc.dart';
 import '../../core/supabase_client.dart';
 import 'listing_summary.dart';
 
@@ -16,7 +17,10 @@ Future<List<ListingSummary>> fetchListings({
   int offset = 0,
   double? maxDistanceKm,
 }) async {
-  final rows = await supabase.rpc('search_listings', params: {
+  // guardNetwork adds the deadline and feeds the offline signal — search is
+  // the app's highest-traffic read and the one most likely to be attempted
+  // in a basement pharmacy with one bar.
+  final rows = await guardNetwork(() => supabase.rpc('search_listings', params: {
     'p_trade_name': tradeName,
     'p_concentration': concentration,
     'p_type': type?.name,
@@ -28,7 +32,7 @@ Future<List<ListingSummary>> fetchListings({
     'p_limit': limit,
     'p_offset': offset,
     'p_max_distance_km': maxDistanceKm,
-  });
+  }));
   return (rows as List<dynamic>)
       .map((row) => ListingSummary.fromJson(row as Map<String, dynamic>))
       .toList();

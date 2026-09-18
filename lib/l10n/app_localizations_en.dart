@@ -1496,4 +1496,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get chatBadgeCancelled => 'Cancelled';
+
+  @override
+  String get offlineTitle => 'No connection';
+
+  @override
+  String get offlineBody =>
+      'We can\'t reach Pharma Exchange right now. Check your internet — we\'ll retry automatically as soon as you\'re back.';
+
+  @override
+  String get offlineBanner =>
+      'You\'re offline. Some things won\'t work until you reconnect.';
+
+  @override
+  String get offlineReconnecting => 'Reconnecting…';
+
+  @override
+  String get offlineActionUnavailable => 'You need a connection to do that.';
 }

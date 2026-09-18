@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 
 import '../features/auth/login_screen.dart';
+import '../features/auth/offline_screen.dart';
 import '../features/auth/reset_password_screen.dart';
 import '../features/chat/chat_thread_screen.dart';
 import '../features/disputes/disputes_screen.dart';
@@ -80,8 +81,16 @@ String? resolveRedirect(SessionState session, String location) {
   switch (session) {
     case SessionState.unknown:
       // Still resolving. Hold on the splash so we never flash a screen we're
-      // about to redirect away from.
+      // about to redirect away from. This is bounded now — `refresh()` has a
+      // timeout and always resolves to something, where it used to be able
+      // to sit here forever with no network.
       return location == '/' ? null : '/';
+
+    case SessionState.offline:
+      // Signed in, couldn't reach the server, and no cached answer from a
+      // previous run to fall back on. Account settings stays reachable so
+      // signing out is still possible without a connection.
+      return location == '/offline' || location == '/profile/account' ? null : '/offline';
 
     case SessionState.signedOut:
       return _publicRoutes.contains(location) ? null : '/onboarding';
@@ -111,6 +120,7 @@ final appRouter = GoRouter(
     GoRoute(path: '/', builder: (context, state) => const SplashScreen()),
     GoRoute(path: '/onboarding', builder: (context, state) => const OnboardingScreen()),
     GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
+    GoRoute(path: '/offline', builder: (context, state) => const OfflineScreen()),
     GoRoute(path: '/register', builder: (context, state) => const KycWizardScreen()),
     GoRoute(path: '/register/otp', builder: (context, state) => const OtpVerificationScreen()),
     GoRoute(path: '/register/complete', builder: (context, state) => const CompleteRegistrationScreen()),
