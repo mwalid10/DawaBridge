@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'connectivity.dart';
+import 'offline_cache.dart';
 import 'supabase_client.dart';
 
 /// Thrown when a single-row RPC legitimately comes back with no row.
@@ -64,12 +67,42 @@ Future<Map<String, dynamic>> rpcSingle(
 }
 
 /// Calls an RPC returning zero or more rows.
+///
+/// Pass [cacheKey] to make the call read-through: rows are cached on every
+/// success, and a network failure falls back to the last good copy instead
+/// of an error screen. Only use it for reads whose result is the same for
+/// every call — a filtered search must not be cached under a key that an
+/// unfiltered one would also read.
 Future<List<Map<String, dynamic>>> rpcList(
   String function, {
   Map<String, dynamic>? params,
+  String? cacheKey,
 }) async {
-  final rows = await guardNetwork(() => supabase.rpc(function, params: params));
-  return ((rows as List<dynamic>?) ?? const [])
-      .cast<Map<String, dynamic>>()
-      .toList();
+  try {
+    final rows = await guardNetwork(() => supabase.rpc(function, params: params));
+    final list = ((rows as List<dynamic>?) ?? const [])
+        .cast<Map<String, dynamic>>()
+        .toList();
+    if (cacheKey != null) unawaited(OfflineCache.write(cacheKey, list));
+    return list;
+  } catch (error) {
+    if (cacheKey == null || !ConnectivityController.looksOffline(error)) rethrow;
+    // Offline with something cached: show it. A stale listing the user can
+    // read and act on when they reconnect is worth more than an error.
+    final cached = await OfflineCache.read(cacheKey);
+    if (cached == null) rethrow;
+    return cached.rows;
+  }
+}
+
+/// Single-row variant of [rpcList]'s cache behaviour.
+Future<Map<String, dynamic>> rpcSingleCached(
+  String function, {
+  Map<String, dynamic>? params,
+  required String cacheKey,
+  required String notFoundLabel,
+}) async {
+  final rows = await rpcList(function, params: params, cacheKey: cacheKey);
+  if (rows.isEmpty) throw NotFoundException(notFoundLabel);
+  return rows.first;
 }

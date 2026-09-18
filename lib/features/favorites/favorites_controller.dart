@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/supabase_client.dart';
+import '../../core/offline_cache.dart';
+import '../../core/rpc.dart';
 import '../listings/listing_summary.dart';
 
 /// All of the signed-in pharmacy's favorited listings — see
@@ -10,7 +11,7 @@ class FavoritesController extends AsyncNotifier<List<ListingSummary>> {
   Future<List<ListingSummary>> build() => _fetch();
 
   Future<List<ListingSummary>> _fetch() async {
-    final rows = await supabase.rpc('get_my_favorites');
+    final rows = await rpcList('get_my_favorites', cacheKey: OfflineCache.favorites);
     return (rows as List<dynamic>).map((row) => ListingSummary.fromJson(row as Map<String, dynamic>)).toList();
   }
 

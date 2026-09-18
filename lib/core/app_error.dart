@@ -102,6 +102,8 @@ class AppError {
       'LOCATION_OUT_OF_BOUNDS' => l10n.errorLocationOutOfBounds,
       'LICENSE_REQUIRED' => l10n.errorLicenseRequired,
       'FILE_TOO_LARGE' => l10n.errorFileTooLarge,
+      // Deal actions are online-only by design — see OfflineActionException.
+      'OFFLINE_ACTION' => l10n.offlineActionUnavailable,
       _ => _networkOrGeneric(l10n, error),
     };
   }

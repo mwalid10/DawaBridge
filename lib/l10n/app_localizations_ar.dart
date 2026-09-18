@@ -1505,4 +1505,16 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get offlineActionUnavailable =>
       'تحتاج إلى اتصال بالإنترنت للقيام بذلك.';
+
+  @override
+  String get chatMessagePending => 'سيُرسل عند عودة الاتصال';
+
+  @override
+  String get offlineCanBrowse => 'تصفّح الإعلانات التي شاهدتها من قبل';
+
+  @override
+  String get offlineCanMessage => 'اكتب رسائل — ستُرسل عند عودة الاتصال';
+
+  @override
+  String get offlineCannotDeal => 'قبول الصفقات أو طلبها يحتاج إلى اتصال';
 }

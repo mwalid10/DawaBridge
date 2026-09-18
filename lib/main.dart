@@ -14,6 +14,7 @@ import 'core/session.dart';
 import 'core/supabase_client.dart';
 import 'core/theme.dart';
 import 'core/widgets/offline_banner.dart';
+import 'features/chat/outbox.dart';
 import 'l10n/app_localizations.dart';
 
 /// Runs in a separate isolate when a push arrives while the app is
@@ -99,6 +100,9 @@ Future<void> main() async {
   // to sign-in, and `pharmacies.status` was never consulted at all.
   connectivityController.start();
   sessionController.start();
+  // Flushes anything typed offline — including from a previous run, if the
+  // app was killed with messages still queued.
+  MessageOutbox.start();
 
   // Password recovery deep link. The email's link carries a recovery token;
   // supabase_flutter exchanges it for a session and emits this event. Before

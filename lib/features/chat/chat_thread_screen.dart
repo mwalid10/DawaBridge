@@ -703,7 +703,9 @@ class _MessageBubble extends StatelessWidget {
 
     return Align(
       alignment: isMine ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
+      child: Opacity(
+        opacity: message.isPending ? 0.62 : 1,
+        child: Container(
         margin: const EdgeInsets.only(bottom: AppSpacing.sm),
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.md),
         constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
@@ -729,11 +731,33 @@ class _MessageBubble extends StatelessWidget {
             else
               Text(message.body, style: textTheme.bodyLarge?.copyWith(color: isMine ? Colors.white : AppColors.ink)),
             const SizedBox(height: 2),
-            Text(
-              DateFormat.jm().format(message.createdAt),
-              style: textTheme.labelSmall?.copyWith(color: isMine ? Colors.white70 : AppColors.inkFaint),
-            ),
-          ],
+            // A queued message shows a clock rather than a send time, so
+            // it's visibly different from one that's actually landed.
+            if (message.isPending)
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.schedule_rounded,
+                    size: 11,
+                    color: isMine ? Colors.white70 : AppColors.inkFaint,
+                  ),
+                  const SizedBox(width: 3),
+                  Text(
+                    context.l10n.chatMessagePending,
+                    style: textTheme.labelSmall?.copyWith(
+                      color: isMine ? Colors.white70 : AppColors.inkFaint,
+                    ),
+                  ),
+                ],
+              )
+            else
+              Text(
+                DateFormat.jm().format(message.createdAt),
+                style: textTheme.labelSmall?.copyWith(color: isMine ? Colors.white70 : AppColors.inkFaint),
+              ),
+            ],
+          ),
         ),
       ),
     );

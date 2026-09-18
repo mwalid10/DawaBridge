@@ -1,3 +1,5 @@
+import 'outbox.dart';
+
 /// Row shape of the `messages` table, read through `get_messages()` and the
 /// Realtime channel (RLS restricts rows to deal participants — see
 /// 0007_deals_chat_notifications.sql).
@@ -23,6 +25,11 @@ class Message {
   final bool isSystem;
   final DateTime createdAt;
 
+  /// Typed while offline and still sitting in [MessageOutbox]. Client-only —
+  /// never comes from the database, and every message read back from the
+  /// server has this false by definition.
+  final bool isPending;
+
   const Message({
     required this.id,
     required this.dealId,
@@ -32,8 +39,19 @@ class Message {
     this.locationLat,
     this.locationLng,
     this.isSystem = false,
+    this.isPending = false,
     required this.createdAt,
   });
+
+  /// Renders a queued message in the thread before it has been sent.
+  factory Message.pending(PendingMessage p) => Message(
+        id: p.id,
+        dealId: p.dealId,
+        senderId: p.senderId,
+        body: p.body,
+        createdAt: p.createdAt,
+        isPending: true,
+      );
 
   bool get isLocation => locationLat != null && locationLng != null;
 

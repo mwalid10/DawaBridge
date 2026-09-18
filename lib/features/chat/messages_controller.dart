@@ -1,12 +1,16 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../core/connectivity.dart';
 import '../../core/file_utils.dart';
+import '../../core/offline_cache.dart';
 import '../../core/rpc.dart';
 import '../../core/supabase_client.dart';
 import 'message.dart';
+import 'outbox.dart';
 
 /// Messages for one deal's thread — an initial page, then kept live via a
 /// Realtime subscription. Sending relies on the subscription echoing the
@@ -24,6 +28,7 @@ class MessagesController extends AsyncNotifier<List<Message>> {
 
   final String dealId;
   RealtimeChannel? _channel;
+  StreamSubscription<void>? _outboxSub;
   bool _hasMore = true;
   bool _loadingMore = false;
 
@@ -31,21 +36,43 @@ class MessagesController extends AsyncNotifier<List<Message>> {
 
   @override
   Future<List<Message>> build() async {
-    ref.onDispose(() => _channel?.unsubscribe());
+    ref.onDispose(() {
+      _channel?.unsubscribe();
+      _outboxSub?.cancel();
+    });
 
     // Subscribe before fetching so nothing can slip through the gap; the id
     // check in the callback absorbs any overlap.
     _subscribe();
 
-    final rows = await rpcList('get_messages', params: {
-      'p_deal_id': dealId,
-      'p_limit': _pageSize,
-    });
+    // Re-render when the outbox drains, so a queued bubble stops looking
+    // pending the moment it's actually delivered.
+    _outboxSub ??= MessageOutbox.onChanged.listen((_) => unawaited(_syncPending()));
+
+    final rows = await rpcList(
+      'get_messages',
+      params: {'p_deal_id': dealId, 'p_limit': _pageSize},
+      // Threads are readable with no signal — the whole point of queuing a
+      // reply is that you were reading the conversation when you lost it.
+      cacheKey: OfflineCache.messages(dealId),
+    );
     _hasMore = rows.length == _pageSize;
 
     // The RPC returns newest-first so it can page with a `before` cursor;
     // the thread renders oldest-first.
-    return rows.map(Message.fromJson).toList().reversed.toList();
+    final delivered = rows.map(Message.fromJson).toList().reversed.toList();
+    final pending = await MessageOutbox.forDeal(dealId);
+    return [...delivered, ...pending.map(Message.pending)];
+  }
+
+  /// Drops pending bubbles whose message has since been delivered.
+  Future<void> _syncPending() async {
+    final current = state.value;
+    if (current == null) return;
+
+    final stillQueued = (await MessageOutbox.forDeal(dealId)).map((m) => m.id).toSet();
+    final next = current.where((m) => !m.isPending || stillQueued.contains(m.id)).toList();
+    if (next.length != current.length) state = AsyncValue.data(next);
   }
 
   void _subscribe() {
@@ -60,6 +87,15 @@ class MessagesController extends AsyncNotifier<List<Message>> {
           callback: (payload) {
             final message = Message.fromJson(payload.newRecord);
             final current = state.value ?? [];
+            // A queued message echoes back under the id we generated for
+            // it, so replace the pending bubble rather than appending a
+            // duplicate beside it.
+            final pendingIndex = current.indexWhere((m) => m.id == message.id && m.isPending);
+            if (pendingIndex != -1) {
+              final next = [...current]..[pendingIndex] = message;
+              state = AsyncValue.data(next);
+              return;
+            }
             if (current.any((m) => m.id == message.id)) return;
             state = AsyncValue.data([...current, message]);
           },
@@ -90,19 +126,62 @@ class MessagesController extends AsyncNotifier<List<Message>> {
     }
   }
 
+  /// Sends a message, queueing it if there's no connection.
+  ///
+  /// Chat is the one write the app queues offline. It's append-only, only
+  /// its order within the thread matters, and nothing can change underneath
+  /// it that would make a late delivery wrong — unlike accepting a deal,
+  /// which stays online-only for exactly that reason.
+  ///
+  /// The row id is generated here rather than server-side so a retry whose
+  /// first attempt actually landed collides on the primary key instead of
+  /// posting the message twice. See [MessageOutbox].
   Future<void> send(String body) async {
     final trimmed = body.trim();
     if (trimmed.isEmpty) return;
     final uid = supabase.auth.currentUser?.id;
     if (uid == null) return;
 
-    await supabase.from('messages').insert({
-      'deal_id': dealId,
-      'sender_id': uid,
-      // `body` is NOT NULL but had no length bound, so a paste could push an
-      // arbitrarily large row through Realtime to the other device.
-      'body': trimmed.length > 4000 ? trimmed.substring(0, 4000) : trimmed,
-    });
+    // `body` is NOT NULL but had no length bound, so a paste could push an
+    // arbitrarily large row through Realtime to the other device.
+    final capped = trimmed.length > 4000 ? trimmed.substring(0, 4000) : trimmed;
+
+    final pending = PendingMessage(
+      id: MessageOutbox.newId(),
+      dealId: dealId,
+      senderId: uid,
+      body: capped,
+      createdAt: DateTime.now(),
+    );
+
+    if (connectivityController.isOffline) {
+      await _enqueue(pending);
+      return;
+    }
+
+    try {
+      await supabase.from('messages').insert({
+        'id': pending.id,
+        'deal_id': dealId,
+        'sender_id': uid,
+        'body': capped,
+      });
+      connectivityController.reportSuccess();
+    } catch (error) {
+      if (!ConnectivityController.looksOffline(error)) rethrow;
+      // Went offline between the check and the insert, or the interface is
+      // up but nothing can actually get out.
+      connectivityController.reportFailure();
+      await _enqueue(pending);
+    }
+  }
+
+  Future<void> _enqueue(PendingMessage pending) async {
+    await MessageOutbox.add(pending);
+    // Show it in the thread immediately, greyed, so the message doesn't
+    // appear to vanish. The Realtime echo replaces it once it lands.
+    final current = state.value ?? [];
+    state = AsyncValue.data([...current, Message.pending(pending)]);
   }
 
   /// Uploads [localPath] to the deal-scoped chat-attachments path

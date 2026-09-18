@@ -1,5 +1,4 @@
 import '../../core/rpc.dart';
-import '../../core/supabase_client.dart';
 import 'listing_summary.dart';
 
 /// Shared query helper backing both the Home feed and Search — both call
@@ -16,11 +15,11 @@ Future<List<ListingSummary>> fetchListings({
   int limit = 30,
   int offset = 0,
   double? maxDistanceKm,
+  /// Set only for a query whose shape never varies (the Home feed). A
+  /// filtered search must not read rows cached by a different filter.
+  String? cacheKey,
 }) async {
-  // guardNetwork adds the deadline and feeds the offline signal — search is
-  // the app's highest-traffic read and the one most likely to be attempted
-  // in a basement pharmacy with one bar.
-  final rows = await guardNetwork(() => supabase.rpc('search_listings', params: {
+  final params = {
     'p_trade_name': tradeName,
     'p_concentration': concentration,
     'p_type': type?.name,
@@ -32,8 +31,10 @@ Future<List<ListingSummary>> fetchListings({
     'p_limit': limit,
     'p_offset': offset,
     'p_max_distance_km': maxDistanceKm,
-  }));
-  return (rows as List<dynamic>)
-      .map((row) => ListingSummary.fromJson(row as Map<String, dynamic>))
-      .toList();
+  };
+
+  // guardNetwork adds the deadline and feeds the offline signal; rpcList
+  // adds the read-through cache when a key is supplied.
+  final rows = await rpcList('search_listings', params: params, cacheKey: cacheKey);
+  return rows.map(ListingSummary.fromJson).toList();
 }

@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/connectivity.dart';
+import '../../core/offline_cache.dart';
 import '../../core/rpc.dart';
 import '../../core/supabase_client.dart';
 import 'deal.dart';
@@ -9,7 +11,7 @@ import 'deal.dart';
 class DealsController extends AsyncNotifier<List<Deal>> {
   @override
   Future<List<Deal>> build() async {
-    final rows = await rpcList('get_my_deals');
+    final rows = await rpcList('get_my_deals', cacheKey: OfflineCache.deals);
     return rows.map(Deal.fromJson).toList();
   }
 
@@ -68,11 +70,31 @@ final dealDetailControllerProvider =
 /// `AppError.message` turns into a localized sentence; they are no longer
 /// shown to the user as raw Postgres exception text.
 Future<String> requestListing(String listingId, {String? message}) async {
-  final result = await supabase.rpc('request_listing', params: {
-    'p_listing_id': listingId,
-    'p_message': message,
-  });
+  _requireConnection();
+  final result = await guardNetwork(() => supabase.rpc('request_listing', params: {
+        'p_listing_id': listingId,
+        'p_message': message,
+      }));
   return result as String;
+}
+
+/// Thrown when a deal action is attempted with no connection.
+///
+/// Deliberately not queued the way chat messages are. Chat is append-only
+/// and a late delivery is still correct; a deal action is a decision about
+/// contested state. Two sellers accepting different buyers for one listing,
+/// or an acceptance replayed after the buyer already withdrew, is a
+/// correctness problem that queuing would create rather than solve — the
+/// database resolves those races with a row lock, and the client has to be
+/// present for the answer.
+class OfflineActionException implements Exception {
+  const OfflineActionException();
+  @override
+  String toString() => 'OFFLINE_ACTION';
+}
+
+void _requireConnection() {
+  if (connectivityController.isOffline) throw const OfflineActionException();
 }
 
 /// Drives a deal through its lifecycle.
@@ -86,5 +108,8 @@ Future<String> requestListing(String listingId, {String? message}) async {
 ///
 /// See `respond_to_deal` in 0035_deal_lifecycle_v2.sql.
 Future<void> respondToDeal(String dealId, String action) async {
-  await supabase.rpc('respond_to_deal', params: {'p_deal_id': dealId, 'p_action': action});
+  _requireConnection();
+  await guardNetwork(
+    () => supabase.rpc('respond_to_deal', params: {'p_deal_id': dealId, 'p_action': action}),
+  );
 }

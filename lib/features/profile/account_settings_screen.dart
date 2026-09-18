@@ -4,9 +4,11 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/app_error.dart';
 import '../../core/l10n_extensions.dart';
+import '../../core/offline_cache.dart';
 import '../../core/supabase_client.dart';
 import '../../core/theme.dart';
 import '../../core/widgets/glass_card.dart';
+import '../chat/outbox.dart';
 import '../push/push_token_controller.dart';
 import 'pharmacy_profile.dart';
 import 'profile_controller.dart';
@@ -79,6 +81,10 @@ class AccountSettingsScreen extends ConsumerWidget {
     // the handset kept receiving pushes for the account that just logged
     // out, including message notifications from its deals.
     await unregisterPushToken();
+    // One pharmacy's cached listings, threads and unsent messages must not
+    // be readable — or flushed — under whoever signs in on this device next.
+    await OfflineCache.clear();
+    await MessageOutbox.clear();
     await supabase.auth.signOut();
     // No manual navigation: the session controller picks up signedOut and
     // the router redirect moves us.

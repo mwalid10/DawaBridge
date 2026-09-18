@@ -2785,6 +2785,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You need a connection to do that.'**
   String get offlineActionUnavailable;
+
+  /// No description provided for @chatMessagePending.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending when you\'re back online'**
+  String get chatMessagePending;
+
+  /// No description provided for @offlineCanBrowse.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse listings you\'ve already seen'**
+  String get offlineCanBrowse;
+
+  /// No description provided for @offlineCanMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Write messages — they send when you\'re back'**
+  String get offlineCanMessage;
+
+  /// No description provided for @offlineCannotDeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepting or requesting deals needs a connection'**
+  String get offlineCannotDeal;
 }
 
 class _AppLocalizationsDelegate

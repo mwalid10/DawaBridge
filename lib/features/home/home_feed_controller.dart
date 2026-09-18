@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/offline_cache.dart';
 import '../../core/supabase_client.dart';
 import '../listings/listing_summary.dart';
 import '../listings/listings_query.dart';
@@ -27,6 +28,9 @@ class HomeFeedController extends AsyncNotifier<List<ListingSummary>> {
       excludePharmacyId: uid,
       limit: previewSize,
       offset: 0,
+      // The one listings query with a fixed shape, so it is the one that
+      // can be safely served from cache with no signal.
+      cacheKey: OfflineCache.feed,
     );
   }
 

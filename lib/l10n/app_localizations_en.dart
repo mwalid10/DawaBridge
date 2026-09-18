@@ -1513,4 +1513,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get offlineActionUnavailable => 'You need a connection to do that.';
+
+  @override
+  String get chatMessagePending => 'Sending when you\'re back online';
+
+  @override
+  String get offlineCanBrowse => 'Browse listings you\'ve already seen';
+
+  @override
+  String get offlineCanMessage =>
+      'Write messages — they send when you\'re back';
+
+  @override
+  String get offlineCannotDeal =>
+      'Accepting or requesting deals needs a connection';
 }

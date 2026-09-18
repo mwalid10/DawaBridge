@@ -613,5 +613,9 @@
   "offlineBody": "We can't reach Pharma Exchange right now. Check your internet — we'll retry automatically as soon as you're back.",
   "offlineBanner": "You're offline. Some things won't work until you reconnect.",
   "offlineReconnecting": "Reconnecting…",
-  "offlineActionUnavailable": "You need a connection to do that."
+  "offlineActionUnavailable": "You need a connection to do that.",
+  "chatMessagePending": "Sending when you're back online",
+  "offlineCanBrowse": "Browse listings you've already seen",
+  "offlineCanMessage": "Write messages — they send when you're back",
+  "offlineCannotDeal": "Accepting or requesting deals needs a connection"
 }

@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/supabase_client.dart';
+import '../../core/offline_cache.dart';
+import '../../core/rpc.dart';
 import 'listing_summary.dart';
 
 /// All of the signed-in pharmacy's own listings, across every state — see
@@ -13,7 +14,13 @@ class MyListingsController extends AsyncNotifier<List<ListingSummary>> {
   Future<List<ListingSummary>> build() => _fetch();
 
   Future<List<ListingSummary>> _fetch() async {
-    final rows = await supabase.rpc('get_my_listings', params: {'p_state': stateFilter?.name});
+    // Only the unfiltered view is cached: a cached 'all' list must not be
+    // served to someone who asked for just the reserved ones.
+    final rows = await rpcList(
+      'get_my_listings',
+      params: {'p_state': stateFilter?.name},
+      cacheKey: stateFilter == null ? OfflineCache.myListings : null,
+    );
     return (rows as List<dynamic>).map((row) => ListingSummary.fromJson(row as Map<String, dynamic>)).toList();
   }
 
