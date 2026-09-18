@@ -26,12 +26,28 @@
 -- CONFIGURATION (both required, see the DO block at the bottom for status)
 --
 --   1. Vault secrets, so the trigger knows where to post and how to prove
---      it's us:
---        select vault.create_secret('https://<ref>.supabase.co', 'project_url');
---        select vault.create_secret('<random string>', 'push_hook_secret');
+--      it's us.
 --
---   2. The same secret on the function, so it accepts the call:
---        supabase secrets set PUSH_HOOK_SECRET='<the same random string>'
+--      DO NOT paste the lines below as-is — the angle-bracket parts are
+--      placeholders, and vault.create_secret will happily store the literal
+--      text "<random string>" as your secret. It then mismatches whatever
+--      the function has and every push is silently 403'd, with nothing
+--      wrong-looking anywhere a user can see. (This happened.) Generate a
+--      real value first, e.g.
+--        openssl rand -base64 32
+--
+--        select vault.create_secret('https://YOUR_REF.supabase.co', 'project_url');
+--        select vault.create_secret('PASTE_GENERATED_SECRET_HERE', 'push_hook_secret');
+--
+--      Already created one with a placeholder in it? create_secret will
+--      refuse a duplicate name — update it in place instead:
+--        select vault.update_secret(
+--          (select id from vault.secrets where name = 'push_hook_secret'),
+--          'PASTE_GENERATED_SECRET_HERE'
+--        );
+--
+--   2. The SAME value on the function, so it accepts the call:
+--        supabase secrets set PUSH_HOOK_SECRET='PASTE_GENERATED_SECRET_HERE'
 --
 --   And, for anything to actually be delivered, FCM_SERVICE_ACCOUNT_JSON
 --   must also be set on the functions (a Firebase-console step that was
