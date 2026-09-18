@@ -503,9 +503,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get listingEditPrice => 'Edit price';
-
-  @override
   String get fieldPriceEgp => 'Price (EGP)';
 
   @override
@@ -516,14 +513,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get listingDiscountExceedsPrice => 'Can\'t exceed the price';
-
-  @override
-  String get listingSavePrice => 'Save price';
-
-  @override
-  String listingCouldntUpdatePrice(Object error) {
-    return 'Couldn\'t update price: $error';
-  }
 
   @override
   String get listingMessageSeller => 'Message the seller';
@@ -560,9 +549,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get listingSetPrice => 'Set a price';
-
-  @override
-  String get listingEditPriceLink => 'Edit price';
 
   @override
   String get listingAcceptedAlternatives => 'Accepted alternatives';

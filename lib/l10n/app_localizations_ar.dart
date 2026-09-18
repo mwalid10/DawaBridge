@@ -503,9 +503,6 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get listingEditPrice => 'تعديل السعر';
-
-  @override
   String get fieldPriceEgp => 'السعر (ج.م)';
 
   @override
@@ -516,14 +513,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get listingDiscountExceedsPrice => 'لا يمكن أن يتجاوز السعر الأصلي';
-
-  @override
-  String get listingSavePrice => 'حفظ السعر';
-
-  @override
-  String listingCouldntUpdatePrice(Object error) {
-    return 'تعذر تحديث السعر: $error';
-  }
 
   @override
   String get listingMessageSeller => 'مراسلة البائع';
@@ -560,9 +549,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get listingSetPrice => 'تحديد سعر';
-
-  @override
-  String get listingEditPriceLink => 'تعديل السعر';
 
   @override
   String get listingAcceptedAlternatives => 'البدائل المقبولة';

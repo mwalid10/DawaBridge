@@ -1004,12 +1004,6 @@ abstract class AppLocalizations {
   /// **'Qty {quantity}'**
   String listingQtyLabel(Object quantity);
 
-  /// No description provided for @listingEditPrice.
-  ///
-  /// In en, this message translates to:
-  /// **'Edit price'**
-  String get listingEditPrice;
-
   /// No description provided for @fieldPriceEgp.
   ///
   /// In en, this message translates to:
@@ -1033,18 +1027,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Can\'t exceed the price'**
   String get listingDiscountExceedsPrice;
-
-  /// No description provided for @listingSavePrice.
-  ///
-  /// In en, this message translates to:
-  /// **'Save price'**
-  String get listingSavePrice;
-
-  /// No description provided for @listingCouldntUpdatePrice.
-  ///
-  /// In en, this message translates to:
-  /// **'Couldn\'t update price: {error}'**
-  String listingCouldntUpdatePrice(Object error);
 
   /// No description provided for @listingMessageSeller.
   ///
@@ -1111,12 +1093,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Set a price'**
   String get listingSetPrice;
-
-  /// No description provided for @listingEditPriceLink.
-  ///
-  /// In en, this message translates to:
-  /// **'Edit price'**
-  String get listingEditPriceLink;
 
   /// No description provided for @listingAcceptedAlternatives.
   ///

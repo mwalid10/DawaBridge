@@ -29,105 +29,6 @@ class ListingDetailScreen extends ConsumerStatefulWidget {
 
 class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
   bool _requesting = false;
-  bool _savingPrice = false;
-
-  Future<void> _editPrice(ListingSummary listing) async {
-    final l10n = context.l10n;
-    final priceController = TextEditingController(text: listing.price?.toStringAsFixed(2) ?? '');
-    final discountController = TextEditingController(text: listing.discountPrice?.toStringAsFixed(2) ?? '');
-    final formKey = GlobalKey<FormState>();
-
-    final save = await showModalBottomSheet<bool>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (sheetContext) => Padding(
-        padding: EdgeInsets.only(bottom: MediaQuery.of(sheetContext).viewInsets.bottom),
-        child: Container(
-          padding: const EdgeInsets.all(AppSpacing.xl),
-          decoration: const BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
-          ),
-          child: Form(
-            key: formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(l10n.listingEditPrice, style: Theme.of(sheetContext).textTheme.headlineMedium),
-                  const SizedBox(height: AppSpacing.lg),
-                  TextFormField(
-                    controller: priceController,
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    decoration: InputDecoration(labelText: l10n.fieldPriceEgp),
-                    validator: (v) {
-                      final n = double.tryParse((v ?? '').trim());
-                      if (n == null || n <= 0) return l10n.listingPriceValidator;
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  TextFormField(
-                    controller: discountController,
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    decoration: InputDecoration(labelText: l10n.fieldDiscountPriceOptional),
-                    validator: (v) {
-                      if ((v ?? '').trim().isEmpty) return null;
-                      final n = double.tryParse(v!.trim());
-                      final price = double.tryParse(priceController.text.trim());
-                      if (n == null || n <= 0) return l10n.listingPriceValidator;
-                      if (price != null && n > price) return l10n.listingDiscountExceedsPrice;
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: AppSpacing.xl),
-                  AppGradientButton(
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) Navigator.of(sheetContext).pop(true);
-                    },
-                    child: Text(l10n.listingSavePrice),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-
-    if (save != true || !mounted) {
-      priceController.dispose();
-      discountController.dispose();
-      return;
-    }
-
-    setState(() => _savingPrice = true);
-    try {
-      final discountText = discountController.text.trim();
-      // Was a direct `from('listings').update(...)`. It goes through the
-      // validated RPC now so the price/discount relationship and the
-      // "can't change terms while a buyer has it reserved" rule are
-      // enforced server-side rather than relying on this form.
-      await supabase.rpc('update_my_listing', params: {
-        'p_listing_id': widget.listingId,
-        'p_price': double.parse(priceController.text.trim()),
-        'p_discount_price': discountText.isEmpty ? null : double.parse(discountText),
-        'p_clear_discount': discountText.isEmpty,
-      });
-      ref.invalidate(listingDetailControllerProvider(widget.listingId));
-    } catch (error) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppError.message(l10n, error))));
-      }
-    } finally {
-      // Both were leaked on every invocation.
-      priceController.dispose();
-      discountController.dispose();
-      if (mounted) setState(() => _savingPrice = false);
-    }
-  }
 
   /// Shared entry point for both the "Contact" and "Exchange" actions —
   /// this app only has one seller-contact mechanism (a request that opens a
@@ -426,14 +327,26 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
                       const SizedBox(height: AppSpacing.sm),
                       Text(listing.description!, style: Theme.of(context).textTheme.bodyMedium),
                     ],
+                    // Owner actions. This used to be a price-only bottom
+                    // sheet, which was the only mutable field anywhere — so
+                    // a pharmacist opening their own listing to correct a
+                    // wrong quantity or expiry date would reasonably
+                    // conclude they still couldn't. It now opens the full
+                    // editor (which also holds Delete), and the price form
+                    // lives in exactly one place instead of two that could
+                    // drift apart.
                     if (listing.pharmacyId == uid) ...[
                       const SizedBox(height: AppSpacing.sm),
                       Align(
                         alignment: Alignment.centerLeft,
                         child: TextButton.icon(
-                          onPressed: _savingPrice ? null : () => _editPrice(listing),
+                          onPressed: listing.state == ListingState.available
+                              ? () => context.push('/listing/${listing.id}/edit')
+                              : null,
                           icon: const Icon(Icons.edit_rounded, size: 16),
-                          label: Text(listing.price == null ? l10n.listingSetPrice : l10n.listingEditPriceLink),
+                          label: Text(
+                            listing.price == null ? l10n.listingSetPrice : l10n.editListingTitle,
+                          ),
                         ),
                       ),
                     ],

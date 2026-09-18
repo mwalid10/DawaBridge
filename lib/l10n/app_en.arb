@@ -187,18 +187,10 @@
       "quantity": {}
     }
   },
-  "listingEditPrice": "Edit price",
   "fieldPriceEgp": "Price (EGP)",
   "listingPriceValidator": "Enter a valid price",
   "fieldDiscountPriceOptional": "Discount price (optional)",
   "listingDiscountExceedsPrice": "Can't exceed the price",
-  "listingSavePrice": "Save price",
-  "listingCouldntUpdatePrice": "Couldn't update price: {error}",
-  "@listingCouldntUpdatePrice": {
-    "placeholders": {
-      "error": {}
-    }
-  },
   "listingMessageSeller": "Message the seller",
   "listingMessageSellerBody": "Optional — say what you need. A default greeting is sent if you leave this blank.",
   "listingSendRequest": "Send request",
@@ -215,7 +207,6 @@
   "fieldQuantityLabel": "Quantity",
   "fieldExpiryDateLabel": "Expiry Date",
   "listingSetPrice": "Set a price",
-  "listingEditPriceLink": "Edit price",
   "listingAcceptedAlternatives": "Accepted alternatives",
   "listingDistanceAway": "{distance} km away",
   "@listingDistanceAway": {

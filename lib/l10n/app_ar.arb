@@ -189,18 +189,10 @@
       "quantity": {}
     }
   },
-  "listingEditPrice": "تعديل السعر",
   "fieldPriceEgp": "السعر (ج.م)",
   "listingPriceValidator": "أدخل سعرًا صحيحًا",
   "fieldDiscountPriceOptional": "سعر الخصم (اختياري)",
   "listingDiscountExceedsPrice": "لا يمكن أن يتجاوز السعر الأصلي",
-  "listingSavePrice": "حفظ السعر",
-  "listingCouldntUpdatePrice": "تعذر تحديث السعر: {error}",
-  "@listingCouldntUpdatePrice": {
-    "placeholders": {
-      "error": {}
-    }
-  },
   "listingMessageSeller": "مراسلة البائع",
   "listingMessageSellerBody": "اختياري — اذكر ما تحتاجه. سيتم إرسال تحية افتراضية إذا تركت هذا فارغًا.",
   "listingSendRequest": "إرسال الطلب",
@@ -217,7 +209,6 @@
   "fieldQuantityLabel": "الكمية",
   "fieldExpiryDateLabel": "تاريخ الانتهاء",
   "listingSetPrice": "تحديد سعر",
-  "listingEditPriceLink": "تعديل السعر",
   "listingAcceptedAlternatives": "البدائل المقبولة",
   "listingDistanceAway": "على بعد {distance} كم",
   "@listingDistanceAway": {
