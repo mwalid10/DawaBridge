@@ -1517,4 +1517,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get offlineCannotDeal => 'قبول الصفقات أو طلبها يحتاج إلى اتصال';
+
+  @override
+  String get brandName => 'DawaBridge';
+
+  @override
+  String get brandTagline => 'نربط الصيدليات.. نتبادل الأدوية';
 }

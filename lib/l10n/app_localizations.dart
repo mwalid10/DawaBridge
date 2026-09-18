@@ -1877,7 +1877,7 @@ abstract class AppLocalizations {
   /// No description provided for @addMedicineControlledBody.
   ///
   /// In en, this message translates to:
-  /// **'{name} is a controlled substance. Pharma Exchange Egypt doesn\'t support self-service listing of controlled substances yet — contact support if you believe this is an error.'**
+  /// **'{name} is a controlled substance. DawaBridge doesn\'t support self-service listing of controlled substances yet — contact support if you believe this is an error.'**
   String addMedicineControlledBody(Object name);
 
   /// No description provided for @addMedicineChooseDifferent.
@@ -2765,7 +2765,7 @@ abstract class AppLocalizations {
   /// No description provided for @offlineBody.
   ///
   /// In en, this message translates to:
-  /// **'We can\'t reach Pharma Exchange right now. Check your internet — we\'ll retry automatically as soon as you\'re back.'**
+  /// **'We can\'t reach DawaBridge right now. Check your internet — we\'ll retry automatically as soon as you\'re back.'**
   String get offlineBody;
 
   /// No description provided for @offlineBanner.
@@ -2809,6 +2809,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Accepting or requesting deals needs a connection'**
   String get offlineCannotDeal;
+
+  /// No description provided for @brandName.
+  ///
+  /// In en, this message translates to:
+  /// **'DawaBridge'**
+  String get brandName;
+
+  /// No description provided for @brandTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting Pharmacies, Sharing Medicines'**
+  String get brandTagline;
 }
 
 class _AppLocalizationsDelegate

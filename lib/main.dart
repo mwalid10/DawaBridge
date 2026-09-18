@@ -123,7 +123,7 @@ class PharmaExchangeApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = ref.watch(localeControllerProvider);
     return MaterialApp.router(
-      title: 'Pharma Exchange Egypt',
+      title: 'DawaBridge',
       debugShowCheckedModeBanner: false,
       theme: buildAppTheme(),
       // Deliberately light-only for now. A dark ThemeData on its own would

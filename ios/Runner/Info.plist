@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Pharma Exchange Egypt</string>
+	<string>DawaBridge</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -15,7 +15,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>pharma_exchange_egypt</string>
+	<string>DawaBridge</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -27,11 +27,11 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Pharma Exchange Egypt needs camera access so you can take and share photos in chat.</string>
+	<string>DawaBridge needs camera access so you can take and share photos in chat.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Pharma Exchange Egypt needs photo library access so you can attach photos to a chat.</string>
+	<string>DawaBridge needs photo library access so you can attach photos to a chat.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Pharma Exchange Egypt needs your location to pin your pharmacy's address and to show nearby listings.</string>
+	<string>DawaBridge needs your location to pin your pharmacy's address and to show nearby listings.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

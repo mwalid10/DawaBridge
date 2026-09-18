@@ -998,7 +998,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String addMedicineControlledBody(Object name) {
-    return '$name is a controlled substance. Pharma Exchange Egypt doesn\'t support self-service listing of controlled substances yet — contact support if you believe this is an error.';
+    return '$name is a controlled substance. DawaBridge doesn\'t support self-service listing of controlled substances yet — contact support if you believe this is an error.';
   }
 
   @override
@@ -1502,7 +1502,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get offlineBody =>
-      'We can\'t reach Pharma Exchange right now. Check your internet — we\'ll retry automatically as soon as you\'re back.';
+      'We can\'t reach DawaBridge right now. Check your internet — we\'ll retry automatically as soon as you\'re back.';
 
   @override
   String get offlineBanner =>
@@ -1527,4 +1527,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get offlineCannotDeal =>
       'Accepting or requesting deals needs a connection';
+
+  @override
+  String get brandName => 'DawaBridge';
+
+  @override
+  String get brandTagline => 'Connecting Pharmacies, Sharing Medicines';
 }

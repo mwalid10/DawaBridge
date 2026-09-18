@@ -180,14 +180,20 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Solid white, not the translucent badge that held the
+                      // old generic pharmacy glyph — the DawaBridge mark is
+                      // a green gradient and disappears against the green
+                      // hero unless it sits on its own light ground.
                       Container(
-                        padding: const EdgeInsets.all(14),
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                         decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.18),
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white.withValues(alpha: 0.32), width: 1.5),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(AppRadius.md),
+                          boxShadow: const [
+                            BoxShadow(color: Color(0x22000000), blurRadius: 12, offset: Offset(0, 4)),
+                          ],
                         ),
-                        child: const Icon(Icons.local_pharmacy_rounded, color: Colors.white, size: 30),
+                        child: Image.asset('assets/branding/logo.png', width: 64, fit: BoxFit.contain),
                       ),
                       const SizedBox(height: AppSpacing.lg),
                       Text(

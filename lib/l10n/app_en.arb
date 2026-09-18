@@ -416,7 +416,7 @@
   "fieldManufacturer": "Manufacturer",
   "fieldForm": "Form",
   "addMedicineControlledTitle": "Controlled substance — can't be listed here",
-  "addMedicineControlledBody": "{name} is a controlled substance. Pharma Exchange Egypt doesn't support self-service listing of controlled substances yet — contact support if you believe this is an error.",
+  "addMedicineControlledBody": "{name} is a controlled substance. DawaBridge doesn't support self-service listing of controlled substances yet — contact support if you believe this is an error.",
   "@addMedicineControlledBody": {
     "placeholders": {
       "name": {}
@@ -610,12 +610,14 @@
   "chatBadgeCompleted": "Completed",
   "chatBadgeCancelled": "Cancelled",
   "offlineTitle": "No connection",
-  "offlineBody": "We can't reach Pharma Exchange right now. Check your internet — we'll retry automatically as soon as you're back.",
+  "offlineBody": "We can't reach DawaBridge right now. Check your internet — we'll retry automatically as soon as you're back.",
   "offlineBanner": "You're offline. Some things won't work until you reconnect.",
   "offlineReconnecting": "Reconnecting…",
   "offlineActionUnavailable": "You need a connection to do that.",
   "chatMessagePending": "Sending when you're back online",
   "offlineCanBrowse": "Browse listings you've already seen",
   "offlineCanMessage": "Write messages — they send when you're back",
-  "offlineCannotDeal": "Accepting or requesting deals needs a connection"
+  "offlineCannotDeal": "Accepting or requesting deals needs a connection",
+  "brandName": "DawaBridge",
+  "brandTagline": "Connecting Pharmacies, Sharing Medicines"
 }

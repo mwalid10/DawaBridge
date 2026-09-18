@@ -583,5 +583,7 @@
   "chatMessagePending": "سيُرسل عند عودة الاتصال",
   "offlineCanBrowse": "تصفّح الإعلانات التي شاهدتها من قبل",
   "offlineCanMessage": "اكتب رسائل — ستُرسل عند عودة الاتصال",
-  "offlineCannotDeal": "قبول الصفقات أو طلبها يحتاج إلى اتصال"
+  "offlineCannotDeal": "قبول الصفقات أو طلبها يحتاج إلى اتصال",
+  "brandName": "DawaBridge",
+  "brandTagline": "نربط الصيدليات.. نتبادل الأدوية"
 }

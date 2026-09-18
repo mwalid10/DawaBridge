@@ -67,6 +67,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+  image: ^4.10.1
+  flutter_launcher_icons: ^0.14.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -82,6 +84,7 @@ flutter:
 
   assets:
     - .env
+    - assets/branding/
 
   fonts:
     - family: PlusJakartaSans
@@ -93,3 +96,28 @@ flutter:
           weight: 600
         - asset: assets/fonts/PlusJakartaSans-Variable.ttf
           weight: 700
+
+# DawaBridge launcher icons.
+#
+# Sources come from tool/make_branding.dart, which trims the raw logo export
+# down to the mark's true bounds first — the original is a 2048px canvas with
+# the logo occupying only 53% x 31% of it, and feeding that in directly would
+# produce a launcher icon that's mostly empty space.
+#
+# Regenerate with:  dart run flutter_launcher_icons
+flutter_launcher_icons:
+  image_path: "assets/branding/icon.png"
+
+  android: true
+  # Adaptive icons: Android masks the foreground to whatever shape the
+  # launcher uses and only guarantees the centre ~66% survives, so the
+  # foreground is padded harder than the plain icon.
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/branding/icon_foreground.png"
+  min_sdk_android: 21
+
+  ios: true
+  # iOS rejects an icon with an alpha channel at App Store submission, so the
+  # flattened white-background version is the right source here.
+  remove_alpha_ios: true
+  image_path_ios: "assets/branding/icon.png"

@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Modify this file to customize your launch splash screen -->
+<!-- DawaBridge native launch screen.
+
+     White is hard-coded rather than using ?android:colorBackground, which
+     resolves to black on a device in dark mode. The app itself is light-only
+     (see the themeMode comment in main.dart), so inheriting the system
+     colour here produced a black native splash that flashed to a white
+     Flutter splash a moment later. -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@android:color/white" />
 
-    <!-- You can insert your own image assets here -->
-    <!-- <item>
+    <item>
         <bitmap
             android:gravity="center"
-            android:src="@mipmap/launch_image" />
-    </item> -->
+            android:src="@drawable/launch_image" />
+    </item>
 </layer-list>
