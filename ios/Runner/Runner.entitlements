@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Push notifications.
+
+	     firebase_messaging cannot register for remote notifications without
+	     this; APNs simply never issues a token, and the app silently gets no
+	     pushes with no error. There was no entitlements file at all before,
+	     which is one of the two reasons iOS push could never have worked
+	     (the other being the missing GoogleService-Info.plist).
+
+	     'development' is correct for debug and TestFlight-via-Xcode builds.
+	     Xcode automatically promotes this to 'production' for App Store
+	     distribution, so it does not need a second file. -->
+	<key>aps-environment</key>
+	<string>development</string>
+</dict>
+</plist>

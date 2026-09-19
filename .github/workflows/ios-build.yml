@@ -1,26 +1,143 @@
 name: iOS build
 
+# Builds an UNSIGNED iOS app. There is no Mac on the dev machine, so this
+# runner is the only way the iOS target gets compiled at all — which means
+# it's also the only thing that catches iOS-side breakage (a podspec that
+# needs a newer deployment target, a plugin that doesn't build on arm64, a
+# missing Info.plist key).
+#
+# Unsigned means the artifact can't be installed on a device. Getting to a
+# TestFlight build needs an Apple Developer account, certificates and a
+# provisioning profile in repository secrets — see the notes at the bottom.
+
 on:
   push:
+    branches: [main]
+    # Skip runs that can't affect the iOS build.
+    paths-ignore:
+      - '**.md'
+      - 'supabase/**'
+      - 'android/**'
+      - '.github/workflows/**'
+      - '!.github/workflows/ios-build.yml'
+  pull_request:
     branches: [main]
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: macos-14
+    timeout-minutes: 45
+
     steps:
       - uses: actions/checkout@v4
 
       - uses: subosito/flutter-action@v2
         with:
+          # Pinned to the version used locally, so CI can't pass on a
+          # different toolchain than the one the code was written against.
           flutter-version: '3.44.9'
           channel: 'stable'
+          cache: true
+
+      # .env is gitignored, but main.dart does `await dotenv.load()` before
+      # runApp and throws without the file. The build only needs it to exist
+      # and parse — these are placeholders, never real credentials, and the
+      # artifact is unsigned and uninstallable anyway.
+      - name: Create placeholder .env
+        run: |
+          cat > .env <<'EOF'
+          SUPABASE_URL=https://placeholder.supabase.co
+          SUPABASE_ANON_KEY=placeholder-anon-key-for-ci-build-only
+          EOF
+
+      # Likewise GoogleService-Info.plist. It is deliberately NOT in the
+      # repo — it belongs to the Firebase project and is generated from the
+      # console. main.dart already guards Firebase.initializeApp() so a
+      # missing/placeholder config degrades to "push disabled" instead of
+      # crashing at launch, but the file has to exist for the iOS build to
+      # link Firebase at all.
+      #
+      # If FIREBASE_IOS_PLIST is set as a repository secret (base64 of the
+      # real file) the real one is used, so CI matches a release build.
+      - name: Provide GoogleService-Info.plist
+        env:
+          FIREBASE_IOS_PLIST: ${{ secrets.FIREBASE_IOS_PLIST }}
+        run: |
+          if [ -f ios/Runner/GoogleService-Info.plist ]; then
+            # Committed to the repo, the way android/app/google-services.json
+            # already is. It's client config, not a credential, so that is a
+            # perfectly reasonable choice — don't clobber it.
+            echo "Using the GoogleService-Info.plist committed to the repo."
+          elif [ -n "$FIREBASE_IOS_PLIST" ]; then
+            echo "$FIREBASE_IOS_PLIST" | base64 --decode > ios/Runner/GoogleService-Info.plist
+            echo "Using the real GoogleService-Info.plist from secrets."
+          else
+            echo "::warning::FIREBASE_IOS_PLIST secret not set — building with a placeholder. Push notifications will not work in this artifact."
+            cat > ios/Runner/GoogleService-Info.plist <<'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>API_KEY</key><string>placeholder</string>
+            <key>GCM_SENDER_ID</key><string>000000000000</string>
+            <key>BUNDLE_ID</key><string>com.pharmaexchangeegypt.pharmaExchangeEgypt</string>
+            <key>PROJECT_ID</key><string>placeholder</string>
+            <key>GOOGLE_APP_ID</key><string>1:000000000000:ios:0000000000000000000000</string>
+            <key>IS_GCM_ENABLED</key><true/>
+          </dict>
+          </plist>
+          EOF
+          fi
 
       - run: flutter pub get
 
-      - run: flutter build ios --release --no-codesign
+      # Fails the build on anything the analyzer flags, so an iOS-only
+      # compile error isn't the first thing anyone hears about.
+      - run: flutter analyze
+
+      - run: flutter test
+
+      - name: Build (unsigned)
+        run: flutter build ios --release --no-codesign
+
+      # .app is what Xcode produces; .ipa is what distribution tools expect.
+      # Wrapping it here means the artifact is one step from being signed
+      # and uploaded rather than needing to be repackaged by hand.
+      - name: Package as unsigned IPA
+        run: |
+          mkdir -p build/ios/Payload
+          cp -r build/ios/iphoneos/Runner.app build/ios/Payload/
+          cd build/ios
+          zip -qry DawaBridge-unsigned.ipa Payload
+          ls -lh DawaBridge-unsigned.ipa
 
       - uses: actions/upload-artifact@v4
         with:
-          name: Runner-ios-build
-          path: build/ios/iphoneos/Runner.app
+          name: DawaBridge-ios-unsigned
+          path: build/ios/DawaBridge-unsigned.ipa
+          retention-days: 14
+
+# ---------------------------------------------------------------------------
+# Getting from here to TestFlight
+#
+# This workflow deliberately stops at an unsigned build, because signing
+# needs an Apple Developer Program membership (99 USD/year) and credentials
+# that can't live in the repo. When that account exists:
+#
+#   1. Register the bundle id com.pharmaexchangeegypt.pharmaExchangeEgypt in
+#      the Apple Developer portal, with the Push Notifications capability
+#      enabled.
+#   2. Create an APNs auth key (.p8) and upload it to Firebase under
+#      Project settings -> Cloud Messaging. Without this, FCM has no way to
+#      reach iOS devices even with everything else correct.
+#   3. Add these repository secrets:
+#        BUILD_CERTIFICATE_BASE64   the .p12 distribution certificate
+#        P12_PASSWORD               its password
+#        PROVISIONING_PROFILE_BASE64
+#        KEYCHAIN_PASSWORD          any value, used for the temp keychain
+#        FIREBASE_IOS_PLIST         the real GoogleService-Info.plist
+#   4. Add a step before the build that imports the certificate into a
+#      temporary keychain, then drop --no-codesign and use
+#      `flutter build ipa --export-options-plist=...`.
+# ---------------------------------------------------------------------------

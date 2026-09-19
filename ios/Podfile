@@ -1,0 +1,75 @@
+# DawaBridge — iOS pods.
+#
+# Committed rather than left to Flutter's first-run generation, because the
+# generated default leaves the platform line commented out and CocoaPods
+# then falls back to a version older than Firebase accepts. firebase_core
+# 4.14 pulls Firebase iOS SDK 12.x, whose podspec declares
+# `ios.deployment_target = '15.0'` — anything lower fails pod install with a
+# platform-incompatibility error before a single file compiles.
+#
+# Keep this in step with IPHONEOS_DEPLOYMENT_TARGET in
+# ios/Runner.xcodeproj/project.pbxproj, which is also 15.0.
+platform :ios, '15.0'
+
+# CocoaPods analytics sends network stats on every pod install, slowing down
+# builds — and on CI that is pure dead time.
+ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+
+project 'Runner', {
+  'Debug' => :debug,
+  'Profile' => :release,
+  'Release' => :release,
+}
+
+def flutter_root
+  generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
+  unless File.exist?(generated_xcode_build_settings_path)
+    raise "#{generated_xcode_build_settings_path} must exist. If you're running pod install manually, make sure \"flutter pub get\" is executed first"
+  end
+
+  File.foreach(generated_xcode_build_settings_path) do |line|
+    matches = line.match(/FLUTTER_ROOT\=(.*)/)
+    return matches[1].strip if matches
+  end
+  raise "FLUTTER_ROOT not found in #{generated_xcode_build_settings_path}. Try deleting Generated.xcconfig, then run \"flutter pub get\""
+end
+
+require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
+
+flutter_ios_podfile_setup
+
+target 'Runner' do
+  use_frameworks!
+
+  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+
+  target 'RunnerTests' do
+    inherit! :search_paths
+  end
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    flutter_additional_ios_build_settings(target)
+
+    target.build_configurations.each do |config|
+      # Some transitive pods still declare a lower target than the app.
+      # Without this, Xcode 15+ warns on every one of them and a few fail
+      # outright against the iOS 15 SDK.
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
+
+      # geolocator, image_picker and file_picker each guard their
+      # permission-specific code behind these macros. Declaring only the
+      # ones the app actually asks for keeps the others' code out of the
+      # binary — which matters at App Store review, where an unused
+      # permission API present in the binary draws questions about a
+      # purpose string that isn't in Info.plist.
+      config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)']
+      config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] += [
+        'PERMISSION_LOCATION=1',
+        'PERMISSION_CAMERA=1',
+        'PERMISSION_PHOTOS=1',
+      ]
+    end
+  end
+end
