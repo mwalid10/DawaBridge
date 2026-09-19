@@ -9,6 +9,16 @@
 # packages, and plugins designed to encourage good coding practices.
 include: package:flutter_lints/flutter.yaml
 
+analyzer:
+  # With Swift Package Manager enabled, `flutter pub get` copies each darwin
+  # plugin's ENTIRE source tree — example app, tests and all — into
+  # build/<platform>/SourcePackages. Those copies import dev dependencies this
+  # project does not have (mockito, integration_test,
+  # flutter_local_notifications), so analyzing them produced 190 errors in CI
+  # for code we neither wrote nor ship. Build output is not source.
+  exclude:
+    - build/**
+
 linter:
   # The lint rules applied to this project can be customized in the
   # section below to disable rules from the `package:flutter_lints/flutter.yaml`
