@@ -18,8 +18,6 @@ on:
       - '**.md'
       - 'supabase/**'
       - 'android/**'
-      - '.github/workflows/**'
-      - '!.github/workflows/ios-build.yml'
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -41,15 +39,33 @@ jobs:
           cache: true
 
       # .env is gitignored, but main.dart does `await dotenv.load()` before
-      # runApp and throws without the file. The build only needs it to exist
-      # and parse — these are placeholders, never real credentials, and the
-      # artifact is unsigned and uninstallable anyway.
-      - name: Create placeholder .env
+      # runApp and throws without the file. It is also a bundled Flutter asset
+      # (see the `assets:` list in pubspec.yaml), so whatever is written here
+      # is baked into the artifact — a placeholder build installs fine and
+      # then fails every Supabase call, which makes it useless for testing on
+      # a real device.
+      #
+      # Set SUPABASE_URL and SUPABASE_ANON_KEY as repository secrets to get a
+      # build that actually talks to the project. The anon key is a publishable
+      # client key guarded by RLS — it ships inside every release build of
+      # every Flutter/Supabase app — but it is still extractable from the
+      # artifact, so an IPA built this way is not something to hand around.
+      - name: Write .env
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
-          cat > .env <<'EOF'
-          SUPABASE_URL=https://placeholder.supabase.co
-          SUPABASE_ANON_KEY=placeholder-anon-key-for-ci-build-only
-          EOF
+          if [ -n "$SUPABASE_URL" ] && [ -n "$SUPABASE_ANON_KEY" ]; then
+            echo "Using the real Supabase credentials from secrets."
+          else
+            echo "::warning::SUPABASE_URL / SUPABASE_ANON_KEY secrets are not set — building with placeholders. The app will launch but cannot sign in or load any data."
+            SUPABASE_URL=https://placeholder.supabase.co
+            SUPABASE_ANON_KEY=placeholder-anon-key-for-ci-build-only
+          fi
+          {
+            echo "SUPABASE_URL=$SUPABASE_URL"
+            echo "SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY"
+          } > .env
 
       # Likewise GoogleService-Info.plist. It is deliberately NOT in the
       # repo — it belongs to the Firebase project and is generated from the
