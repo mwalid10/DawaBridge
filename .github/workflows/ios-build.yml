@@ -117,6 +117,15 @@ jobs:
       # sandbox/Podfile.lock mismatch that broke the first real iOS build.
       - run: flutter config --enable-swift-package-manager
 
+      # macOS ships rsync 2.6.9, which predates --mkpath and cannot create a
+      # missing parent directory. With Swift Package Manager enabled, the
+      # `flutter pub get` below rsyncs every darwin plugin into
+      # build/ios/SourcePackages/<plugin>, and a clean CI checkout has no
+      # build/ directory at all — so the first plugin copy dies with
+      # "Failed to copy plugin firebase_messaging ... mkdir failed". A local
+      # Mac never hits this because build/ios survives from an earlier build.
+      - run: mkdir -p build/ios/SourcePackages
+
       - run: flutter pub get
 
       # Fails the build on anything the analyzer flags, so an iOS-only
