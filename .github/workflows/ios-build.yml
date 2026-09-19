@@ -24,13 +24,16 @@ on:
 
 jobs:
   build:
-    # macos-15 ships Xcode 16.4. firebase-ios-sdk 12.18 — pulled in by
-    # firebase_messaging 16.6.0 — declares swift-tools-version 6.1 in its
-    # Package.swift, and Xcode 16.3+ is required to so much as parse that.
-    # The Xcode 15.x on macos-14 failed SPM resolution before compiling a
-    # single file. Staying on 15 rather than jumping to macos-26/Xcode 26
-    # keeps the toolchain close to what Flutter 3.44.9 was released against.
-    runs-on: macos-15
+    # The runner has to clear two separate SDK floors at once:
+    #   - firebase-ios-sdk 12.18, pulled in by firebase_messaging 16.6.0,
+    #     declares swift-tools-version 6.1 in its Package.swift, which Xcode
+    #     16.3+ is needed to so much as parse.
+    #   - connectivity_plus 7.3.1 calls NWPath.isUltraConstrained, which only
+    #     exists in the iOS 26 SDK, so it needs Xcode 26.
+    # macos-26 is the only image that satisfies both. For the record:
+    # macos-14 (Xcode 15.x) failed SPM resolution outright, and macos-15
+    # (Xcode 16.4) resolved fine and then failed compiling connectivity_plus.
+    runs-on: macos-26
     timeout-minutes: 45
 
     steps:
