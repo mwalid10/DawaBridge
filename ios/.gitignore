@@ -11,6 +11,12 @@
 **/DerivedData/
 Icon?
 **/Pods/
+# CocoaPods is not used: every plugin resolves through Swift Package
+# Manager. A committed Podfile (or lock) makes Flutter treat the project as
+# non-standard and refuse to migrate, which leaves CocoaPods half-wired and
+# fails the build on a sandbox/lockfile mismatch.
+Podfile
+Podfile.lock
 **/.symlinks/
 profile
 xcuserdata

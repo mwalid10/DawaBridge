@@ -90,6 +90,17 @@ jobs:
           EOF
           fi
 
+      # Every plugin this app uses ships a Package.swift, so Flutter resolves
+      # them all through Swift Package Manager. Enabling it here keeps CI on
+      # the same path as a local Mac build — otherwise CI silently falls back
+      # to CocoaPods and can pass while the real build breaks, or vice versa.
+      #
+      # There is deliberately no Podfile in the repo. A committed one with
+      # any customisation counts as "non-standard", which stops Flutter
+      # auto-migrating to SPM and leaves CocoaPods half-integrated — the
+      # sandbox/Podfile.lock mismatch that broke the first real iOS build.
+      - run: flutter config --enable-swift-package-manager
+
       - run: flutter pub get
 
       # Fails the build on anything the analyzer flags, so an iOS-only
