@@ -127,6 +127,10 @@ class _DeleteAccountButtonState extends ConsumerState<_DeleteAccountButton> {
     try {
       await unregisterPushToken();
       await supabase.rpc('delete_my_account');
+      // Same reasoning as the sign-out path above, and more so: the account
+      // this cache belongs to no longer exists.
+      await OfflineCache.clear();
+      await MessageOutbox.clear();
       await supabase.auth.signOut();
       if (!mounted) return;
       messenger.showSnackBar(SnackBar(content: Text(l10n.accountDeleteDone)));

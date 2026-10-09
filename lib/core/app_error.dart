@@ -96,6 +96,10 @@ class AppError {
       'RATING_DEAL_NOT_COMPLETED' => l10n.errorRatingDealNotCompleted,
       'DRUG_NAME_REQUIRED' => l10n.errorDrugNameRequired,
       'DRUG_NAME_TOO_LONG' => l10n.errorDrugNameTooLong,
+      // What an exchange listing accepts in return — 0043.
+      'LISTING_NOT_BARTER' => l10n.errorListingNotBarter,
+      'LISTING_ALTERNATIVES_TOO_MANY' => l10n.errorAlternativesTooMany,
+      'DRUG_NOT_FOUND' => l10n.errorDrugNotFound,
       'PHARMACY_NAME_REQUIRED' => l10n.errorPharmacyNameRequired,
       'GOVERNORATE_REQUIRED' => l10n.errorGovernorateRequired,
       'LOCATION_REQUIRED' => l10n.errorLocationRequired,

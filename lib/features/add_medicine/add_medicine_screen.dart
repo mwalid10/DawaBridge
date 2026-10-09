@@ -8,17 +8,16 @@ import 'package:intl/intl.dart';
 
 import '../../core/l10n_extensions.dart';
 import '../../core/success_screen.dart';
-import '../../core/supabase_client.dart';
 import '../../core/theme.dart';
 import '../../core/widgets/app_gradient_button.dart';
 import '../../core/widgets/glass_card.dart';
 import '../drugs/drug.dart';
 import '../drugs/drug_catalog_entry.dart';
 import '../drugs/drug_catalog_search.dart';
+import '../drugs/alternatives_picker_sheet.dart';
 import '../drugs/drugs_controller.dart';
-import '../home/home_feed_controller.dart';
 import '../listings/listing_summary.dart';
-import '../search/search_controller.dart';
+import '../listings/listing_views.dart';
 import 'add_listing_data.dart';
 import 'add_medicine_controller.dart';
 
@@ -90,7 +89,7 @@ class _AddMedicineScreenState extends ConsumerState<AddMedicineScreen> {
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      builder: (context) => _AlternativesPickerSheet(
+      builder: (context) => AlternativesPickerSheet(
         excludeDrugId: data.drug?.id,
         selectedDrugs: selectedDrugs,
         onToggle: (id) => ref.read(addMedicineControllerProvider.notifier).toggleAlternative(id),
@@ -149,8 +148,7 @@ class _AddMedicineScreenState extends ConsumerState<AddMedicineScreen> {
     });
     try {
       await notifier.submit(quantity: quantity);
-      ref.invalidate(homeFeedControllerProvider);
-      ref.invalidate(searchControllerProvider);
+      invalidateListingViews(ref);
       notifier.reset();
       _quantityController.clear();
       _priceController.clear();
@@ -657,204 +655,6 @@ class _DrugEntryTile extends StatelessWidget {
         if (entry.pharmaceuticalForm != null) entry.pharmaceuticalForm!,
       ].join(' · ')),
       onTap: () => Navigator.of(context).pop(_DrugPickResult.fromCatalog(entry)),
-    );
-  }
-}
-
-String _catalogKey(String tradeName, String? concentration) =>
-    '${tradeName.trim().toLowerCase()}|${(concentration ?? '').trim().toLowerCase()}';
-
-/// Search-as-you-type over the same drug_catalog as the main Medicine field
-/// (_DrugSearchSheet), multi-select instead of single-pick. Each tap
-/// resolves the entry through find_or_create_drug (same RPC, same
-/// converge-on-one-row-by-name+concentration behavior — see
-/// 0022_drug_catalog.sql) and toggles it in the accepted-alternatives list;
-/// [selectedDrugs] (already-resolved Drug rows for the current selection,
-/// looked up by the caller from drugsControllerProvider) seeds a
-/// name+concentration key set so previously-picked items show checked
-/// immediately, without spending an RPC call just to render the list.
-class _AlternativesPickerSheet extends StatefulWidget {
-  const _AlternativesPickerSheet({
-    required this.excludeDrugId,
-    required this.selectedDrugs,
-    required this.onToggle,
-    required this.onResolved,
-  });
-
-  final String? excludeDrugId;
-  final List<Drug> selectedDrugs;
-  final void Function(String drugId) onToggle;
-  final void Function(Drug drug) onResolved;
-
-  @override
-  State<_AlternativesPickerSheet> createState() => _AlternativesPickerSheetState();
-}
-
-class _AlternativesPickerSheetState extends State<_AlternativesPickerSheet> {
-  final _controller = TextEditingController();
-  Timer? _debounce;
-  String _query = '';
-  List<DrugCatalogEntry> _results = const [];
-  List<DrugCatalogEntry> _initialResults = const [];
-  bool _loading = false;
-  bool _initialLoading = true;
-  bool _resolving = false;
-  late final Set<String> _selectedIds;
-  late final Map<String, String> _resolvedIdByKey;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedIds = widget.selectedDrugs.map((d) => d.id).toSet();
-    _resolvedIdByKey = {for (final d in widget.selectedDrugs) _catalogKey(d.tradeName, d.concentration): d.id};
-    _loadInitial();
-  }
-
-  Future<void> _loadInitial() async {
-    try {
-      final results = await fetchInitialDrugCatalog();
-      if (mounted) setState(() => _initialResults = results);
-    } catch (_) {
-      // Best-effort preload — typing to search still works independently.
-    } finally {
-      if (mounted) setState(() => _initialLoading = false);
-    }
-  }
-
-  @override
-  void dispose() {
-    _debounce?.cancel();
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _onQueryChanged(String value) {
-    setState(() => _query = value);
-    _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 350), () async {
-      final q = value.trim();
-      if (q.isEmpty) {
-        setState(() {
-          _results = const [];
-          _loading = false;
-        });
-        return;
-      }
-      setState(() => _loading = true);
-      try {
-        final results = await searchDrugCatalog(q);
-        if (mounted && _controller.text.trim() == q) {
-          setState(() {
-            _results = results;
-            _loading = false;
-          });
-        }
-      } catch (_) {
-        if (mounted) setState(() => _loading = false);
-      }
-    });
-  }
-
-  Future<void> _toggleEntry(DrugCatalogEntry entry) async {
-    if (_resolving) return;
-    final l10n = context.l10n;
-    setState(() => _resolving = true);
-    try {
-      final rows = await supabase.rpc('find_or_create_drug', params: {
-        'p_trade_name': entry.tradeName,
-        'p_concentration': entry.concentration,
-        'p_company': entry.company,
-        'p_pharmaceutical_form': entry.pharmaceuticalForm,
-      });
-      final row = (rows as List<dynamic>).first as Map<String, dynamic>;
-      final drug = Drug.fromJson(row);
-      if (drug.id == widget.excludeDrugId || drug.isControlled) return;
-      widget.onResolved(drug);
-      widget.onToggle(drug.id);
-      setState(() {
-        _resolvedIdByKey[_catalogKey(drug.tradeName, drug.concentration)] = drug.id;
-        if (_selectedIds.contains(drug.id)) {
-          _selectedIds.remove(drug.id);
-        } else {
-          _selectedIds.add(drug.id);
-        }
-      });
-    } catch (_) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.addMedicineCouldntSelect)));
-      }
-    } finally {
-      if (mounted) setState(() => _resolving = false);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final trimmed = _query.trim();
-    final items = trimmed.isEmpty ? _initialResults : _results;
-    return DraggableScrollableSheet(
-      initialChildSize: 0.75,
-      expand: false,
-      builder: (context, scrollController) {
-        return Padding(
-          padding: EdgeInsets.only(
-            left: AppSpacing.lg,
-            right: AppSpacing.lg,
-            top: AppSpacing.lg,
-            bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.lg,
-          ),
-          child: Column(
-            children: [
-              Text(l10n.listingAcceptedAlternatives, style: Theme.of(context).textTheme.titleMedium),
-              const SizedBox(height: AppSpacing.md),
-              TextField(
-                controller: _controller,
-                autofocus: true,
-                onChanged: _onQueryChanged,
-                decoration: InputDecoration(
-                  hintText: l10n.addMedicineSearchHint,
-                  prefixIcon: const Icon(Icons.search_rounded),
-                  suffixIcon: _loading
-                      ? const Padding(
-                          padding: EdgeInsets.all(12),
-                          child: SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)),
-                        )
-                      : null,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              Expanded(
-                child: (trimmed.isEmpty && _initialLoading)
-                    ? const Center(child: CircularProgressIndicator())
-                    : items.isEmpty
-                        ? Center(
-                            child: Text(l10n.addMedicineNoMatches, style: Theme.of(context).textTheme.bodySmall),
-                          )
-                        : ListView.builder(
-                            controller: scrollController,
-                            itemCount: items.length,
-                            itemBuilder: (context, i) {
-                              final entry = items[i];
-                              final key = _catalogKey(entry.tradeName, entry.concentration);
-                              final resolvedId = _resolvedIdByKey[key];
-                              final checked = resolvedId != null && _selectedIds.contains(resolvedId);
-                              return CheckboxListTile(
-                                title: Text(entry.displayName),
-                                subtitle: Text([
-                                  if (entry.company != null) entry.company!,
-                                  if (entry.pharmaceuticalForm != null) entry.pharmaceuticalForm!,
-                                ].join(' · ')),
-                                value: checked,
-                                onChanged: _resolving ? null : (_) => _toggleEntry(entry),
-                              );
-                            },
-                          ),
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }

@@ -42,6 +42,8 @@ class OfflineCache {
   static const favorites = 'favorites';
   static const deals = 'deals';
   static String listing(String id) => 'listing_$id';
+  static String listingAlternatives(String id) => 'listing_alts_$id';
+  static String deal(String id) => 'deal_$id';
   static String messages(String dealId) => 'messages_$dealId';
 
   static Future<void> write(String key, List<Map<String, dynamic>> rows) async {

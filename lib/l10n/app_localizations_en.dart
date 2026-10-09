@@ -551,7 +551,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get listingSetPrice => 'Set a price';
 
   @override
-  String get listingAcceptedAlternatives => 'Accepted alternatives';
+  String get listingAcceptedAlternatives => 'Accepts in exchange';
+
+  @override
+  String get listingAcceptedAlternativesSubtitle =>
+      'What this pharmacy will take in return';
+
+  @override
+  String get listingAcceptsAnyOffer =>
+      'They haven\'t named anything specific — send a message to propose an exchange.';
+
+  @override
+  String get listingAcceptedAlternativesUnavailable =>
+      'Couldn\'t load what they accept.';
 
   @override
   String listingDistanceAway(Object distance) {
@@ -1265,6 +1277,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorDrugNameTooLong => 'That medicine name is too long.';
+
+  @override
+  String get errorListingNotBarter =>
+      'Only an exchange listing can name what it accepts in return.';
+
+  @override
+  String get errorAlternativesTooMany =>
+      'That\'s too many alternatives — pick 20 or fewer.';
+
+  @override
+  String get errorDrugNotFound =>
+      'One of those medicines is no longer in the catalogue.';
 
   @override
   String get errorPharmacyNameRequired => 'Enter your pharmacy name.';

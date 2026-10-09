@@ -551,7 +551,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get listingSetPrice => 'تحديد سعر';
 
   @override
-  String get listingAcceptedAlternatives => 'البدائل المقبولة';
+  String get listingAcceptedAlternatives => 'يقبل في المقابل';
+
+  @override
+  String get listingAcceptedAlternativesSubtitle =>
+      'ما تقبله هذه الصيدلية بدلاً منه';
+
+  @override
+  String get listingAcceptsAnyOffer =>
+      'لم تحدّد بدائل معيّنة — راسلها لاقتراح مبادلة.';
+
+  @override
+  String get listingAcceptedAlternativesUnavailable =>
+      'تعذّر تحميل ما تقبله الصيدلية.';
 
   @override
   String listingDistanceAway(Object distance) {
@@ -1262,6 +1274,17 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get errorDrugNameTooLong => 'اسم الدواء طويل جداً.';
+
+  @override
+  String get errorListingNotBarter =>
+      'تحديد ما يُقبل في المقابل متاح لإعلانات المبادلة فقط.';
+
+  @override
+  String get errorAlternativesTooMany =>
+      'عدد البدائل كبير جداً — اختر 20 بديلاً على الأكثر.';
+
+  @override
+  String get errorDrugNotFound => 'أحد هذه الأدوية لم يعد موجوداً في الكتالوج.';
 
   @override
   String get errorPharmacyNameRequired => 'أدخل اسم صيدليتك.';

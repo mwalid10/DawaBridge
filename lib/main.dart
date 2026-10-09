@@ -7,6 +7,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'core/account_state_reset.dart';
 import 'core/connectivity.dart';
 import 'core/locale_controller.dart';
 import 'core/router.dart';
@@ -113,7 +114,16 @@ Future<void> main() async {
     }
   });
 
-  runApp(const ProviderScope(child: PharmaExchangeApp()));
+  // Owned here rather than by a `ProviderScope` widget, so the account-change
+  // reset can reach the container from outside the widget tree — the same
+  // place the other app-wide listeners are started.
+  final container = ProviderContainer();
+  AccountStateReset.start(container);
+
+  runApp(UncontrolledProviderScope(
+    container: container,
+    child: const PharmaExchangeApp(),
+  ));
 }
 
 class PharmaExchangeApp extends ConsumerWidget {
