@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -10,9 +11,11 @@ import '../../core/theme.dart';
 import '../../core/widgets/app_gradient_button.dart';
 import '../../core/widgets/glass_card.dart';
 import '../../core/widgets/error_retry.dart';
+import '../drugs/alternatives_picker_sheet.dart';
+import '../drugs/drug.dart';
 import 'listing_detail_controller.dart';
 import 'listing_summary.dart';
-import 'my_listings_controller.dart';
+import 'listing_views.dart';
 
 /// Edit or remove one of your own listings.
 ///
@@ -50,6 +53,12 @@ class _EditListingScreenState extends ConsumerState<EditListingScreen> {
   bool _deleting = false;
   String? _error;
 
+  /// Exchange listings only. Held as ids because that's what the column and
+  /// the RPC take; [_alternativeNames] carries what to print on the chips.
+  List<String> _alternatives = [];
+  List<String> _seededAlternatives = [];
+  final Map<String, Drug> _alternativeNames = {};
+
   @override
   void dispose() {
     _quantity.dispose();
@@ -67,6 +76,28 @@ class _EditListingScreenState extends ConsumerState<EditListingScreen> {
     _discount.text = listing.discountPrice?.toStringAsFixed(2) ?? '';
     _description.text = listing.description ?? '';
     _expiry = listing.expiryDate;
+    _alternatives = List.of(listing.acceptedAlternatives);
+    _seededAlternatives = List.of(listing.acceptedAlternatives);
+  }
+
+  Future<void> _openAlternativesPicker(ListingSummary listing) async {
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => AlternativesPickerSheet(
+        // Swapping a medicine for itself isn't an exchange.
+        excludeDrugId: listing.drugId,
+        selectedDrugs: _alternatives.map((id) => _alternativeNames[id]).whereType<Drug>().toList(),
+        onToggle: (id) => setState(() {
+          if (_alternatives.contains(id)) {
+            _alternatives.remove(id);
+          } else {
+            _alternatives.add(id);
+          }
+        }),
+        onResolved: (drug) => setState(() => _alternativeNames[drug.id] = drug),
+      ),
+    );
   }
 
   Future<void> _save() async {
@@ -90,10 +121,16 @@ class _EditListingScreenState extends ConsumerState<EditListingScreen> {
         'p_discount_price': discountText.isEmpty ? null : double.parse(discountText),
         'p_description': _description.text.trim(),
         'p_clear_discount': discountText.isEmpty,
+        // Sent only when it actually changed. The RPC reads a missing value
+        // as "leave it alone", so this is the same call as before for a
+        // listing whose alternatives weren't touched — which also keeps
+        // every other edit working against a database that hasn't had
+        // migration 0043 applied yet.
+        if (!listEquals(_alternatives, _seededAlternatives))
+          'p_accepted_alternatives': _alternatives,
       });
 
-      ref.invalidate(listingDetailControllerProvider(widget.listingId));
-      ref.invalidate(myListingsControllerProvider);
+      invalidateListingViews(ref, listingId: widget.listingId);
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.editListingSaved)));
       context.pop();
@@ -129,7 +166,9 @@ class _EditListingScreenState extends ConsumerState<EditListingScreen> {
     });
     try {
       await supabase.rpc('delete_my_listing', params: {'p_listing_id': widget.listingId});
-      ref.invalidate(myListingsControllerProvider);
+      // Everywhere, not just My listings — a deleted listing left on the feed
+      // or in someone's favourites is a request waiting to fail.
+      invalidateListingViews(ref, listingId: widget.listingId);
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.editListingDeleted)));
       context.go('/my-listings');
@@ -168,6 +207,17 @@ class _EditListingScreenState extends ConsumerState<EditListingScreen> {
         ),
         data: (listing) {
           _seed(listing);
+
+          // Names for what the listing already carried when this screen
+          // opened — the picker only reports the ones chosen in this
+          // session. Fills the chips, and ticks the right rows when the
+          // sheet is reopened.
+          if (listing.acceptedAlternatives.isNotEmpty) {
+            final saved = ref.watch(acceptedAlternativeDrugsProvider(widget.listingId)).value;
+            for (final drug in saved ?? const <Drug>[]) {
+              _alternativeNames.putIfAbsent(drug.id, () => drug);
+            }
+          }
 
           // Only an available listing is editable; once it's reserved the
           // buyer has agreed terms against these numbers.
@@ -262,6 +312,47 @@ class _EditListingScreenState extends ConsumerState<EditListingScreen> {
                         maxLength: 1000,
                         decoration: InputDecoration(labelText: l10n.fieldDescriptionOptional),
                       ),
+                      // Only settable at posting time until migration 0043 —
+                      // an exchange listing that named nothing could be
+                      // corrected only by deleting it and posting again,
+                      // which loses its age and whoever had favourited it.
+                      if (listing.type == ListingType.barter) ...[
+                        const SizedBox(height: AppSpacing.lg),
+                        const Divider(height: 1),
+                        const SizedBox(height: AppSpacing.lg),
+                        Align(
+                          alignment: AlignmentDirectional.centerStart,
+                          child: Text(l10n.listingAcceptedAlternatives, style: Theme.of(context).textTheme.titleMedium),
+                        ),
+                        const SizedBox(height: 2),
+                        Align(
+                          alignment: AlignmentDirectional.centerStart,
+                          child: Text(
+                            l10n.listingAcceptedAlternativesSubtitle,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.md),
+                        Wrap(
+                          spacing: AppSpacing.sm,
+                          runSpacing: AppSpacing.sm,
+                          children: [
+                            for (final id in _alternatives)
+                              Chip(
+                                // The ellipsis is only the window before the
+                                // name lookup lands — never a raw uuid.
+                                label: Text(_alternativeNames[id]?.tradeName ?? '…'),
+                                onDeleted: () => setState(() => _alternatives.remove(id)),
+                                backgroundColor: AppColors.primarySoft,
+                              ),
+                            ActionChip(
+                              avatar: const Icon(Icons.add_rounded, size: 16),
+                              label: Text(l10n.addMedicineAddAlternative),
+                              onPressed: () => _openAlternativesPicker(listing),
+                            ),
+                          ],
+                        ),
+                      ],
                     ],
                   ),
                 ),

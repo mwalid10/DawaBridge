@@ -13,10 +13,11 @@ import '../../core/widgets/app_gradient_button.dart';
 import '../../core/widgets/glass_card.dart';
 import '../../core/widgets/listing_type_pill.dart';
 import '../deals/deals_controller.dart';
-import '../drugs/drugs_controller.dart';
+import '../drugs/drug.dart';
 import '../favorites/favorite_controller.dart';
 import 'listing_detail_controller.dart';
 import 'listing_summary.dart';
+import 'listing_views.dart';
 
 class ListingDetailScreen extends ConsumerStatefulWidget {
   const ListingDetailScreen({super.key, required this.listingId});
@@ -90,7 +91,7 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
       ref.invalidate(dealsControllerProvider);
       // The listing stays 'available' until the seller accepts now, so
       // refresh it rather than assuming it just went reserved.
-      ref.invalidate(listingDetailControllerProvider(widget.listingId));
+      invalidateListingViews(ref, listingId: widget.listingId);
       if (!mounted) return;
       context.push('/chat/$dealId');
     } catch (error) {
@@ -112,7 +113,6 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final detail = ref.watch(listingDetailControllerProvider(widget.listingId));
-    final drugs = ref.watch(drugsControllerProvider);
     final uid = supabase.auth.currentUser?.id;
 
     return Scaffold(
@@ -160,15 +160,6 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
           ),
         ),
         data: (listing) {
-          final alternativeNames = drugs.value == null
-              ? const <String>[]
-              : listing.acceptedAlternatives
-                  .map((id) {
-                    final match = drugs.value!.where((d) => d.id == id);
-                    return match.isEmpty ? null : match.first.tradeName;
-                  })
-                  .whereType<String>()
-                  .toList();
           final hasDiscount = listing.discountPrice != null && listing.price != null && listing.discountPrice! < listing.price!;
           final pctOff = hasDiscount ? ((1 - listing.discountPrice! / listing.price!) * 100).round() : null;
 
@@ -327,6 +318,18 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
                       const SizedBox(height: AppSpacing.sm),
                       Text(listing.description!, style: Theme.of(context).textTheme.bodyMedium),
                     ],
+                    // On an exchange listing this is the question the viewer
+                    // actually has — there's no price to answer it — so it
+                    // sits with the rest of the listing's own detail, above
+                    // the owner's edit row, and shows on every barter
+                    // listing rather than only the ones that named something.
+                    if (listing.type == ListingType.barter) ...[
+                      const SizedBox(height: AppSpacing.lg),
+                      _AcceptedInExchange(
+                        listingId: listing.id,
+                        namedAlternatives: listing.acceptedAlternatives.isNotEmpty,
+                      ),
+                    ],
                     // Owner actions. This used to be a price-only bottom
                     // sheet, which was the only mutable field anywhere — so
                     // a pharmacist opening their own listing to correct a
@@ -347,25 +350,6 @@ class _ListingDetailScreenState extends ConsumerState<ListingDetailScreen> {
                           label: Text(
                             listing.price == null ? l10n.listingSetPrice : l10n.editListingTitle,
                           ),
-                        ),
-                      ),
-                    ],
-                    if (listing.type == ListingType.barter && alternativeNames.isNotEmpty) ...[
-                      const SizedBox(height: AppSpacing.lg),
-                      GlassCard(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(l10n.listingAcceptedAlternatives, style: Theme.of(context).textTheme.titleMedium),
-                            const SizedBox(height: AppSpacing.sm),
-                            Wrap(
-                              spacing: AppSpacing.sm,
-                              runSpacing: AppSpacing.sm,
-                              children: alternativeNames
-                                  .map((name) => Chip(label: Text(name), backgroundColor: AppColors.primarySoft))
-                                  .toList(),
-                            ),
-                          ],
                         ),
                       ),
                     ],
@@ -539,6 +523,71 @@ class _InfoCard extends StatelessWidget {
           const SizedBox(height: AppSpacing.sm),
           Text(label, style: Theme.of(context).textTheme.bodySmall),
           Text(value, style: Theme.of(context).textTheme.titleMedium, overflow: TextOverflow.ellipsis),
+        ],
+      ),
+    );
+  }
+}
+
+/// What the owner of an exchange listing will take in return.
+///
+/// Shown for every barter listing, including the ones that named nothing —
+/// in the live data that's most of them, and "they didn't say, ask them" is
+/// an answer, where a missing section reads as an unfinished screen.
+class _AcceptedInExchange extends ConsumerWidget {
+  const _AcceptedInExchange({required this.listingId, required this.namedAlternatives});
+
+  final String listingId;
+
+  /// Whether the listing carries any alternatives at all. Known from the
+  /// listing itself, so the common "named nothing" case renders without
+  /// waiting on — or needing — a lookup.
+  final bool namedAlternatives;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final alternatives = namedAlternatives
+        ? ref.watch(acceptedAlternativeDrugsProvider(listingId))
+        : const AsyncValue<List<Drug>>.data([]);
+
+    return GlassCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.swap_horiz_rounded, size: 18, color: AppColors.warn),
+              const SizedBox(width: AppSpacing.sm),
+              Text(l10n.listingAcceptedAlternatives, style: Theme.of(context).textTheme.titleMedium),
+            ],
+          ),
+          const SizedBox(height: 2),
+          Text(l10n.listingAcceptedAlternativesSubtitle, style: Theme.of(context).textTheme.bodySmall),
+          const SizedBox(height: AppSpacing.md),
+          alternatives.when(
+            loading: () => const SizedBox(
+              height: 20,
+              width: 20,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+            // Offline with nothing cached, or the drug rows are gone. Saying
+            // so beats an empty card, and beats claiming they're open to
+            // anything when they may well have named three things.
+            error: (_, _) => Text(
+              l10n.listingAcceptedAlternativesUnavailable,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            data: (drugs) => drugs.isEmpty
+                ? Text(l10n.listingAcceptsAnyOffer, style: Theme.of(context).textTheme.bodyMedium)
+                : Wrap(
+                    spacing: AppSpacing.sm,
+                    runSpacing: AppSpacing.sm,
+                    children: drugs
+                        .map((drug) => Chip(label: Text(drug.tradeName), backgroundColor: AppColors.primarySoft))
+                        .toList(),
+                  ),
+          ),
         ],
       ),
     );

@@ -207,7 +207,10 @@
   "fieldQuantityLabel": "Quantity",
   "fieldExpiryDateLabel": "Expiry Date",
   "listingSetPrice": "Set a price",
-  "listingAcceptedAlternatives": "Accepted alternatives",
+  "listingAcceptedAlternatives": "Accepts in exchange",
+  "listingAcceptedAlternativesSubtitle": "What this pharmacy will take in return",
+  "listingAcceptsAnyOffer": "They haven't named anything specific — send a message to propose an exchange.",
+  "listingAcceptedAlternativesUnavailable": "Couldn't load what they accept.",
   "listingDistanceAway": "{distance} km away",
   "@listingDistanceAway": {
     "placeholders": {
@@ -510,6 +513,9 @@
   "errorRatingDealNotCompleted": "You can only rate a completed deal.",
   "errorDrugNameRequired": "Enter the medicine name.",
   "errorDrugNameTooLong": "That medicine name is too long.",
+  "errorListingNotBarter": "Only an exchange listing can name what it accepts in return.",
+  "errorAlternativesTooMany": "That's too many alternatives — pick 20 or fewer.",
+  "errorDrugNotFound": "One of those medicines is no longer in the catalogue.",
   "errorPharmacyNameRequired": "Enter your pharmacy name.",
   "errorGovernorateRequired": "Pick your governorate.",
   "errorLocationRequired": "Drop a pin on your pharmacy’s location.",

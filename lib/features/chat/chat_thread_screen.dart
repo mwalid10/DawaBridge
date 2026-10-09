@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -10,6 +12,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/app_error.dart';
+import '../../core/connectivity.dart';
 import '../../core/l10n_extensions.dart';
 import '../../core/success_screen.dart';
 import '../../core/supabase_client.dart';
@@ -22,6 +25,7 @@ import '../deals/deal.dart';
 import '../deals/deals_controller.dart';
 import '../disputes/dispute.dart';
 import '../disputes/disputes_controller.dart';
+import '../listings/listing_views.dart';
 import '../profile/profile_controller.dart';
 import '../ratings/ratings_controller.dart';
 import 'message.dart';
@@ -46,9 +50,26 @@ class _ChatThreadScreenState extends ConsumerState<ChatThreadScreen> {
   bool _rating = false;
   bool _reporting = false;
   bool _attaching = false;
+  StreamSubscription<void>? _reconnectSub;
+
+  @override
+  void initState() {
+    super.initState();
+    // Both halves of this screen can be served from cache while offline, and
+    // neither catches up on its own: Realtime doesn't replay the inserts it
+    // missed while the socket was down, and the deal row keeps whatever state
+    // it had when the signal went. AppShell refreshes the deal *list* on
+    // reconnect but knows nothing about the thread that's open on top of it.
+    _reconnectSub = connectivityController.onReconnected.listen((_) {
+      if (!mounted) return;
+      ref.invalidate(dealDetailControllerProvider(widget.dealId));
+      ref.invalidate(messagesControllerProvider(widget.dealId));
+    });
+  }
 
   @override
   void dispose() {
+    _reconnectSub?.cancel();
     _inputController.dispose();
     _scrollController.dispose();
     super.dispose();
@@ -245,9 +266,16 @@ class _ChatThreadScreenState extends ConsumerState<ChatThreadScreen> {
 
     setState(() => _actingOnDeal = true);
     try {
+      // Read before invalidating, which clears the value this comes from.
+      final listingId = ref.read(dealDetailControllerProvider(widget.dealId)).value?.listingId;
       await respondToDeal(widget.dealId, action);
       ref.invalidate(dealDetailControllerProvider(widget.dealId));
       ref.invalidate(dealsControllerProvider);
+      // Answering a request moves the listing itself: accepting reserves it
+      // and auto-declines every other request on it, declining and
+      // cancelling put it back on the market. Everyone browsing is looking
+      // at a listing whose availability just changed.
+      invalidateListingViews(ref, listingId: listingId);
       if (action == 'complete' && mounted) {
         context.push(
           '/success',

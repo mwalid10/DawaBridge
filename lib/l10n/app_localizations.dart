@@ -1097,8 +1097,26 @@ abstract class AppLocalizations {
   /// No description provided for @listingAcceptedAlternatives.
   ///
   /// In en, this message translates to:
-  /// **'Accepted alternatives'**
+  /// **'Accepts in exchange'**
   String get listingAcceptedAlternatives;
+
+  /// No description provided for @listingAcceptedAlternativesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What this pharmacy will take in return'**
+  String get listingAcceptedAlternativesSubtitle;
+
+  /// No description provided for @listingAcceptsAnyOffer.
+  ///
+  /// In en, this message translates to:
+  /// **'They haven\'t named anything specific — send a message to propose an exchange.'**
+  String get listingAcceptsAnyOffer;
+
+  /// No description provided for @listingAcceptedAlternativesUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load what they accept.'**
+  String get listingAcceptedAlternativesUnavailable;
 
   /// No description provided for @listingDistanceAway.
   ///
@@ -2347,6 +2365,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'That medicine name is too long.'**
   String get errorDrugNameTooLong;
+
+  /// No description provided for @errorListingNotBarter.
+  ///
+  /// In en, this message translates to:
+  /// **'Only an exchange listing can name what it accepts in return.'**
+  String get errorListingNotBarter;
+
+  /// No description provided for @errorAlternativesTooMany.
+  ///
+  /// In en, this message translates to:
+  /// **'That\'s too many alternatives — pick 20 or fewer.'**
+  String get errorAlternativesTooMany;
+
+  /// No description provided for @errorDrugNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'One of those medicines is no longer in the catalogue.'**
+  String get errorDrugNotFound;
 
   /// No description provided for @errorPharmacyNameRequired.
   ///

@@ -43,9 +43,17 @@ class DealDetailController extends AsyncNotifier<DealDetail> {
   Future<DealDetail> build() async {
     // Was `(rows as List).first` — a bare StateError when the deal isn't
     // visible to the caller (deleted, or opened from a stale notification).
-    final row = await rpcSingle(
+    //
+    // Cached, because the thread screen hangs everything off this one row:
+    // the header name, the deal status bar, and the whole action bar —
+    // including the message composer. Uncached it failed the instant the
+    // signal went, leaving a thread that showed its cached messages under a
+    // blank header with nothing to type into, which is precisely the case
+    // the outbox was built to queue for.
+    final row = await rpcSingleCached(
       'get_deal_detail',
       params: {'p_deal_id': dealId},
+      cacheKey: OfflineCache.deal(dealId),
       notFoundLabel: 'deal',
     );
     return DealDetail.fromJson(row);

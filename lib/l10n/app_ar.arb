@@ -209,7 +209,10 @@
   "fieldQuantityLabel": "الكمية",
   "fieldExpiryDateLabel": "تاريخ الانتهاء",
   "listingSetPrice": "تحديد سعر",
-  "listingAcceptedAlternatives": "البدائل المقبولة",
+  "listingAcceptedAlternatives": "يقبل في المقابل",
+  "listingAcceptedAlternativesSubtitle": "ما تقبله هذه الصيدلية بدلاً منه",
+  "listingAcceptsAnyOffer": "لم تحدّد بدائل معيّنة — راسلها لاقتراح مبادلة.",
+  "listingAcceptedAlternativesUnavailable": "تعذّر تحميل ما تقبله الصيدلية.",
   "listingDistanceAway": "على بعد {distance} كم",
   "@listingDistanceAway": {
     "placeholders": {
@@ -507,6 +510,9 @@
   "errorRatingDealNotCompleted": "يمكنك تقييم الصفقات المكتملة فقط.",
   "errorDrugNameRequired": "أدخل اسم الدواء.",
   "errorDrugNameTooLong": "اسم الدواء طويل جداً.",
+  "errorListingNotBarter": "تحديد ما يُقبل في المقابل متاح لإعلانات المبادلة فقط.",
+  "errorAlternativesTooMany": "عدد البدائل كبير جداً — اختر 20 بديلاً على الأكثر.",
+  "errorDrugNotFound": "أحد هذه الأدوية لم يعد موجوداً في الكتالوج.",
   "errorPharmacyNameRequired": "أدخل اسم صيدليتك.",
   "errorGovernorateRequired": "اختر المحافظة.",
   "errorLocationRequired": "حدّد موقع صيدليتك على الخريطة.",
