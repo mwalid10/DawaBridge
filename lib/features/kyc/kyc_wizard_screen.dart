@@ -9,10 +9,10 @@ import '../../core/theme.dart';
 import '../../core/widgets/step_progress_bar.dart';
 import 'kyc_controller.dart';
 import 'kyc_submission.dart';
+import 'steps/account_details_step.dart';
 import 'steps/address_step.dart';
 import 'steps/license_step.dart';
 import 'steps/password_step.dart';
-import 'steps/pharmacy_details_step.dart';
 
 class KycWizardScreen extends ConsumerStatefulWidget {
   const KycWizardScreen({super.key, this.recovery = false});
@@ -96,13 +96,21 @@ class _KycWizardScreenState extends ConsumerState<KycWizardScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    // The first step names what is being registered, so it follows the
+    // type picked on that step rather than always reading "Pharmacy".
+    final isWarehouse = ref.watch(kycControllerProvider).accountType.isWarehouse;
+    final firstStepLabel = isWarehouse ? l10n.kycStepWarehouse : l10n.kycStepPharmacy;
     final stepLabels = widget.recovery
-        ? [l10n.kycStepPharmacy, l10n.kycStepAddress, l10n.kycStepLicense]
-        : [l10n.kycStepPharmacy, l10n.kycStepAddress, l10n.kycStepLicense, l10n.kycStepPassword];
+        ? [firstStepLabel, l10n.kycStepAddress, l10n.kycStepLicense]
+        : [firstStepLabel, l10n.kycStepAddress, l10n.kycStepLicense, l10n.kycStepPassword];
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.recovery ? l10n.kycFinishSetupTitle : l10n.kycRegisterTitle),
+        title: Text(switch ((widget.recovery, isWarehouse)) {
+          (true, _) => l10n.kycFinishSetupTitle,
+          (false, true) => l10n.kycRegisterWarehouseTitle,
+          (false, false) => l10n.kycRegisterTitle,
+        }),
         leading: _step == 0
             ? null
             : IconButton(icon: const Icon(Icons.arrow_back_rounded), onPressed: () => _goTo(_step - 1)),
@@ -143,7 +151,7 @@ class _KycWizardScreenState extends ConsumerState<KycWizardScreen> {
               controller: _pageController,
               physics: const NeverScrollableScrollPhysics(),
               children: [
-                PharmacyDetailsStep(onNext: () => _goTo(1), emailLocked: widget.recovery),
+                AccountDetailsStep(onNext: () => _goTo(1), emailLocked: widget.recovery),
                 AddressStep(onNext: () => _goTo(2), onBack: () => _goTo(0)),
                 LicenseStep(
                   onNext: widget.recovery ? _submitRecovery : () => _goTo(3),

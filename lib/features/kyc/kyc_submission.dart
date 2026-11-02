@@ -53,6 +53,7 @@ Future<void> submitPharmacyRegistration(KycData data) async {
     'p_lng': data.pinLocation?.longitude,
     'p_license_url': storagePath,
     'p_license_expiry': data.licenseExpiry?.toIso8601String().split('T').first,
+    'p_account_type': data.accountType.name,
   });
 
   // Let the router move the user on rather than navigating by hand.

@@ -1,3 +1,4 @@
+import '../../core/account_type.dart';
 import '../../l10n/app_localizations.dart';
 
 enum PlanStatus {
@@ -19,6 +20,7 @@ enum PlanStatus {
 /// (owner-only), so this is a direct table read, no RPC needed.
 class PharmacyProfile {
   final String name;
+  final AccountType accountType;
   final String email;
   final String? phone;
   final String governorate;
@@ -29,6 +31,7 @@ class PharmacyProfile {
 
   const PharmacyProfile({
     required this.name,
+    required this.accountType,
     required this.email,
     required this.phone,
     required this.governorate,
@@ -41,6 +44,7 @@ class PharmacyProfile {
   factory PharmacyProfile.fromJson(Map<String, dynamic> json) {
     return PharmacyProfile(
       name: json['name'] as String,
+      accountType: AccountType.fromString(json['account_type'] as String?),
       email: json['email'] as String,
       phone: json['phone'] as String?,
       governorate: json['governorate'] as String,

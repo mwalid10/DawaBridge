@@ -57,6 +57,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get listingTypeExchange => 'Exchange';
 
   @override
+  String get accountTypePharmacy => 'Pharmacy';
+
+  @override
+  String get accountTypeWarehouse => 'Warehouse';
+
+  @override
   String get listingStateAvailable => 'Available';
 
   @override
@@ -198,6 +204,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get kycStepPharmacy => 'Pharmacy';
 
   @override
+  String get kycStepWarehouse => 'Warehouse';
+
+  @override
   String get kycStepAddress => 'Address';
 
   @override
@@ -210,7 +219,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get kycRegisterTitle => 'Register your pharmacy';
 
   @override
+  String get kycRegisterWarehouseTitle => 'Register your warehouse';
+
+  @override
+  String get kycAccountTypeLabel => 'What are you registering?';
+
+  @override
+  String get kycAccountTypePharmacyBlurb =>
+      'A retail pharmacy buying and selling stock.';
+
+  @override
+  String get kycAccountTypeWarehouseBlurb =>
+      'A medicine warehouse supplying pharmacies.';
+
+  @override
   String get kycPharmacyDetailsTitle => 'Pharmacy details';
+
+  @override
+  String get kycWarehouseDetailsTitle => 'Warehouse details';
 
   @override
   String get kycPharmacyDetailsSubtitle =>
@@ -220,7 +246,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fieldPharmacyName => 'Pharmacy name';
 
   @override
+  String get fieldWarehouseName => 'Warehouse name';
+
+  @override
   String get kycPharmacyNameValidator => 'Enter the full pharmacy name';
+
+  @override
+  String get kycWarehouseNameValidator => 'Enter the full warehouse name';
 
   @override
   String get fieldEmailAddress => 'Email address';
@@ -251,11 +283,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get kycPinYourPharmacy => 'Pin your pharmacy';
 
   @override
+  String get kycPinYourWarehouse => 'Pin your warehouse';
+
+  @override
   String get kycUseCurrentLocation => 'Use current location';
 
   @override
   String get kycTapToDropPin =>
       'Drag the map to move the pin to your pharmacy.';
+
+  @override
+  String get kycTapToDropPinWarehouse =>
+      'Drag the map to move the pin to your warehouse.';
 
   @override
   String kycPinSet(Object lat, Object lng) {
@@ -278,6 +317,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Drop a pin on the map at your pharmacy\'s exact location.';
 
   @override
+  String get kycDropPinWarehouse =>
+      'Drop a pin on the map at your warehouse\'s exact location.';
+
+  @override
   String get kycLicenseTitle => 'License verification';
 
   @override
@@ -296,6 +339,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get kycUploadLicense =>
       'Upload a photo or PDF of your pharmacy license.';
+
+  @override
+  String get kycUploadLicenseWarehouse =>
+      'Upload a photo or PDF of your warehouse license.';
 
   @override
   String get kycSelectValidExpiry =>
@@ -456,6 +503,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get searchAllTypes => 'All types';
+
+  @override
+  String get fieldAccountType => 'Account type';
+
+  @override
+  String get searchAllAccountTypes => 'All accounts';
 
   @override
   String get searchAllGovernorates => 'All';

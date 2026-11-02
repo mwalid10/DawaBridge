@@ -77,7 +77,8 @@ class _LicenseStepState extends ConsumerState<LicenseStep> {
   void _submit() {
     final l10n = context.l10n;
     if (_filePath == null) {
-      setState(() => _error = l10n.kycUploadLicense);
+      final isWarehouse = ref.read(kycControllerProvider).accountType.isWarehouse;
+      setState(() => _error = isWarehouse ? l10n.kycUploadLicenseWarehouse : l10n.kycUploadLicense);
       return;
     }
     if (_expiry == null || !_expiry!.isAfter(DateTime.now())) {

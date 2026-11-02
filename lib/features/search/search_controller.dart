@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/account_type.dart';
 import '../../core/supabase_client.dart';
 import '../listings/listing_summary.dart';
 import '../listings/listings_query.dart';
@@ -10,6 +11,7 @@ class SearchFilters {
   final String query;
   final String concentration;
   final ListingType? type;
+  final AccountType? accountType;
   final String? governorate;
   final DateTime? expiryBefore;
 
@@ -17,6 +19,7 @@ class SearchFilters {
     this.query = '',
     this.concentration = '',
     this.type,
+    this.accountType,
     this.governorate,
     this.expiryBefore,
   });
@@ -26,6 +29,8 @@ class SearchFilters {
     String? concentration,
     ListingType? type,
     bool clearType = false,
+    AccountType? accountType,
+    bool clearAccountType = false,
     String? governorate,
     bool clearGovernorate = false,
     DateTime? expiryBefore,
@@ -35,6 +40,7 @@ class SearchFilters {
       query: query ?? this.query,
       concentration: concentration ?? this.concentration,
       type: clearType ? null : (type ?? this.type),
+      accountType: clearAccountType ? null : (accountType ?? this.accountType),
       governorate: clearGovernorate ? null : (governorate ?? this.governorate),
       expiryBefore: clearExpiryBefore ? null : (expiryBefore ?? this.expiryBefore),
     );
@@ -78,6 +84,7 @@ class SearchController extends AsyncNotifier<List<ListingSummary>> {
       tradeName: filters.query.trim().isEmpty ? null : filters.query.trim(),
       concentration: filters.concentration.trim().isEmpty ? null : filters.concentration.trim(),
       type: filters.type,
+      accountType: filters.accountType,
       governorate: filters.governorate,
       expiryBefore: filters.expiryBefore,
       lat: nearest ? _lat : null,

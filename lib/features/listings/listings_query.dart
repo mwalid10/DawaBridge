@@ -1,3 +1,4 @@
+import '../../core/account_type.dart';
 import '../../core/rpc.dart';
 import 'listing_summary.dart';
 
@@ -8,6 +9,7 @@ Future<List<ListingSummary>> fetchListings({
   String? concentration,
   ListingType? type,
   String? governorate,
+  AccountType? accountType,
   DateTime? expiryBefore,
   double? lat,
   double? lng,
@@ -24,6 +26,7 @@ Future<List<ListingSummary>> fetchListings({
     'p_concentration': concentration,
     'p_type': type?.name,
     'p_governorate': governorate,
+    'p_account_type': accountType?.name,
     'p_expiry_before': expiryBefore?.toIso8601String().split('T').first,
     'p_lat': lat,
     'p_lng': lng,

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'account_type.dart';
 import 'connectivity.dart';
 import 'supabase_client.dart';
 
@@ -62,11 +63,17 @@ enum SessionState {
 /// provider-container-before-router bootstrap problem.
 class SessionController extends ChangeNotifier {
   SessionState _state = SessionState.unknown;
+  AccountType _accountType = AccountType.pharmacy;
   StreamSubscription<AuthState>? _sub;
   StreamSubscription<void>? _reconnectSub;
   int _resolveToken = 0;
 
   SessionState get state => _state;
+
+  /// What kind of account is signed in. Only meaningful once [state] is one
+  /// of the pharmacy states; defaults to pharmacy, which is what every
+  /// account created before migration 0045 is.
+  AccountType get accountType => _accountType;
 
   bool get isSignedIn => switch (_state) {
         SessionState.unknown || SessionState.signedOut => false,
@@ -135,6 +142,7 @@ class SessionController extends ChangeNotifier {
       final row = list.first as Map<String, dynamic>;
       final role = row['role'] as String?;
       final status = row['status'] as String?;
+      _setAccountType(AccountType.fromString(row['account_type'] as String?));
 
       _set(switch (role) {
         'admin' => SessionState.admin,
@@ -168,12 +176,42 @@ class SessionController extends ChangeNotifier {
       // wall. This is safe: the client-side gate is a convenience, and every
       // rule it mirrors is enforced again in RLS — an unapproved pharmacy
       // restored optimistically here still can't write anything.
+      _accountType = await _readCachedAccountType() ?? _accountType;
       final cached = await _readCachedState();
       _set(cached ?? SessionState.offline);
     }
   }
 
   static const _cachedStateKey = 'session_state';
+  static const _cachedAccountTypeKey = 'session_account_type';
+
+  /// Kept alongside the session state so an offline cold start can still
+  /// word its screens for a warehouse instead of calling it a pharmacy.
+  void _setAccountType(AccountType next) {
+    if (_accountType == next) return;
+    _accountType = next;
+    unawaited(_cacheAccountType(next));
+    notifyListeners();
+  }
+
+  Future<void> _cacheAccountType(AccountType type) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_cachedAccountTypeKey, type.name);
+    } catch (_) {
+      // Best effort, same as _cacheState.
+    }
+  }
+
+  Future<AccountType?> _readCachedAccountType() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final saved = prefs.getString(_cachedAccountTypeKey);
+      return saved == null ? null : AccountType.fromString(saved);
+    } catch (_) {
+      return null;
+    }
+  }
 
   /// Persisted so a cold start without network has something better to do
   /// than hang. Cleared on sign-out.
@@ -182,6 +220,7 @@ class SessionController extends ChangeNotifier {
       final prefs = await SharedPreferences.getInstance();
       if (state == SessionState.signedOut) {
         await prefs.remove(_cachedStateKey);
+        await prefs.remove(_cachedAccountTypeKey);
       } else {
         await prefs.setString(_cachedStateKey, state.name);
       }
@@ -208,6 +247,7 @@ class SessionController extends ChangeNotifier {
   }
 
   void _set(SessionState next) {
+    if (next == SessionState.signedOut) _accountType = AccountType.pharmacy;
     if (_state == next) return;
     _state = next;
     unawaited(_cacheState(next));

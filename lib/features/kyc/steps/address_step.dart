@@ -88,7 +88,8 @@ class _AddressStepState extends ConsumerState<AddressStep> {
       return;
     }
     if (_pin == null) {
-      setState(() => _error = l10n.kycDropPin);
+      final isWarehouse = ref.read(kycControllerProvider).accountType.isWarehouse;
+      setState(() => _error = isWarehouse ? l10n.kycDropPinWarehouse : l10n.kycDropPin);
       return;
     }
     ref.read(kycControllerProvider.notifier).updateAddress(
@@ -103,6 +104,7 @@ class _AddressStepState extends ConsumerState<AddressStep> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final isWarehouse = ref.watch(kycControllerProvider).accountType.isWarehouse;
     return ListView(
       padding: const EdgeInsets.all(20),
       children: [
@@ -127,7 +129,10 @@ class _AddressStepState extends ConsumerState<AddressStep> {
           maxLines: 2,
         ),
         const SizedBox(height: AppSpacing.xl),
-        Text(l10n.kycPinYourPharmacy, style: Theme.of(context).textTheme.titleMedium),
+        Text(
+          isWarehouse ? l10n.kycPinYourWarehouse : l10n.kycPinYourPharmacy,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
         const SizedBox(height: AppSpacing.sm),
         Container(
           height: 280,
@@ -205,7 +210,9 @@ class _AddressStepState extends ConsumerState<AddressStep> {
         ),
         const SizedBox(height: AppSpacing.sm),
         Text(
-          _pin == null ? l10n.kycTapToDropPin : l10n.kycPinSet(_pin!.latitude.toStringAsFixed(5), _pin!.longitude.toStringAsFixed(5)),
+          _pin == null
+              ? (isWarehouse ? l10n.kycTapToDropPinWarehouse : l10n.kycTapToDropPin)
+              : l10n.kycPinSet(_pin!.latitude.toStringAsFixed(5), _pin!.longitude.toStringAsFixed(5)),
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: _pin == null ? AppColors.inkFaint : AppColors.good,
               ),

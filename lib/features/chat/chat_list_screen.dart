@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../../core/l10n_extensions.dart';
 import '../../core/theme.dart';
 import '../../l10n/app_localizations.dart';
+import '../../core/widgets/account_type_pill.dart';
 import '../../core/widgets/glass_card.dart';
 import '../../core/widgets/listing_type_pill.dart';
 import '../deals/deal.dart';
@@ -139,8 +140,18 @@ class _DealTile extends StatelessWidget {
                           style: textTheme.titleMedium,
                         ),
                       ),
-                      if (deal.lastMessageAt != null)
+                      // Warehouses only, as on the listing card: this row
+                      // already carries a name and a timestamp, and labelling
+                      // the pharmacy that nearly every thread is with would
+                      // crowd it out for nothing.
+                      if (deal.counterpartAccountType.isWarehouse) ...[
+                        const SizedBox(width: AppSpacing.sm),
+                        AccountTypePill(type: deal.counterpartAccountType, dense: true),
+                      ],
+                      if (deal.lastMessageAt != null) ...[
+                        const SizedBox(width: AppSpacing.sm),
                         Text(DateFormat.MMMd().add_jm().format(deal.lastMessageAt!), style: textTheme.bodySmall),
+                      ],
                     ],
                   ),
                   const SizedBox(height: 2),

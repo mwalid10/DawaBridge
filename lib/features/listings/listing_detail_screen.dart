@@ -9,6 +9,7 @@ import '../../core/l10n_extensions.dart';
 import '../../core/rpc.dart';
 import '../../core/supabase_client.dart';
 import '../../core/theme.dart';
+import '../../core/widgets/account_type_pill.dart';
 import '../../core/widgets/app_gradient_button.dart';
 import '../../core/widgets/glass_card.dart';
 import '../../core/widgets/listing_type_pill.dart';
@@ -617,7 +618,22 @@ class _SellerCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(listing.pharmacyName, style: Theme.of(context).textTheme.titleMedium),
+                Row(
+                  children: [
+                    // Flexible, not Expanded: the pill should sit against the
+                    // name on a short one rather than being pushed to the far
+                    // edge of the card.
+                    Flexible(
+                      child: Text(
+                        listing.pharmacyName,
+                        style: Theme.of(context).textTheme.titleMedium,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    AccountTypePill(type: listing.accountType, dense: true),
+                  ],
+                ),
                 Text('${listing.governorate} · ${listing.area}', style: Theme.of(context).textTheme.bodySmall),
               ],
             ),

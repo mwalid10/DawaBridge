@@ -194,6 +194,18 @@ abstract class AppLocalizations {
   /// **'Exchange'**
   String get listingTypeExchange;
 
+  /// No description provided for @accountTypePharmacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Pharmacy'**
+  String get accountTypePharmacy;
+
+  /// No description provided for @accountTypeWarehouse.
+  ///
+  /// In en, this message translates to:
+  /// **'Warehouse'**
+  String get accountTypeWarehouse;
+
   /// No description provided for @listingStateAvailable.
   ///
   /// In en, this message translates to:
@@ -464,6 +476,12 @@ abstract class AppLocalizations {
   /// **'Pharmacy'**
   String get kycStepPharmacy;
 
+  /// No description provided for @kycStepWarehouse.
+  ///
+  /// In en, this message translates to:
+  /// **'Warehouse'**
+  String get kycStepWarehouse;
+
   /// No description provided for @kycStepAddress.
   ///
   /// In en, this message translates to:
@@ -488,11 +506,41 @@ abstract class AppLocalizations {
   /// **'Register your pharmacy'**
   String get kycRegisterTitle;
 
+  /// No description provided for @kycRegisterWarehouseTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Register your warehouse'**
+  String get kycRegisterWarehouseTitle;
+
+  /// No description provided for @kycAccountTypeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'What are you registering?'**
+  String get kycAccountTypeLabel;
+
+  /// No description provided for @kycAccountTypePharmacyBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'A retail pharmacy buying and selling stock.'**
+  String get kycAccountTypePharmacyBlurb;
+
+  /// No description provided for @kycAccountTypeWarehouseBlurb.
+  ///
+  /// In en, this message translates to:
+  /// **'A medicine warehouse supplying pharmacies.'**
+  String get kycAccountTypeWarehouseBlurb;
+
   /// No description provided for @kycPharmacyDetailsTitle.
   ///
   /// In en, this message translates to:
   /// **'Pharmacy details'**
   String get kycPharmacyDetailsTitle;
+
+  /// No description provided for @kycWarehouseDetailsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Warehouse details'**
+  String get kycWarehouseDetailsTitle;
 
   /// No description provided for @kycPharmacyDetailsSubtitle.
   ///
@@ -506,11 +554,23 @@ abstract class AppLocalizations {
   /// **'Pharmacy name'**
   String get fieldPharmacyName;
 
+  /// No description provided for @fieldWarehouseName.
+  ///
+  /// In en, this message translates to:
+  /// **'Warehouse name'**
+  String get fieldWarehouseName;
+
   /// No description provided for @kycPharmacyNameValidator.
   ///
   /// In en, this message translates to:
   /// **'Enter the full pharmacy name'**
   String get kycPharmacyNameValidator;
+
+  /// No description provided for @kycWarehouseNameValidator.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the full warehouse name'**
+  String get kycWarehouseNameValidator;
 
   /// No description provided for @fieldEmailAddress.
   ///
@@ -566,6 +626,12 @@ abstract class AppLocalizations {
   /// **'Pin your pharmacy'**
   String get kycPinYourPharmacy;
 
+  /// No description provided for @kycPinYourWarehouse.
+  ///
+  /// In en, this message translates to:
+  /// **'Pin your warehouse'**
+  String get kycPinYourWarehouse;
+
   /// No description provided for @kycUseCurrentLocation.
   ///
   /// In en, this message translates to:
@@ -577,6 +643,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Drag the map to move the pin to your pharmacy.'**
   String get kycTapToDropPin;
+
+  /// No description provided for @kycTapToDropPinWarehouse.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag the map to move the pin to your warehouse.'**
+  String get kycTapToDropPinWarehouse;
 
   /// No description provided for @kycPinSet.
   ///
@@ -607,6 +679,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Drop a pin on the map at your pharmacy\'s exact location.'**
   String get kycDropPin;
+
+  /// No description provided for @kycDropPinWarehouse.
+  ///
+  /// In en, this message translates to:
+  /// **'Drop a pin on the map at your warehouse\'s exact location.'**
+  String get kycDropPinWarehouse;
 
   /// No description provided for @kycLicenseTitle.
   ///
@@ -643,6 +721,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Upload a photo or PDF of your pharmacy license.'**
   String get kycUploadLicense;
+
+  /// No description provided for @kycUploadLicenseWarehouse.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload a photo or PDF of your warehouse license.'**
+  String get kycUploadLicenseWarehouse;
 
   /// No description provided for @kycSelectValidExpiry.
   ///
@@ -937,6 +1021,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All types'**
   String get searchAllTypes;
+
+  /// No description provided for @fieldAccountType.
+  ///
+  /// In en, this message translates to:
+  /// **'Account type'**
+  String get fieldAccountType;
+
+  /// No description provided for @searchAllAccountTypes.
+  ///
+  /// In en, this message translates to:
+  /// **'All accounts'**
+  String get searchAllAccountTypes;
 
   /// No description provided for @searchAllGovernorates.
   ///

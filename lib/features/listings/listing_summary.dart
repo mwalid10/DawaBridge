@@ -1,3 +1,4 @@
+import '../../core/account_type.dart';
 import '../../l10n/app_localizations.dart';
 
 enum ListingType {
@@ -54,6 +55,7 @@ class ListingSummary {
   final DateTime createdAt;
   final String pharmacyId;
   final String pharmacyName;
+  final AccountType accountType;
   final String governorate;
   final String area;
   final double? pharmacyLat;
@@ -81,6 +83,7 @@ class ListingSummary {
     required this.createdAt,
     required this.pharmacyId,
     required this.pharmacyName,
+    required this.accountType,
     required this.governorate,
     required this.area,
     this.pharmacyLat,
@@ -112,6 +115,7 @@ class ListingSummary {
       createdAt: DateTime.parse(json['created_at'] as String),
       pharmacyId: json['pharmacy_id'] as String,
       pharmacyName: json['pharmacy_name'] as String,
+      accountType: AccountType.fromString(json['account_type'] as String?),
       governorate: json['governorate'] as String,
       area: json['area'] as String,
       pharmacyLat: (json['pharmacy_lat'] as num?)?.toDouble(),

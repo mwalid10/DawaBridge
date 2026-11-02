@@ -17,6 +17,7 @@ import '../../core/l10n_extensions.dart';
 import '../../core/success_screen.dart';
 import '../../core/supabase_client.dart';
 import '../../core/theme.dart';
+import '../../core/widgets/account_type_pill.dart';
 import '../../core/widgets/app_gradient_button.dart';
 import '../../core/widgets/map_pin.dart';
 import '../../core/widgets/star_picker.dart';
@@ -494,7 +495,24 @@ class _ChatThreadScreenState extends ConsumerState<ChatThreadScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(deal.counterpartName, style: Theme.of(context).textTheme.titleMedium, overflow: TextOverflow.ellipsis),
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            deal.counterpartName,
+                            style: Theme.of(context).textTheme.titleMedium,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        // An app bar is the tightest row in the app, so this
+                        // follows the same rule as the chat list: badge the
+                        // exception, not the default.
+                        if (deal.counterpartAccountType.isWarehouse) ...[
+                          const SizedBox(width: AppSpacing.sm),
+                          AccountTypePill(type: deal.counterpartAccountType, dense: true),
+                        ],
+                      ],
+                    ),
                     Text(
                       '${deal.drugTradeName} · ${deal.listingType.label(l10n)}',
                       style: Theme.of(context).textTheme.bodySmall,

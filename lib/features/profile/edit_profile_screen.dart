@@ -107,14 +107,17 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
           error: error,
           onRetry: () => ref.invalidate(pharmacyProfileControllerProvider),
         ),
-        data: (_) => Form(
+        data: (pharmacy) => Form(
           key: _formKey,
           child: ListView(
             padding: const EdgeInsets.all(AppSpacing.lg),
             children: [
               TextFormField(
                 controller: _nameController,
-                decoration: InputDecoration(labelText: l10n.fieldPharmacyName, prefixIcon: const Icon(Icons.storefront_rounded)),
+                decoration: InputDecoration(
+                  labelText: pharmacy.accountType.isWarehouse ? l10n.fieldWarehouseName : l10n.fieldPharmacyName,
+                  prefixIcon: Icon(pharmacy.accountType.icon),
+                ),
                 validator: (v) => (v == null || v.trim().length < 3) ? l10n.editProfileNameValidator : null,
               ),
               const SizedBox(height: AppSpacing.lg),

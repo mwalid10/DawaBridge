@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pharma_exchange_egypt/core/account_type.dart';
 import 'package:pharma_exchange_egypt/core/theme.dart';
+import 'package:pharma_exchange_egypt/core/widgets/account_type_pill.dart';
 import 'package:pharma_exchange_egypt/core/widgets/listing_type_pill.dart';
 import 'package:pharma_exchange_egypt/features/listings/listing_summary.dart';
 import 'package:pharma_exchange_egypt/features/listings/widgets/my_listing_tile.dart';
@@ -12,7 +14,12 @@ import 'package:pharma_exchange_egypt/l10n/app_localizations.dart';
 /// the overlays didn't, so the chip sat on the type pill and the edit button
 /// sat on the photo.
 void main() {
-  ListingSummary listing({bool controlled = false, ListingState state = ListingState.available}) => ListingSummary(
+  ListingSummary listing({
+    bool controlled = false,
+    ListingState state = ListingState.available,
+    AccountType accountType = AccountType.pharmacy,
+  }) =>
+      ListingSummary(
         id: '1',
         drugId: 'd1',
         tradeName: 'Zyrtec',
@@ -33,6 +40,7 @@ void main() {
         createdAt: DateTime(2026, 1, 1),
         pharmacyId: 'p1',
         pharmacyName: 'Pharmacy',
+        accountType: accountType,
         governorate: 'Luxor',
         area: 'Luxor',
         pharmacyLat: null,
@@ -40,7 +48,12 @@ void main() {
         distanceKm: null,
       );
 
-  Future<void> pumpTile(WidgetTester tester, Locale locale, {bool controlled = false}) async {
+  Future<void> pumpTile(
+    WidgetTester tester,
+    Locale locale, {
+    bool controlled = false,
+    AccountType accountType = AccountType.pharmacy,
+  }) async {
     await tester.pumpWidget(MaterialApp(
       theme: buildAppTheme(),
       locale: locale,
@@ -49,7 +62,7 @@ void main() {
       home: Scaffold(
         body: Padding(
           padding: const EdgeInsets.all(AppSpacing.lg),
-          child: MyListingTile(listing: listing(controlled: controlled)),
+          child: MyListingTile(listing: listing(controlled: controlled, accountType: accountType)),
         ),
       ),
     ));
@@ -97,6 +110,31 @@ void main() {
 
         // A RenderFlex overflow paints the striped banner and reports here.
         expect(tester.takeException(), isNull);
+      });
+
+      // A warehouse listing adds a third chip to the title row, which in
+      // Arabic is the row that already broke once — hence the same two
+      // checks again with the badge present, not just on the pharmacy case.
+      testWidgets('the warehouse badge keeps off the state chip', (tester) async {
+        await pumpTile(tester, locale, accountType: AccountType.warehouse);
+
+        final badge = tester.getRect(find.byType(AccountTypePill));
+        final chip = tester.getRect(stateChip(tester));
+
+        expect(badge.overlaps(chip), isFalse, reason: 'warehouse badge $badge is sitting on the state chip $chip');
+      });
+
+      testWidgets('nothing overflows the card for a warehouse', (tester) async {
+        await pumpTile(tester, locale, controlled: true, accountType: AccountType.warehouse);
+
+        expect(find.byType(AccountTypePill), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      });
+
+      testWidgets('a pharmacy listing carries no account badge', (tester) async {
+        await pumpTile(tester, locale);
+
+        expect(find.byType(AccountTypePill), findsNothing);
       });
     });
   }

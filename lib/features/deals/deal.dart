@@ -1,3 +1,4 @@
+import '../../core/account_type.dart';
 import '../listings/listing_summary.dart';
 
 /// Lifecycle of a deal, as `deal_status` in the database.
@@ -50,6 +51,7 @@ class Deal {
   final bool isSeller;
   final String counterpartId;
   final String counterpartName;
+  final AccountType counterpartAccountType;
   final String? lastMessage;
   final DateTime? lastMessageAt;
 
@@ -68,6 +70,7 @@ class Deal {
     required this.isSeller,
     required this.counterpartId,
     required this.counterpartName,
+    required this.counterpartAccountType,
     required this.lastMessage,
     required this.lastMessageAt,
     required this.expiresAt,
@@ -85,6 +88,7 @@ class Deal {
       isSeller: json['is_seller'] as bool,
       counterpartId: json['counterpart_id'] as String,
       counterpartName: json['counterpart_name'] as String,
+      counterpartAccountType: AccountType.fromString(json['counterpart_account_type'] as String?),
       lastMessage: json['last_message'] as String?,
       lastMessageAt: json['last_message_at'] == null ? null : DateTime.parse(json['last_message_at'] as String),
       expiresAt: json['expires_at'] == null ? null : DateTime.parse(json['expires_at'] as String),
@@ -107,6 +111,7 @@ class DealDetail {
   final bool isSeller;
   final String counterpartId;
   final String counterpartName;
+  final AccountType counterpartAccountType;
   final DateTime? expiresAt;
   final DateTime createdAt;
 
@@ -120,6 +125,7 @@ class DealDetail {
     required this.isSeller,
     required this.counterpartId,
     required this.counterpartName,
+    required this.counterpartAccountType,
     required this.expiresAt,
     required this.createdAt,
   });
@@ -135,6 +141,7 @@ class DealDetail {
       isSeller: json['is_seller'] as bool,
       counterpartId: json['counterpart_id'] as String,
       counterpartName: json['counterpart_name'] as String,
+      counterpartAccountType: AccountType.fromString(json['counterpart_account_type'] as String?),
       expiresAt: json['expires_at'] == null ? null : DateTime.parse(json['expires_at'] as String),
       createdAt: DateTime.parse(json['created_at'] as String),
     );

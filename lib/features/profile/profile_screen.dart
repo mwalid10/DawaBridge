@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/l10n_extensions.dart';
 import '../../core/locale_controller.dart';
+import '../../core/session.dart';
 import '../../core/theme.dart';
+import '../../core/widgets/account_type_pill.dart';
 import '../../core/widgets/glass_card.dart';
 import '../../core/widgets/gradient_hero_background.dart';
 import '../../core/widgets/star_picker.dart';
@@ -68,9 +70,17 @@ class ProfileScreen extends ConsumerWidget {
                       shape: BoxShape.circle,
                       boxShadow: AppShadows.card,
                     ),
-                    child: const CircleAvatar(
+                    // From the session rather than the profile below, which
+                    // is still loading when this first paints — the router
+                    // can't reach this screen without a resolved session, so
+                    // the type is always already known here.
+                    child: CircleAvatar(
                       backgroundColor: Colors.white,
-                      child: Icon(Icons.storefront_rounded, color: AppColors.primary, size: 34),
+                      child: Icon(
+                        ref.read(sessionControllerProvider).accountType.icon,
+                        color: AppColors.primary,
+                        size: 34,
+                      ),
                     ),
                   ),
                   const SizedBox(height: AppSpacing.md),
@@ -84,6 +94,11 @@ class ProfileScreen extends ConsumerWidget {
                     data: (pharmacy) => Column(
                       children: [
                         Text(pharmacy.name, style: Theme.of(context).textTheme.titleLarge, textAlign: TextAlign.center),
+                        const SizedBox(height: AppSpacing.xs),
+                        // Both types, unlike the dense list rows: this is the
+                        // account's own page, there is room, and "Pharmacy"
+                        // here is a statement about you rather than noise.
+                        AccountTypePill(type: pharmacy.accountType),
                         const SizedBox(height: 2),
                         Text(
                           '${pharmacy.email} · ${pharmacy.governorate}, ${pharmacy.area}',

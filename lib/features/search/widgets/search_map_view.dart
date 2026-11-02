@@ -179,7 +179,10 @@ class _SearchMapViewState extends State<SearchMapView> {
                       width: 44,
                       height: 44,
                       decoration: const BoxDecoration(gradient: AppGradients.cta, shape: BoxShape.circle),
-                      child: const Icon(Icons.local_pharmacy_rounded, color: Colors.white, size: 22),
+                      // Was a hardcoded pharmacy cross, which is the one
+                      // place the app asserted a type about a listing's
+                      // seller rather than reading it.
+                      child: Icon(_selected!.accountType.icon, color: Colors.white, size: 22),
                     ),
                     const SizedBox(width: AppSpacing.md),
                     Expanded(

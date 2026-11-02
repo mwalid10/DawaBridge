@@ -1,5 +1,7 @@
 import 'package:latlong2/latlong.dart';
 
+import '../../core/account_type.dart';
+
 /// Form state carried across the 4-step KYC wizard.
 ///
 /// `pinLocation`, `licenseExpiry` and the license file exist specifically
@@ -8,6 +10,7 @@ import 'package:latlong2/latlong.dart';
 /// mandatory here, not optional add-ons, so the wizard can't be completed
 /// without them.
 class KycData {
+  final AccountType accountType;
   final String pharmacyName;
   final String email;
   final String governorate;
@@ -19,6 +22,7 @@ class KycData {
   final String password;
 
   const KycData({
+    this.accountType = AccountType.pharmacy,
     this.pharmacyName = '',
     this.email = '',
     this.governorate = '',
@@ -31,6 +35,7 @@ class KycData {
   });
 
   KycData copyWith({
+    AccountType? accountType,
     String? pharmacyName,
     String? email,
     String? governorate,
@@ -42,6 +47,7 @@ class KycData {
     String? password,
   }) {
     return KycData(
+      accountType: accountType ?? this.accountType,
       pharmacyName: pharmacyName ?? this.pharmacyName,
       email: email ?? this.email,
       governorate: governorate ?? this.governorate,

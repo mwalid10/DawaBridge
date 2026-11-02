@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../core/account_type.dart';
 import '../../core/egypt_governorates.dart';
 import '../../core/app_error.dart';
 import '../../core/l10n_extensions.dart';
@@ -78,6 +79,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     final l10n = context.l10n;
     final activeFilterCount = [
       filters.type != null,
+      filters.accountType != null,
       filters.governorate != null,
       filters.concentration.isNotEmpty,
       filters.expiryBefore != null,
@@ -304,6 +306,7 @@ class _FilterSheet extends StatefulWidget {
 
 class _FilterSheetState extends State<_FilterSheet> {
   late ListingType? _type = widget.filters.type;
+  late AccountType? _accountType = widget.filters.accountType;
   late String? _governorate = widget.filters.governorate;
   late String _concentration = widget.filters.concentration;
   late DateTime? _expiryBefore = widget.filters.expiryBefore;
@@ -346,6 +349,19 @@ class _FilterSheetState extends State<_FilterSheet> {
                   ...ListingType.values.map((t) => DropdownMenuItem(value: t, child: Text(t.label(l10n)))),
                 ],
                 onChanged: (v) => setState(() => _type = v),
+              ),
+              const SizedBox(height: AppSpacing.md),
+              DropdownButtonFormField<AccountType?>(
+                initialValue: _accountType,
+                decoration: InputDecoration(
+                  labelText: l10n.fieldAccountType,
+                  prefixIcon: const Icon(Icons.badge_rounded),
+                ),
+                items: [
+                  DropdownMenuItem(value: null, child: Text(l10n.searchAllAccountTypes)),
+                  ...AccountType.values.map((t) => DropdownMenuItem(value: t, child: Text(t.label(l10n)))),
+                ],
+                onChanged: (v) => setState(() => _accountType = v),
               ),
               const SizedBox(height: AppSpacing.md),
               DropdownButtonFormField<String?>(
@@ -420,6 +436,8 @@ class _FilterSheetState extends State<_FilterSheet> {
                         widget.filters.copyWith(
                           type: _type,
                           clearType: _type == null,
+                          accountType: _accountType,
+                          clearAccountType: _accountType == null,
                           governorate: _governorate,
                           clearGovernorate: _governorate == null,
                           concentration: _concentration,

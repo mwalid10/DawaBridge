@@ -4,6 +4,90 @@ Session notes covering work across both **pharma_exchange_egypt** (mobile app)
 and **pharma_exchange_admin** (admin dashboard, separate project at
 `D:\flutter_projects\pharma_exchange_admin`). Newest entries on top.
 
+## 2026-11-02 (later) — Warehouses: a second customer type
+
+The marketplace launched pharmacy-only. Warehouses (medicine wholesalers that
+supply pharmacies) are now a second kind of account, with full parity: they
+register the same way, are approved the same way, and list, deal, chat and
+get rated identically. The type only changes wording and gives search
+something to filter on.
+
+### Migration `0045_account_types.sql` (**not applied yet** — see below)
+
+- `create type account_type as enum ('pharmacy','warehouse')` and
+  `pharmacies.account_type`, `not null default 'pharmacy'` so the four
+  existing rows stay pharmacies.
+- **No second table.** `pharmacies` is the account table — `listings`,
+  `deals`, `ratings`, `disputes`, `favorites`, `notifications` and `messages`
+  all FK into it and every RLS policy keys on it. A parallel table would mean
+  a nullable FK pair on nine tables and a rewrite of every policy to express
+  what is one column. The table keeps its name (renaming it would touch all
+  44 earlier migrations and every RPC shape the client parses); a table
+  comment records the widened meaning.
+- **Full parity needs no RLS change at all** — `is_approved_pharmacy()` keys
+  on `pharmacies.status`, which warehouses have too.
+- New `trg_pharmacies_guard_account_type`: "pharmacies read/update own row"
+  from 0001 is `for all`, so without it an approved pharmacy could PATCH
+  itself into a warehouse after KYC and the licence on file would be the
+  wrong kind of licence. Same column-aware-trigger shape as 0044's
+  `trg_pharmacies_guard_plan_changes`, and it leaves `auth.uid() is null`
+  (service role / cron) alone.
+- `get_my_status()` returns the type. `role` deliberately stays `'pharmacy'`
+  for both kinds, so every routing rule built on it is untouched.
+- `complete_my_registration()` takes `p_account_type`, defaulted, so the
+  recovery path still lands a pharmacy. Still idempotent.
+- `search_listings()` gains a `p_account_type` filter, and it plus
+  `get_listing_detail()`, `get_my_favorites()`, `get_my_listings()`,
+  `get_my_deals()` and `get_deal_detail()` all return the counterpart's type.
+  `create or replace` can't widen a `RETURNS TABLE`, so each is dropped and
+  rebuilt with its body otherwise unchanged. Every live signature was checked
+  against the project first, and `get_my_listings` is in the list only so
+  that all three RPCs filling `ListingSummary` have the same contract.
+- `get_price_increased_listings()` was deliberately **left alone**: the Home
+  carousel reads `global_price_alerts` directly, so that RPC is dead code.
+
+### App
+
+- New `lib/core/account_type.dart` (`AccountType`, with `label`, `icon`,
+  `isWarehouse`) and `lib/core/widgets/account_type_pill.dart`.
+  `AccountType.fromString` is tolerant of null, unlike the other row enums —
+  rows cached offline before this shipped have no `account_type` key, and
+  throwing there would turn a stale cache entry into a broken screen.
+- Carried on `ListingSummary`, `Deal`, `DealDetail`, `PharmacyProfile`,
+  `KycData`, `SearchFilters` and `SessionController` (cached in prefs next to
+  the session state, so an offline cold start doesn't call a warehouse a
+  pharmacy).
+- KYC step 1 is now `AccountDetailsStep` (renamed from
+  `pharmacy_details_step.dart`): a two-tile type picker at the top, committed
+  to the controller on tap rather than on Continue, because the wizard's own
+  title and step labels and the later steps' wording all read it. Warehouse
+  wording follows through the name field and validator, the map pin
+  instructions and the licence prompt (16 new l10n keys, EN + AR).
+- Badge placement rule: dense rows (listing card, chat list, chat thread
+  header) badge **only** warehouses, since pharmacies are the default and the
+  overwhelming majority — labelling them there would put a chip on nearly
+  every row and say nothing. Roomy surfaces (listing detail, own profile)
+  badge both. The listing card's seller row also takes its icon from the type.
+- Search filter sheet gains an account-type dropdown; it counts toward the
+  active-filter badge.
+- `my_listing_tile_test.dart` extended: the warehouse badge adds a third chip
+  to the title row, which is the row that already broke once in Arabic, so
+  the overlap and overflow checks now run for both types in both locales.
+
+`flutter analyze` clean; all 87 tests pass.
+
+### Still open
+
+- **The migration is not applied.** Schema-mutating applies are refused from
+  here, so `supabase/migrations/0045_account_types.sql` has to be pasted into
+  Supabase Studio. Nothing in the app works until it is — the RPCs all change
+  shape.
+- **The admin dashboard has not been touched.** It reads `pharmacies`
+  directly under "pharmacies: admin read all", so it will *receive*
+  `account_type` for free, but nothing displays or filters on it: the KYC
+  review queue can't tell a reviewer which kind of licence they are looking
+  at. That is a change in `pharma_exchange_admin`, not here.
+
 ## 2026-11-02 — Notched nav bar, My listings in Arabic, admin roles
 
 ### Bottom navigation (`lib/features/home/app_nav_bar.dart`, new)

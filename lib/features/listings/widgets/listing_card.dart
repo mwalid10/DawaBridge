@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 
 import '../../../core/l10n_extensions.dart';
 import '../../../core/theme.dart';
+import '../../../core/widgets/account_type_pill.dart';
 import '../../../core/widgets/glass_card.dart';
 import '../../../core/widgets/listing_type_pill.dart';
 import '../listing_summary.dart';
@@ -55,6 +56,13 @@ class ListingCard extends StatelessWidget {
                       ),
                       const SizedBox(width: AppSpacing.sm),
                       ListingTypePill(kind: _pillKind),
+                      // Only for warehouses. Pharmacies are the default and
+                      // the overwhelming majority, so badging them here would
+                      // put a label on nearly every card and say nothing.
+                      if (listing.accountType.isWarehouse) ...[
+                        const SizedBox(width: 4),
+                        AccountTypePill(type: listing.accountType, dense: true),
+                      ],
                       if (trailing != null) ...[const SizedBox(width: 2), trailing!],
                     ],
                   ),
@@ -90,7 +98,7 @@ class ListingCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      const Icon(Icons.storefront_rounded, size: 13, color: AppColors.inkFaint),
+                      Icon(listing.accountType.icon, size: 13, color: AppColors.inkFaint),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(

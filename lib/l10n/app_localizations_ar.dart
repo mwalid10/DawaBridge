@@ -57,6 +57,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get listingTypeExchange => 'مقايضة';
 
   @override
+  String get accountTypePharmacy => 'صيدلية';
+
+  @override
+  String get accountTypeWarehouse => 'مخزن';
+
+  @override
   String get listingStateAvailable => 'متاح';
 
   @override
@@ -201,6 +207,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get kycStepPharmacy => 'الصيدلية';
 
   @override
+  String get kycStepWarehouse => 'المخزن';
+
+  @override
   String get kycStepAddress => 'العنوان';
 
   @override
@@ -213,7 +222,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get kycRegisterTitle => 'سجّل صيدليتك';
 
   @override
+  String get kycRegisterWarehouseTitle => 'سجّل مخزنك';
+
+  @override
+  String get kycAccountTypeLabel => 'ما الذي تسجله؟';
+
+  @override
+  String get kycAccountTypePharmacyBlurb => 'صيدلية تبيع وتشتري الأدوية.';
+
+  @override
+  String get kycAccountTypeWarehouseBlurb => 'مخزن أدوية يورّد للصيدليات.';
+
+  @override
   String get kycPharmacyDetailsTitle => 'بيانات الصيدلية';
+
+  @override
+  String get kycWarehouseDetailsTitle => 'بيانات المخزن';
 
   @override
   String get kycPharmacyDetailsSubtitle =>
@@ -223,7 +247,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get fieldPharmacyName => 'اسم الصيدلية';
 
   @override
+  String get fieldWarehouseName => 'اسم المخزن';
+
+  @override
   String get kycPharmacyNameValidator => 'أدخل الاسم الكامل للصيدلية';
+
+  @override
+  String get kycWarehouseNameValidator => 'أدخل الاسم الكامل للمخزن';
 
   @override
   String get fieldEmailAddress => 'البريد الإلكتروني';
@@ -254,10 +284,17 @@ class AppLocalizationsAr extends AppLocalizations {
   String get kycPinYourPharmacy => 'حدد موقع صيدليتك';
 
   @override
+  String get kycPinYourWarehouse => 'حدّد موقع مخزنك';
+
+  @override
   String get kycUseCurrentLocation => 'استخدام الموقع الحالي';
 
   @override
   String get kycTapToDropPin => 'اسحب الخريطة لتحريك الدبوس إلى موقع صيدليتك.';
+
+  @override
+  String get kycTapToDropPinWarehouse =>
+      'اسحب الخريطة لتحريك الدبوس إلى مخزنك.';
 
   @override
   String kycPinSet(Object lat, Object lng) {
@@ -279,6 +316,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get kycDropPin => 'حدد دبوسًا على الخريطة عند الموقع الدقيق لصيدليتك.';
 
   @override
+  String get kycDropPinWarehouse =>
+      'ضع دبوسًا على الخريطة في موقع مخزنك بالتحديد.';
+
+  @override
   String get kycLicenseTitle => 'التحقق من الترخيص';
 
   @override
@@ -296,6 +337,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get kycUploadLicense => 'ارفع صورة أو ملف PDF لترخيص صيدليتك.';
+
+  @override
+  String get kycUploadLicenseWarehouse => 'ارفع صورة أو ملف PDF لترخيص المخزن.';
 
   @override
   String get kycSelectValidExpiry => 'اختر تاريخ انتهاء صالحًا وغير منتهٍ.';
@@ -453,6 +497,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get searchAllTypes => 'كل الأنواع';
+
+  @override
+  String get fieldAccountType => 'نوع الحساب';
+
+  @override
+  String get searchAllAccountTypes => 'جميع الحسابات';
 
   @override
   String get searchAllGovernorates => 'الكل';
