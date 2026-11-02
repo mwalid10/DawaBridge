@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/connectivity.dart';
 import '../../core/l10n_extensions.dart';
-import '../../core/theme.dart';
 import '../../core/widgets/gradient_fab.dart';
 import '../add_medicine/add_medicine_screen.dart';
 import '../chat/chat_list_screen.dart';
@@ -15,6 +14,7 @@ import '../notifications/notifications_controller.dart';
 import '../profile/profile_screen.dart';
 import '../push/push_token_controller.dart';
 import '../search/search_screen.dart';
+import 'app_nav_bar.dart';
 import 'home_feed_controller.dart';
 import 'home_screen.dart';
 
@@ -86,44 +86,17 @@ class _AppShellState extends ConsumerState<AppShell> {
         icon: Icons.add_rounded,
         onPressed: () => _select(2),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 8,
-        color: AppColors.surface,
-        padding: EdgeInsets.zero,
-        child: SafeArea(
-          top: false,
-          child: Row(
-            children: [
-              // Two equal-width wings around a fixed-width FAB gap, rather
-              // than spaceAround over 5 unevenly-grouped (2 vs 3) items —
-              // spaceAround let the gap's position drift with label width
-              // (English vs Arabic, "Search" vs "Chat", etc.), so it stopped
-              // lining up with the truly-centered (centerDocked) FAB above.
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _NavItem(icon: Icons.home_outlined, selectedIcon: Icons.home_rounded, label: l10n.navHome, index: 0, selected: _index == 0, onTap: _select),
-                    _NavItem(icon: Icons.search_rounded, selectedIcon: Icons.search_rounded, label: l10n.navSearch, index: 1, selected: _index == 1, onTap: _select),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 56),
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _NavItem(icon: Icons.chat_bubble_outline_rounded, selectedIcon: Icons.chat_bubble_rounded, label: l10n.navChat, index: 3, selected: _index == 3, onTap: _select),
-                    _NavItem(icon: Icons.newspaper_outlined, selectedIcon: Icons.newspaper_rounded, label: l10n.navNews, index: 4, selected: _index == 4, onTap: _select),
-                    _NavItem(icon: Icons.person_outline_rounded, selectedIcon: Icons.person_rounded, label: l10n.navProfile, index: 5, selected: _index == 5, onTap: _select),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+      floatingActionButtonLocation: const AboveNavBarFabLocation(),
+      bottomNavigationBar: AppNavBar(
+        selectedIndex: _index,
+        onSelect: _select,
+        destinations: [
+          AppNavDestination(icon: Icons.home_outlined, selectedIcon: Icons.home_rounded, label: l10n.navHome, index: 0),
+          AppNavDestination(icon: Icons.search_rounded, selectedIcon: Icons.search_rounded, label: l10n.navSearch, index: 1),
+          AppNavDestination(icon: Icons.chat_bubble_outline_rounded, selectedIcon: Icons.chat_bubble_rounded, label: l10n.navChat, index: 3),
+          AppNavDestination(icon: Icons.newspaper_outlined, selectedIcon: Icons.newspaper_rounded, label: l10n.navNews, index: 4),
+          AppNavDestination(icon: Icons.person_outline_rounded, selectedIcon: Icons.person_rounded, label: l10n.navProfile, index: 5),
+        ],
       ),
     );
   }
@@ -134,46 +107,3 @@ class _AppShellState extends ConsumerState<AppShell> {
       });
 }
 
-class _NavItem extends StatelessWidget {
-  const _NavItem({
-    required this.icon,
-    required this.selectedIcon,
-    required this.label,
-    required this.index,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final IconData icon;
-  final IconData selectedIcon;
-  final String label;
-  final int index;
-  final bool selected;
-  final ValueChanged<int> onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final color = selected ? AppColors.primary : AppColors.inkFaint;
-    return InkWell(
-      onTap: () => onTap(index),
-      borderRadius: BorderRadius.circular(AppRadius.md),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm, horizontal: AppSpacing.sm),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(selected ? selectedIcon : icon, color: color, size: 24),
-            const SizedBox(height: 2),
-            Text(
-              label,
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: color,
-                    fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-                  ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

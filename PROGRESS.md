@@ -4,6 +4,116 @@ Session notes covering work across both **pharma_exchange_egypt** (mobile app)
 and **pharma_exchange_admin** (admin dashboard, separate project at
 `D:\flutter_projects\pharma_exchange_admin`). Newest entries on top.
 
+## 2026-11-02 — Notched nav bar, My listings in Arabic, admin roles
+
+### Bottom navigation (`lib/features/home/app_nav_bar.dart`, new)
+
+The shell's bar was a `BottomAppBar` with the five destinations split 2/3
+around a fixed 56pt gap for the Add button. The gap's position drifted with
+label width (English vs Arabic, "Search" vs "Chat"), so it stopped lining up
+with the truly-centred FAB above it, and the spacing on the left of the bar
+visibly differed from the right.
+
+Replaced with a floating white bar — inset from the screen edges, rounded,
+with a circular notch cut into its top edge for the Add button to seat in:
+
+- Every destination gets an equal slot, so the row is even in both
+  languages. Equal slots and a centred gap between groups of two and three
+  are mutually exclusive, so the notch is shallow enough to clear the middle
+  destination rather than replacing it. `fabDip` and `notchMargin` are the
+  whole geometry; `barHeight` and the content padding are sized against the
+  depth they imply.
+- `NotchedBarBorder` intersects `CircularNotchedRectangle`'s path — which has
+  the tangential run-in that makes the notch read as a curve, but square
+  corners — with a rounded rect, keeping the curve and the corners both.
+- `AboveNavBarFabLocation` replaces `centerDocked`, which sinks the button to
+  its middle; this dips it 6pt and no further. The button stays the
+  Scaffold's FAB rather than moving into the bar, so no screen pays for
+  another 50-odd points of bottom padding.
+- The bar and the page behind it are both `AppColors.surface`, so a painted
+  green glow is the only thing giving the bar an edge. It paints the bar's
+  own shape, blurred, so the glow follows the notch instead of running
+  straight across under it.
+- Labels shrink to fit their slot rather than wrapping or overflowing.
+
+`test/app_nav_bar_test.dart` (6 tests): equal slot widths in English and
+Arabic, the FAB seating at exactly `fabDip` and clearing the middle
+destination, the notch probed against the real path (a bite out of the top
+edge, wider than the button, not a hole through the bar), the glow measured
+off rendered pixels rather than a `shadowColor` property, and taps reporting
+the shell's tab index rather than the slot's.
+
+### My listings: the overlays were English-only (`widgets/my_listing_tile.dart`, new)
+
+The state chip and the edit button were floated over the card's corners with
+physical `left`/`right`, on the reasoning that `ListingCard` drew nothing
+there. That reasoning only held in English. In Arabic the card mirrors and
+the overlays didn't: the state chip landed on the listing type pill, and the
+edit button landed on the photo, on top of the controlled-substance badge
+already in that corner.
+
+- `_MyListingTile` moved out of `my_listings_screen.dart` into its own
+  widget, so it can be tested on its own.
+- The edit button moved into a new `trailing` slot on `ListingCard`'s title
+  row — laid out rather than floated over a corner.
+- The state chip and the controlled-substance badge both became
+  `PositionedDirectional`. The badge also moved to the thumbnail's bottom
+  inner corner: in English the state chip reads "Available", wide enough to
+  reach across the thumbnail and meet the badge at the top corner.
+- Two bugs found on the way — `_Thumbnail`'s `Stack` clipped the badge in
+  half (it sits deliberately outside the bounds, so `Clip.none`), and the
+  expiry-date row overflowed its column at large text scales and ran under
+  the thumbnail (now `Flexible` + ellipsis).
+
+`test/my_listing_tile_test.dart` (9 tests): every pair that can collide
+asserted non-overlapping in both EN and AR, plus no overflow and no edit
+button on a listing that can't be edited.
+
+### Admin roles (`supabase/migrations/0044_admin_roles.sql`, `create-admin`)
+
+Every row in `admins` had full write access to everything the dashboard can
+touch. Split into `viewer` / `moderator` / `super_admin`:
+
+- `is_admin()` keeps its meaning ("any admin"), so every read policy and the
+  mobile app's `get_my_status()` are untouched. Writes moved to
+  `is_admin_editor()`, and the three things with outsized blast radius moved
+  to `is_super_admin()`: broadcasts, plans & trials, and the admin team.
+- The nine admin write policies were each split into an admin read (any
+  role) plus an editor write.
+- Plans and trials live on `pharmacies`, which moderators legitimately
+  update for KYC, so RLS can't separate them — `pharmacies_guard_plan_changes()`
+  is a column-scoped trigger instead. Pharmacy sessions and service-role/cron
+  (`auth.uid()` null) keep the access they had.
+- `admins_keep_a_super_admin()` refuses to demote or delete the last super
+  admin, locking the other super-admin rows so two of them can't demote each
+  other at the same moment.
+- Creating an admin needs an `auth.users` row, which only the service role
+  can make, so that's the new `create-admin` edge function (super-admin
+  only). Role changes and removal don't need it and go through RLS directly.
+  It re-admits an existing account rather than failing on "email already
+  registered", and refuses pharmacy accounts.
+- `broadcast-notification` now requires `role = 'super_admin'` rather than
+  mere membership in `admins`.
+
+**Applied and deployed**, unlike most SQL in this log: 0044 is live on the
+project (verified against the database — the enum, the column, both triggers,
+all four new functions, and all nine policy splits), `create-admin` is
+deployed and byte-identical to the file here, and `broadcast-notification` is
+at the updated version. The three existing admins were promoted to
+`super_admin` by the migration, as intended.
+
+Not exercised live: the two guard triggers (`LAST_SUPER_ADMIN`,
+`SUPER_ADMIN_REQUIRED`). Both need a real demote/delete or plan change to
+fire, so they're applied but unproven.
+
+The dashboard UI for any of this is in `pharma_exchange_admin` and is **not**
+part of this change — nothing there calls `admin_list_team()` or
+`create-admin` yet, and nothing hides a moderator's plan or broadcast
+controls. The database refuses those writes either way; the UI just won't
+explain why.
+
+`flutter analyze` clean, 81 tests pass.
+
 ## 2026-09-18 (later) — Admin dashboard catch-up + real push notifications
 
 ### Admin dashboard (`pharma_exchange_admin`)

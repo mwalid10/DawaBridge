@@ -9,10 +9,16 @@ import '../../../core/widgets/listing_type_pill.dart';
 import '../listing_summary.dart';
 
 class ListingCard extends StatelessWidget {
-  const ListingCard({super.key, required this.listing, required this.onTap});
+  const ListingCard({super.key, required this.listing, required this.onTap, this.trailing});
 
   final ListingSummary listing;
   final VoidCallback onTap;
+
+  /// An action for the card's title row, after the type pill — the owner's
+  /// edit button on My listings. A slot rather than something callers float
+  /// over the card's corner, which is how that button ended up on top of
+  /// the type pill in English and on top of the photo in Arabic.
+  final Widget? trailing;
 
   ListingTypePillKind get _pillKind => switch (listing.type) {
         ListingType.sell => ListingTypePillKind.sell,
@@ -49,6 +55,7 @@ class ListingCard extends StatelessWidget {
                       ),
                       const SizedBox(width: AppSpacing.sm),
                       ListingTypePill(kind: _pillKind),
+                      if (trailing != null) ...[const SizedBox(width: 2), trailing!],
                     ],
                   ),
                   if (listing.activeIngredient != null)
@@ -66,7 +73,18 @@ class ListingCard extends StatelessWidget {
                       const SizedBox(width: AppSpacing.md),
                       const Icon(Icons.event_rounded, size: 13, color: AppColors.inkFaint),
                       const SizedBox(width: 4),
-                      Text(DateFormat.yMMMd().format(listing.expiryDate), style: textTheme.bodySmall),
+                      // Flexible because nothing else in this row can give:
+                      // at a large text scale, or in a locale that spells
+                      // the month out, the fixed row overflowed its column
+                      // and ran under the thumbnail.
+                      Flexible(
+                        child: Text(
+                          DateFormat.yMMMd().format(listing.expiryDate),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: textTheme.bodySmall,
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -112,6 +130,9 @@ class _Thumbnail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(
+      // The badge below is deliberately outside these bounds; a Stack clips
+      // to them by default, which sliced it in half.
+      clipBehavior: Clip.none,
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(AppRadius.lg),
@@ -137,9 +158,17 @@ class _Thumbnail extends StatelessWidget {
           ),
         ),
         if (isControlled)
-          Positioned(
-            top: -4,
-            right: -4,
+          // The thumbnail's bottom inner corner. Directional because the
+          // thumbnail is the card's leading child, so in Arabic it sits on
+          // the right of the card and a physical `right` put this badge
+          // over the card's outer edge — on top of the state chip My
+          // listings draws there. Bottom rather than top for the same
+          // reason in the other direction: in English that chip reads
+          // "Available", which is wide enough to reach across the
+          // thumbnail and meet this badge at the top corner.
+          PositionedDirectional(
+            bottom: -4,
+            end: -4,
             child: Container(
               padding: const EdgeInsets.all(3),
               decoration: const BoxDecoration(color: AppColors.warnBg, shape: BoxShape.circle),
