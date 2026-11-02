@@ -3,8 +3,8 @@
 // real FCM push in one call, so the dashboard only has to invoke one thing.
 //
 // Uses the service-role key throughout, so it bypasses RLS entirely — the
-// admin check below is the only gate, mirroring is_admin() from
-// 0019_admin_dashboard.sql but re-implemented here since Deno can't call
+// admin check below is the only gate, mirroring is_super_admin() from
+// 0044_admin_roles.sql but re-implemented here since Deno can't call
 // into Postgres's security-definer functions directly.
 //
 // The FCM mechanics (chunking, stale-token pruning) moved to
@@ -41,8 +41,9 @@ Deno.serve(async (req: Request) => {
       return json({ error: "Invalid session" }, 401);
     }
 
-    const { data: adminRow } = await supabase.from("admins").select("id").eq("id", userData.user.id).maybeSingle();
-    if (!adminRow) {
+    // Broadcasting is super-admin only — it pushes to every matching pharmacy.
+    const { data: adminRow } = await supabase.from("admins").select("role").eq("id", userData.user.id).maybeSingle();
+    if (adminRow?.role !== "super_admin") {
       return json({ error: "Not authorized" }, 403);
     }
 
