@@ -102,9 +102,33 @@ deployed and byte-identical to the file here, and `broadcast-notification` is
 at the updated version. The three existing admins were promoted to
 `super_admin` by the migration, as intended.
 
-Not exercised live: the two guard triggers (`LAST_SUPER_ADMIN`,
-`SUPER_ADMIN_REQUIRED`). Both need a real demote/delete or plan change to
-fire, so they're applied but unproven.
+Both guard triggers were then exercised against the live database, each
+inside a transaction that was rolled back — after first proving, with a
+throwaway name change, that a rollback on this connection really does revert:
+
+- demoting one super admin of three — allowed;
+- demoting the last one — `LAST_SUPER_ADMIN`;
+- deleting one super admin of three — allowed. This was the case in doubt:
+  the trigger reads `new.role`, and `NEW` doesn't exist on a delete. The
+  `tg_op = 'DELETE'` test short-circuits ahead of it, so it never evaluates;
+- deleting the last one — `LAST_SUPER_ADMIN`;
+- a moderator changing `plan`, and a moderator changing `trial_ends_at` —
+  `SUPER_ADMIN_REQUIRED` for both;
+- a super admin changing `plan` — allowed;
+- a moderator re-submitting an **unchanged** `plan` alongside another edit —
+  allowed. The trigger fires (the column is in the SET list) but
+  `is distinct from` is false. This is the case any dashboard form that
+  posts every field will hit, so it mattered more than the blocked ones;
+- cron / service role, with a null `auth.uid()` — allowed, so the trial
+  sweep is unaffected.
+
+Nothing needed fixing. The `admins` and `pharmacies` rows were read back
+afterwards and match their original values.
+
+The moderator cases were simulated by setting `request.jwt.claims`, which is
+what `auth.uid()` reads, rather than by switching database role — so they
+exercise the triggers but not the RLS policies around them. Those were
+checked separately against `pg_policies`.
 
 The dashboard UI for any of this is in `pharma_exchange_admin` and is **not**
 part of this change — nothing there calls `admin_list_team()` or
